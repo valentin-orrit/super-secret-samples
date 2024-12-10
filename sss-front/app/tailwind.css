@@ -43,6 +43,9 @@
         src: url(/fonts/JetBrainsMono/JetBrainsMono-ExtraBold.woff2)
             format('woff2');
     }
+  :root {
+        --radius: 0.5rem;
+    }
 }
 
 html,

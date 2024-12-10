@@ -38,12 +38,14 @@ export default function Index() {
                     quality samples for producers who want a unique sound
                 </h2>
 
-                <div
-                    id="enter-btn"
-                    className="m-6 py-2 px-10 bg-sssorange rounded-full"
-                >
-                    <Link to={'/samples'}>enter</Link>
-                </div>
+                <Link to={'/samples'}>
+                    <div
+                        id="enter-btn"
+                        className="m-6 py-2 px-10 bg-sssorange rounded-full"
+                    >
+                        enter
+                    </div>
+                </Link>
             </div>
         </div>
     )
