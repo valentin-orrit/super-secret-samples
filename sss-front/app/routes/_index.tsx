@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
     return (
-        <div className="flex h-screen items-center justify-center font-mono text-sssoffwhite  bg-sssdarkblue">
+        <div className="flex h-screen items-center justify-center font-mono text-sssoffwhite bg-sssdarkblue">
             <div id="shapes" className="flex flex-col items-center m-4">
                 <div className="flex m-4 w-44 sm:w-96">
                     <div id="shapes-top" className="flex flex-col sm:flex-row">
@@ -38,13 +38,11 @@ export default function Index() {
                     quality samples for producers who want a unique sound
                 </h2>
 
-                <Link to={'/samples'}>
-                    <div
-                        id="enter-btn"
-                        className="m-6 py-2 px-10 bg-sssorange rounded-full"
-                    >
-                        enter
-                    </div>
+                <Link
+                    to={'/samples'}
+                    className="m-6 py-2 px-10 bg-sssorange hover:bg-orange-400 rounded-full "
+                >
+                    enter
                 </Link>
             </div>
         </div>

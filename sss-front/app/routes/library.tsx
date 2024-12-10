@@ -8,14 +8,11 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export default function SamplesPage() {
+export default function Library() {
     return (
-        <div
-            id="samples-page"
-            className="flex flex-col font-mono text-sssdarkblue"
-        >
+        <div id="library-page">
             <Navbar />
-            <div id="main">samples page</div>
+            <p>library</p>
         </div>
     )
 }
