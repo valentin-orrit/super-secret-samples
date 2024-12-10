@@ -1,0 +1,11 @@
+services:
+    sss-front:
+        build: ./sss-front
+        container_name: sss-front
+        restart: always
+        ports:
+            - '5173:5173'
+        volumes:
+            - ./sss-front:/usr/src/app
+        environment:
+            - NODE_ENV=development
