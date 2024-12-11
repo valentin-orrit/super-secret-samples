@@ -40,7 +40,7 @@ export default function Index() {
 
                 <Link
                     to={'/samples'}
-                    className="m-6 py-2 px-10 bg-sssorange hover:bg-orange-400 rounded-full "
+                    className="m-6 py-2 px-10 bg-sssorange hover:bg-orange-400 rounded-full"
                 >
                     enter
                 </Link>
