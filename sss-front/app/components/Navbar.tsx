@@ -7,13 +7,20 @@ export default function Navbar() {
     return (
         <div
             id="navbar"
-            className="flex py-1 px-4 items-center justify-between text-sssoffwhite bg-sssdarkblue w-screen"
+            className="flex py-1 px-4 min-h-16 items-center justify-between text-sssoffwhite bg-sssdarkblue w-screen"
         >
             <Link to={'/'}>
                 <img
                     src="/logos/logo-dark-text.svg"
                     alt="website logo"
+                    className="hidden sm:block"
                     width="130px"
+                />
+                <img
+                    src="/logos/logo-dark.svg"
+                    alt="website logo small"
+                    className="block sm:hidden"
+                    width="60px"
                 />
             </Link>
 
@@ -28,7 +35,7 @@ export default function Navbar() {
                         <div className="flex flex-col items-center">
                             <span
                                 id="samples"
-                                className="hover:text-sssyellow mx-4"
+                                className="hover:text-sssyellow mx-1 sm:mx-4"
                             >
                                 samples
                             </span>
@@ -50,7 +57,7 @@ export default function Navbar() {
                         <div className="flex flex-col items-center">
                             <span
                                 id="library"
-                                className="hover:text-sssyellow mx-4"
+                                className="hover:text-sssyellow  mx-1 sm:mx-4"
                             >
                                 library
                             </span>
