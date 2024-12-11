@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,10 +13,14 @@ export default function UserMenu() {
             <DropdownMenuTrigger>
                 <CircleUser size={28} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mx-16 my-8">
+            <DropdownMenuContent className="mx-16 my-5 text-sssdarkblue">
                 <DropdownMenuItem>settings</DropdownMenuItem>
-                <DropdownMenuItem>upload samples</DropdownMenuItem>
-                <DropdownMenuItem>request samples</DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link to="/sample-upload">upload samples</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link to="/sample-request">request samples</Link>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
