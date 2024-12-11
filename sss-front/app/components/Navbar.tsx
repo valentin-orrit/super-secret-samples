@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { NavLink, Link } from '@remix-run/react'
 import Shape from './Shape'
 import UserMenu from './UserMenu'
-import { Volume2 } from 'lucide-react'
+import { VolumeSliderMenu } from './VolumeSliderMenu'
 
 export default function Navbar() {
+    const [volume, setVolume] = useState(60)
+
     return (
         <div
             id="navbar"
@@ -76,7 +79,7 @@ export default function Navbar() {
                     <UserMenu />
                 </div>
                 <div id="user-menu" className="mx-2">
-                    <Volume2 size={28} />
+                    <VolumeSliderMenu volume={volume} />
                 </div>
             </div>
         </div>
