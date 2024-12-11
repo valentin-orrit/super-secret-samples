@@ -5,15 +5,12 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { useVolumeStore } from '../store'
 import { Volume2 } from 'lucide-react'
 
-export function VolumeSliderMenu({
-    volume,
-    setVolume,
-}: {
-    volume: number
-    setVolume: (value: number) => void
-}) {
+export function VolumeSliderMenu() {
+    const { volume, setVolume } = useVolumeStore()
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="flex">

@@ -1,12 +1,9 @@
-import { useState } from 'react'
 import { NavLink, Link } from '@remix-run/react'
 import Shape from './Shape'
 import UserMenu from './UserMenu'
 import { VolumeSliderMenu } from './VolumeSliderMenu'
 
 export default function Navbar() {
-    const [volume, setVolume] = useState(40)
-
     return (
         <div
             id="navbar"
@@ -79,7 +76,7 @@ export default function Navbar() {
                     <UserMenu />
                 </div>
                 <div id="user-menu" className="mx-2">
-                    <VolumeSliderMenu volume={volume} setVolume={setVolume} />
+                    <VolumeSliderMenu />
                 </div>
             </div>
         </div>
