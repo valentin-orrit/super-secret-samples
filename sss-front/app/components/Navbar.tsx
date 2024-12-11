@@ -5,7 +5,7 @@ import UserMenu from './UserMenu'
 import { VolumeSliderMenu } from './VolumeSliderMenu'
 
 export default function Navbar() {
-    const [volume, setVolume] = useState(60)
+    const [volume, setVolume] = useState(40)
 
     return (
         <div
@@ -79,7 +79,7 @@ export default function Navbar() {
                     <UserMenu />
                 </div>
                 <div id="user-menu" className="mx-2">
-                    <VolumeSliderMenu volume={volume} />
+                    <VolumeSliderMenu volume={volume} setVolume={setVolume} />
                 </div>
             </div>
         </div>

@@ -7,7 +7,13 @@ import {
 } from './ui/dropdown-menu'
 import { Volume2 } from 'lucide-react'
 
-export function VolumeSliderMenu({ volume }: { volume: number }) {
+export function VolumeSliderMenu({
+    volume,
+    setVolume,
+}: {
+    volume: number
+    setVolume: (value: number) => void
+}) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="flex">
@@ -15,7 +21,12 @@ export function VolumeSliderMenu({ volume }: { volume: number }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="my-5 rounded-xl text-sssdarkblue">
                 <DropdownMenuItem>
-                    <Slider defaultValue={[volume]} max={100} step={1} />
+                    <Slider
+                        value={[volume]}
+                        onValueChange={(value) => setVolume(value[0])}
+                        max={100}
+                        step={1}
+                    />
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
