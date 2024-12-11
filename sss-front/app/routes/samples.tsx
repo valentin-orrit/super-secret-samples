@@ -11,9 +11,11 @@ export default function SamplesPage() {
     return (
         <div
             id="samples-page"
-            className="flex flex-col font-mono text-sssdarkblue"
+            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite h-screen"
         >
-            <div id="main">samples page</div>
+            <div id="main">
+                <h1>samples page</h1>
+            </div>
         </div>
     )
 }

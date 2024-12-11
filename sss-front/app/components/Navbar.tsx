@@ -1,7 +1,7 @@
 import { NavLink, Link } from '@remix-run/react'
 import Shape from './Shape'
+import UserMenu from './UserMenu'
 import { Volume2 } from 'lucide-react'
-import { CircleUser } from 'lucide-react'
 
 export default function Navbar() {
     return (
@@ -71,9 +71,13 @@ export default function Navbar() {
                 </NavLink>
             </div>
 
-            <div id="menus" className="flex">
-                <CircleUser className="mx-2" />
-                <Volume2 className="mx-2" />
+            <div id="menus" className="flex items-center">
+                <div id="user-menu" className="mx-2 flex items-center">
+                    <UserMenu />
+                </div>
+                <div id="user-menu" className="mx-2">
+                    <Volume2 size={28} />
+                </div>
             </div>
         </div>
     )

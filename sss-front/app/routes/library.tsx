@@ -9,8 +9,13 @@ export const meta: MetaFunction = () => {
 
 export default function Library() {
     return (
-        <div id="library-page">
-            <p>library</p>
+        <div
+            id="samples-page"
+            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite h-screen"
+        >
+            <div id="main">
+                <h1>library page</h1>
+            </div>
         </div>
     )
 }
