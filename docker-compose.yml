@@ -4,7 +4,7 @@ services:
         container_name: sss-front
         restart: always
         ports:
-            - '5173:5173'
+            - '5174:5174'
         volumes:
             - ./sss-front:/usr/src/app
         environment:

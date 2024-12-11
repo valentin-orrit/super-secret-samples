@@ -1,5 +1,4 @@
 import type { MetaFunction } from '@remix-run/node'
-import Navbar from '../components/Navbar'
 
 export const meta: MetaFunction = () => {
     return [
@@ -14,7 +13,6 @@ export default function SamplesPage() {
             id="samples-page"
             className="flex flex-col font-mono text-sssdarkblue"
         >
-            <Navbar />
             <div id="main">samples page</div>
         </div>
     )
