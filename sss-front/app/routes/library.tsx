@@ -11,7 +11,7 @@ export default function Library() {
     return (
         <div
             id="samples-page"
-            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite h-screen"
+            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen"
         >
             <div id="main">
                 <h1>library page</h1>
