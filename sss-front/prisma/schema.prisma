@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  name       String?
+  likes      Like[]
+  downloaded Downloaded[]
+  role       Role         @default(USER)
+}
+
+model Sample {
+  id              Int          @id @default(autoincrement())
+  name            String       @unique
+  s3ReferenceName String       @unique
+  bpm             Int?
+  key             String?
+  genres          Genre[]
+  instruments     Instrument[]
+  tags            Tag[]
+  loop            Boolean
+}
+
+model Like {
+  id     Int   @id @default(autoincrement())
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model Downloaded {
+  id     Int   @id @default(autoincrement())
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model Genre {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique
+  Sample Sample[]
+}
+
+model Instrument {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  samples Sample[]
+}
+
+model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  samples Sample[]
+}
+
+enum Role {
+  USER
+  GUEST
+  ADMIN
+  SAMPLEPRODUCER
+}
