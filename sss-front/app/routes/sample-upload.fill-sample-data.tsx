@@ -21,12 +21,11 @@ export const meta: MetaFunction = () => {
 export default function FillSampleData() {
     const location = useLocation()
     const state = location.state as LocationState
-
-    console.log(state?.samples)
+    const samples = state?.samples
 
     return (
         <div className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite items-center justify-center min-h-screen">
-            <SampleDataFill />
+            <SampleDataFill samples={samples} />
         </div>
     )
 }
