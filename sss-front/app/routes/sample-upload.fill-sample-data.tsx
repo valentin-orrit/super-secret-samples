@@ -24,7 +24,7 @@ export default function FillSampleData() {
     const samples = state?.samples
 
     return (
-        <div className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite items-center justify-center min-h-screen">
+        <div className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite items-center justify-center min-w-screen min-h-screen">
             <SampleDataFill samples={samples} />
         </div>
     )
