@@ -1,4 +1,3 @@
-import type { LoaderFunction } from '@remix-run/node'
 import {
     Links,
     Meta,
@@ -10,20 +9,6 @@ import {
 
 import './tailwind.css'
 import Navbar from './components/Navbar'
-
-import { rootAuthLoader } from '@clerk/remix/ssr.server'
-import { ClerkApp } from '@clerk/remix'
-
-export const loader: LoaderFunction = (args) => {
-    return rootAuthLoader(args, ({ request }) => {
-        const { sessionId, userId, getToken } = request.auth
-        // fetch data
-        // console.log('session ID : ', sessionId)
-        // console.log('user ID : ', userId)
-        // console.log('getToken ID : ', getToken)
-        return { yourData: 'here' }
-    })
-}
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
@@ -46,7 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     )
 }
 
-function App() {
+export default function App() {
     const location = useLocation()
     const isRoot = location.pathname === '/'
 
@@ -57,5 +42,3 @@ function App() {
         </div>
     )
 }
-
-export default ClerkApp(App)
