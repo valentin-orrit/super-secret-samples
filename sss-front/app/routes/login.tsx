@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { MetaFunction } from '@remix-run/node'
 import { Link } from '@remix-run/react'
 import { Button } from '../components/ui/button'
@@ -27,12 +28,30 @@ const loginSchema = z.object({
     password: z.string().min(6, 'Password must be at least 6 characters long'),
 })
 
+const signUpSchema = z
+    .object({
+        email: z.string().email('Invalid email address'),
+        password: z
+            .string()
+            .min(6, 'Password must be at least 6 characters long'),
+        confirmPassword: z
+            .string()
+            .min(6, 'Confirm Password must be at least 6 characters long'),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords must match',
+        path: ['confirmPassword'],
+    })
+
 export default function LoginPage() {
+    const [action, setAction] = useState('login')
+
     const form = useForm({
-        resolver: zodResolver(loginSchema),
+        resolver: zodResolver(action === 'login' ? loginSchema : signUpSchema),
         defaultValues: {
             email: '',
             password: '',
+            confirmPassword: '',
         },
     })
 
@@ -43,8 +62,10 @@ export default function LoginPage() {
     return (
         <div className="flex flex-col items-center mt-40">
             <Card className="w-full max-w-md border rounded-2xl p-8">
-                <CardHeader className="flex font-bold text-sssblue text-2xl text-center ml-2">
-                    <CardTitle className="text-center">login</CardTitle>
+                <CardHeader className="flex font-bold text-sssorange text-2xl text-center ml-2">
+                    <CardTitle className="text-center">
+                        {action === 'login' ? 'login' : 'sign up'}
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -58,11 +79,11 @@ export default function LoginPage() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-sssdarkblue">
-                                            Email
+                                            email
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Enter your email"
+                                                placeholder="enter your email"
                                                 className="text-xs font-thin"
                                                 {...field}
                                             />
@@ -79,22 +100,24 @@ export default function LoginPage() {
                                     <FormItem>
                                         <div className="flex justify-between">
                                             <FormLabel className="text-sssdarkblue">
-                                                Password
+                                                password
                                             </FormLabel>
 
-                                            <div className="flex items-center justify-between text-xs">
-                                                <Link
-                                                    to="/"
-                                                    className="text-sssaccentgray underline hover:text-sssblue"
-                                                >
-                                                    Forgot password?
-                                                </Link>
-                                            </div>
+                                            {action === 'login' ? (
+                                                <div className="flex items-center justify-between text-xs">
+                                                    <Link
+                                                        to="/"
+                                                        className="text-sssaccentgray underline hover:text-sssblue"
+                                                    >
+                                                        Forgot password?
+                                                    </Link>
+                                                </div>
+                                            ) : null}
                                         </div>
                                         <FormControl>
                                             <Input
                                                 type="password"
-                                                placeholder="Enter your password"
+                                                placeholder="enter your password"
                                                 className="text-xs font-thin"
                                                 {...field}
                                             />
@@ -104,11 +127,34 @@ export default function LoginPage() {
                                 )}
                             />
 
+                            {action !== 'login' && (
+                                <FormField
+                                    name="confirmPassword"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Confirm Password
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    placeholder="Confirm your password"
+                                                    className="text-xs font-thin"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+
                             <Button
                                 type="submit"
                                 className="w-full text-sssoffwhite bg-sssblue hover:bg-teal-500 rounded-full"
                             >
-                                Log in
+                                {action === 'login' ? 'login' : 'sign up'}
                             </Button>
                         </form>
                     </Form>
