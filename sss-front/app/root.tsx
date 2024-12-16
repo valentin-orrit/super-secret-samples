@@ -18,9 +18,9 @@ export const loader: LoaderFunction = (args) => {
     return rootAuthLoader(args, ({ request }) => {
         const { sessionId, userId, getToken } = request.auth
         // fetch data
-        console.log('session ID : ', sessionId)
-        console.log('user ID : ', userId)
-        console.log('getToken ID : ', getToken)
+        // console.log('session ID : ', sessionId)
+        // console.log('user ID : ', userId)
+        // console.log('getToken ID : ', getToken)
         return { yourData: 'here' }
     })
 }

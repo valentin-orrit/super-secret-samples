@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
 
 export default function SignInPage() {
     return (
-        <div className="flex flex-col items-center justify-center m-14 p-8 border rounded-xl bg-white">
+        <div className="flex flex-col items-center align-middle my-12">
             <SignIn />
         </div>
     )

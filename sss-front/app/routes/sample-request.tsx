@@ -1,4 +1,9 @@
-import type { MetaFunction } from '@remix-run/node'
+import {
+    redirect,
+    type LoaderFunction,
+    type MetaFunction,
+} from '@remix-run/node'
+import { getAuth } from '@clerk/remix/ssr.server'
 
 export const meta: MetaFunction = () => {
     return [
@@ -9,6 +14,14 @@ export const meta: MetaFunction = () => {
                 'request samples to be created and uploaded in the samples page!',
         },
     ]
+}
+
+export const loader: LoaderFunction = async (args) => {
+    const { userId } = await getAuth(args)
+
+    if (!userId) return redirect('/sign-in')
+
+    return { data: { userId } }
 }
 
 export default function SamplesPage() {
