@@ -1,6 +1,19 @@
-import type { MetaFunction } from '@remix-run/node'
+import { MetaFunction } from '@remix-run/node'
 import { Link } from '@remix-run/react'
-import Shape from '../components/Shape'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from '../components/ui/form'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
 export const meta: MetaFunction = () => {
     return [
@@ -9,54 +22,98 @@ export const meta: MetaFunction = () => {
     ]
 }
 
+const loginSchema = z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+})
+
 export default function LoginPage() {
+    const form = useForm({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    })
+
+    function onSubmit(values: z.infer<typeof loginSchema>) {
+        console.log(values)
+    }
+
     return (
         <div className="flex flex-col items-center mt-40">
-            <div className="flex align-middle items-center">
-                <Shape instrument="arps" width="30" />
-                <h2 className="font-bold text-sssblue text-2xl text-center">
-                    login
-                </h2>
-            </div>
-
-            <form className="w-1/2 mx-12 my-4 px-10 py-4 border rounded-2xl bg-white">
-                <div className="flex flex-col my-2">
-                    <label htmlFor="email">email</label>
-                    <input
-                        type="text"
-                        id="email"
-                        name="email"
-                        autoComplete="on"
-                        className="border rounded-lg my-2 p-1 text-sm"
-                    />
-                </div>
-
-                <div className="flex flex-col my-2">
-                    <div className="flex items-center justify-between">
-                        <label htmlFor="password">password</label>
-                        <Link
-                            to="/"
-                            className="font-thin text-xs underline text-sssaccentgray hover:text-sssblue"
+            <Card className="w-full max-w-md border rounded-2xl p-8">
+                <CardHeader className="flex font-bold text-sssblue text-2xl text-center ml-2">
+                    <CardTitle className="text-center">login</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4"
                         >
-                            forgot password?
-                        </Link>
-                    </div>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        className="border rounded-lg my-2 p-1 text-sm focus:border-sssyellow"
-                    />
-                </div>
+                            <FormField
+                                name="email"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-sssdarkblue">
+                                            Email
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Enter your email"
+                                                className="text-xs font-thin"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                <div className="w-full text-center">
-                    <input
-                        type="submit"
-                        value="log in"
-                        className="m-6 py-2 px-10 cursor-pointer text-sssoffwhite bg-sssblue hover:bg-teal-500 rounded-full"
-                    />
-                </div>
-            </form>
+                            <FormField
+                                name="password"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex justify-between">
+                                            <FormLabel className="text-sssdarkblue">
+                                                Password
+                                            </FormLabel>
+
+                                            <div className="flex items-center justify-between text-xs">
+                                                <Link
+                                                    to="/"
+                                                    className="text-sssaccentgray underline hover:text-sssblue"
+                                                >
+                                                    Forgot password?
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                placeholder="Enter your password"
+                                                className="text-xs font-thin"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <Button
+                                type="submit"
+                                className="w-full text-sssoffwhite bg-sssblue hover:bg-teal-500 rounded-full"
+                            >
+                                Log in
+                            </Button>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
         </div>
     )
 }

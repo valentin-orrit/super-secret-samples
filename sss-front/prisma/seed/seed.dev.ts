@@ -11,25 +11,25 @@ async function seed() {
             data: [
                 {
                     email: 'admin@admin.com',
-                    password: 'admin',
+                    password: 'admin123',
                     name: 'admin',
                     role: 'ADMIN',
                 },
                 {
                     email: 'user@user.com',
-                    password: 'useruser',
+                    password: 'user123',
                     name: 'user',
                     role: 'USER',
                 },
                 {
                     email: 'guest@guest.com',
-                    password: 'guest',
+                    password: 'guest123',
                     name: 'guest',
                     role: 'GUEST',
                 },
                 {
                     email: 'prod@prod.com',
-                    password: 'producer',
+                    password: 'prod123',
                     name: 'prod',
                     role: 'SAMPLEPRODUCER',
                 },
