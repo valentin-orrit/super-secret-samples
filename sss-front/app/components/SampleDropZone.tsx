@@ -73,7 +73,7 @@ export default function SampleDropZone() {
     ))
 
     return (
-        <section className="min-w-1/2 flex flex-col bg-white p-14 rounded-2xl shadow-lg">
+        <section className="min-w-1/2 flex flex-col bg-white my-8 p-14 rounded-2xl shadow-lg">
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogContent className="text-sssred">
                     <DialogTitle>Invalid File Type</DialogTitle>

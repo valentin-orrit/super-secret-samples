@@ -14,10 +14,7 @@ export const meta: MetaFunction = () => {
 
 export default function SampleUpload() {
     return (
-        <div
-            id="samples-page"
-            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite items-center justify-center min-h-screen"
-        >
+        <div className="flex flex-col items-center justify-center min-h-screen">
             <div id="main">
                 <SampleDropZone />
             </div>

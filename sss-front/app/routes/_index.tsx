@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
     return (
-        <div className="flex h-screen items-center justify-center font-mono text-sssoffwhite bg-sssdarkblue">
+        <div className="flex h-screen items-center justify-center text-sssoffwhite bg-sssdarkblue">
             <div id="shapes" className="flex flex-col items-center m-4">
                 <div className="flex m-4 w-44 sm:w-96">
                     <div id="shapes-top" className="flex flex-col sm:flex-row">

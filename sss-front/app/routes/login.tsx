@@ -3,16 +3,14 @@ import type { MetaFunction } from '@remix-run/node'
 export const meta: MetaFunction = () => {
     return [
         { title: 'samples page - super secret samples' },
-        { name: 'description', content: 'browse samples!' },
+        { name: 'description', content: 'log to your profile!' },
     ]
 }
 
-export default function Library() {
+export default function Login() {
     return (
-        <div>
-            <div id="main">
-                <h1>library page</h1>
-            </div>
+        <div className="h-full">
+            <h2>log in</h2>
         </div>
     )
 }
