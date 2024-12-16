@@ -5,8 +5,11 @@ CREATE TYPE "Role" AS ENUM ('USER', 'GUEST', 'ADMIN', 'SAMPLEPRODUCER');
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "name" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -19,6 +22,8 @@ CREATE TABLE "Sample" (
     "bpm" INTEGER,
     "key" TEXT,
     "loop" BOOLEAN NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Sample_pkey" PRIMARY KEY ("id")
 );

@@ -16,10 +16,13 @@ datasource db {
 model User {
   id         Int          @id @default(autoincrement())
   email      String       @unique
+  password   String
   name       String?
   likes      Like[]
   downloaded Downloaded[]
   role       Role         @default(USER)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model Sample {
@@ -32,6 +35,8 @@ model Sample {
   instruments     Instrument[]
   tags            Tag[]
   loop            Boolean
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }
 
 model Like {
