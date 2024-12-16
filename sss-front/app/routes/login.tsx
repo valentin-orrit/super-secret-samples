@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
 
 export default function Login() {
     return (
-        <div className="h-full">
+        <div className="flex flex-col items-center justify-center m-14 p-8 border rounded-xl bg-white">
             <h2>log in</h2>
         </div>
     )
