@@ -6,7 +6,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from './ui/dropdown-menu'
-import { CircleUser } from 'lucide-react'
+import { CircleUser, LogIn } from 'lucide-react'
 import { useUser, useClerk } from '@clerk/remix'
 
 export default function UserMenu() {
@@ -54,9 +54,15 @@ export default function UserMenu() {
             ) : (
                 <Link
                     to="/sign-in"
-                    className="text-md tracking-tighter text-sssyellow bg-sssblue hover:bg-teal-500 rounded-full py-1 px-4"
+                    className="flex items-center gap-2 text-md tracking-tighter text-sssyellow  hover:bg-teal-500 rounded-full py-1 px-2  hover:px-4 group relative"
                 >
-                    sign in
+                    <LogIn
+                        strokeWidth={2}
+                        className="size-7 group-hover:size-5 duration-300"
+                    />
+                    <span className="text-[0px] group-hover:text-sm duration-300">
+                        sign in
+                    </span>
                 </Link>
             )}
         </>
