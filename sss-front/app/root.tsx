@@ -6,13 +6,17 @@ import {
     ScrollRestoration,
     useLocation,
 } from '@remix-run/react'
-
+import type { LoaderFunction } from '@remix-run/node'
+import { ClerkApp } from '@clerk/remix'
+import { rootAuthLoader } from '@clerk/remix/ssr.server'
 import './tailwind.css'
 import Navbar from './components/Navbar'
 
+export const loader: LoaderFunction = (args) => rootAuthLoader(args)
+
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
+        <html lang="en" className="h-dvh">
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -22,7 +26,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Meta />
                 <Links />
             </head>
-            <body className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen">
+            <body>
                 {children}
                 <ScrollRestoration />
                 <Scripts />
@@ -31,14 +35,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
     )
 }
 
-export default function App() {
+function App() {
     const location = useLocation()
     const isRoot = location.pathname === '/'
 
     return (
-        <div id="root">
+        <div
+            id="root"
+            className="flex flex-col min-h-screen font-mono text-sssdarkblue bg-sssoffwhite"
+        >
             {!isRoot && <Navbar />}
-            <Outlet />
+            <main className="flex-grow">
+                <Outlet />
+            </main>
         </div>
     )
 }
+
+export default ClerkApp(App)

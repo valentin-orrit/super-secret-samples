@@ -7,7 +7,7 @@ export default function Navbar() {
     return (
         <div
             id="navbar"
-            className="flex py-1 px-4 min-h-16 items-center justify-between text-sssoffwhite bg-sssdarkblue w-screen"
+            className="flex py-1 px-4 min-h-16 items-center justify-between text-sssoffwhite bg-sssdarkblue w-full sticky top-0 z-10"
         >
             <Link to={'/'}>
                 <img
@@ -32,14 +32,14 @@ export default function Navbar() {
                     }
                 >
                     {({ isActive }) => (
-                        <div className="flex flex-col items-center">
+                        <div className="relative flex flex-col items-center">
                             <span
                                 id="samples"
                                 className="hover:text-sssyellow mx-1 sm:mx-4"
                             >
                                 samples
                             </span>
-                            <span className="w-14 absolute top-11">
+                            <span className="w-14 absolute top-6">
                                 {isActive && (
                                     <Shape instrument="nav_selector" />
                                 )}
@@ -54,14 +54,14 @@ export default function Navbar() {
                     }
                 >
                     {({ isActive }) => (
-                        <div className="flex flex-col items-center">
+                        <div className="relative flex flex-col items-center">
                             <span
                                 id="library"
                                 className="hover:text-sssyellow  mx-1 sm:mx-4"
                             >
                                 library
                             </span>
-                            <span className="w-14 absolute top-11">
+                            <span className="w-14 absolute top-6">
                                 {isActive && (
                                     <Shape instrument="nav_selector" />
                                 )}
