@@ -1,5 +1,5 @@
 import type { MetaFunction } from '@remix-run/node'
-import { Link, useSearchParams } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { useToast } from '../hooks/use-toast'
 import { useUser } from '@clerk/remix'
 import { useEffect } from 'react'
@@ -13,31 +13,38 @@ export const meta: MetaFunction = () => {
 }
 
 export default function SamplesPage() {
-    const [searchParams] = useSearchParams()
     const { toast } = useToast()
     const { user } = useUser()
 
+    // Toast when user just signed in
     useEffect(() => {
-        if (user) {
-            toast({
-                title: `Welcome back ${user.emailAddresses}!`,
-                description:
-                    'If you want exclusive samples, please send us a request.',
-                duration: 5000,
-                className: 'bg-white text-sssdarkblue text-sm rounded-xl',
-                action: (
-                    <ToastAction altText="request samples" asChild>
-                        <Link
-                            className="py-2 px-4 bg-sssyellow hover:bg-yellow-400 rounded-full"
-                            to="/sample-request"
-                        >
-                            request
-                        </Link>
-                    </ToastAction>
-                ),
-            })
+        if (user && user.lastSignInAt) {
+            const lastSignIn = Math.floor(
+                new Date(user.lastSignInAt).getTime() / 1000
+            )
+            const currentTime = Math.floor(Date.now() / 1000)
+
+            if (currentTime - lastSignIn <= 5) {
+                toast({
+                    title: `Welcome back ${user.emailAddresses[0]}!`,
+                    description:
+                        'If you want exclusive samples, please send us a request.',
+                    duration: 5000,
+                    className: 'bg-white text-sssdarkblue text-sm rounded-xl',
+                    action: (
+                        <ToastAction altText="request samples" asChild>
+                            <Link
+                                className="py-2 px-4 bg-sssyellow hover:bg-yellow-400 rounded-full"
+                                to="/sample-request"
+                            >
+                                request
+                            </Link>
+                        </ToastAction>
+                    ),
+                })
+            }
         }
-    }, [searchParams, toast, user])
+    }, [user, toast])
 
     return (
         <div>
