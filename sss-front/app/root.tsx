@@ -10,6 +10,7 @@ import type { LoaderFunction } from '@remix-run/node'
 import { ClerkApp } from '@clerk/remix'
 import { rootAuthLoader } from '@clerk/remix/ssr.server'
 import './tailwind.css'
+import { Toaster } from './components/ui/toaster'
 import Navbar from './components/Navbar'
 
 export const loader: LoaderFunction = (args) => rootAuthLoader(args)
@@ -30,6 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 {children}
                 <ScrollRestoration />
                 <Scripts />
+                <Toaster />
             </body>
         </html>
     )
