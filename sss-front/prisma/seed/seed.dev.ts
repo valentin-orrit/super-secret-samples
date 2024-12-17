@@ -1,48 +1,48 @@
 import prisma from '../client'
+import { Role } from '@prisma/client'
 
 async function seed() {
-    try {
-        if (process.env.NODE_ENV === 'production') {
-            throw new Error('Development seed should not be run in production!')
-        }
+    const testUsers = [
+        {
+            clerkUserId: 'user_2qL6gvXVKTdRm4WRJS2072HvV8a',
+            role: Role.ADMIN,
+        },
+        {
+            clerkUserId: 'user_2qL6jpnSklaTasImaZ4ZKCsywz4',
+            role: Role.USER,
+        },
+        {
+            clerkUserId: 'user_2qL6mvwl9F2Ea9CBxVl6r1msfou',
+            role: Role.GUEST,
+        },
+        {
+            clerkUserId: 'user_2qL6qUhK03xqxRmmeJFL6vyb8s6',
+            role: Role.SAMPLEPRODUCER,
+        },
+    ]
 
-        // seed users
-        await prisma.user.createMany({
-            data: [
-                {
-                    email: 'admin@admin.com',
-                    password: 'admin123',
-                    name: 'admin',
-                    role: 'ADMIN',
-                },
-                {
-                    email: 'user@user.com',
-                    password: 'user123',
-                    name: 'user',
-                    role: 'USER',
-                },
-                {
-                    email: 'guest@guest.com',
-                    password: 'guest123',
-                    name: 'guest',
-                    role: 'GUEST',
-                },
-                {
-                    email: 'prod@prod.com',
-                    password: 'prod123',
-                    name: 'prod',
-                    role: 'SAMPLEPRODUCER',
-                },
-            ],
+    console.log('🌱 Starting to seed test users...')
+
+    for (const userData of testUsers) {
+        const user = await prisma.user.upsert({
+            where: { clerkUserId: userData.clerkUserId },
+            update: {},
+            create: {
+                clerkUserId: userData.clerkUserId,
+                role: userData.role,
+            },
         })
-
-        console.log('DEV: users seeded')
-    } catch (error) {
-        console.error('Error during TEST database seeding:', error)
-        process.exit(1)
-    } finally {
-        await prisma.$disconnect()
+        console.log(`Created user with role ${userData.role}:`, user)
     }
+
+    console.log('✅ Seeding complete!')
 }
 
 seed()
+    .catch((error) => {
+        console.error('Error during database seeding:', error)
+        process.exit(1)
+    })
+    .finally(async () => {
+        await prisma.$disconnect()
+    })

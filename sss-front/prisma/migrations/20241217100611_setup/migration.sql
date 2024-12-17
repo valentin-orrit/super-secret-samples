@@ -4,9 +4,7 @@ CREATE TYPE "Role" AS ENUM ('USER', 'GUEST', 'ADMIN', 'SAMPLEPRODUCER');
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "name" TEXT,
+    "clerkUserId" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -93,7 +91,7 @@ CREATE TABLE "_InstrumentToSample" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_clerkUserId_key" ON "User"("clerkUserId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Sample_name_key" ON "Sample"("name");
