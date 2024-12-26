@@ -8,7 +8,7 @@ export default function Shape({ instrument, width = 200 }: ShapeProps) {
         <div className="shape mx-2">
             <img
                 src={`/shapes/shape_${instrument}.svg`}
-                alt={`${instrument} shape`}
+                alt={`${instrument} shape logo`}
                 width={width}
             />
         </div>
