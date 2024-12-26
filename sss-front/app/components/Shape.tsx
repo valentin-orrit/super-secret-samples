@@ -1,9 +1,12 @@
 interface ShapeProps {
-    instrument: string
-    width?: string | number
+    instrument?: string
+    width?: number
 }
 
-export default function Shape({ instrument, width = 200 }: ShapeProps) {
+export default function Shape({
+    instrument = 'bass',
+    width = 200,
+}: ShapeProps) {
     return (
         <div className="shape mx-2">
             <img
