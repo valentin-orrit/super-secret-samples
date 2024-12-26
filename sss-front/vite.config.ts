@@ -21,7 +21,6 @@ export default defineConfig({
         }),
         tsconfigPaths(),
     ],
-    cacheDir: '/tmp/vitest',
     server: {
         host: '0.0.0.0',
         port: 5174,
