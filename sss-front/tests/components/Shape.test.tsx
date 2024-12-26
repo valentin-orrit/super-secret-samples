@@ -11,6 +11,7 @@ describe('Shape', () => {
     it('should render the Shape with the name and width provided as props', () => {
         render(<Shape instrument="drums" width={300} />)
         const img = screen.getByRole('img')
+
         expect(img).toBeInTheDocument()
         expect(img).toHaveProperty(
             'src',
