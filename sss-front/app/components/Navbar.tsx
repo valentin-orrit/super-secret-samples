@@ -28,7 +28,7 @@ export default function Navbar() {
                 <NavLink
                     to="/samples"
                     className={({ isActive }) =>
-                        isActive ? 'text-sssorange' : 'hover:text-sssorange'
+                        isActive ? 'text-sssorange' : 'hover:text-sssyellow'
                     }
                 >
                     {({ isActive }) => (
@@ -50,7 +50,7 @@ export default function Navbar() {
                 <NavLink
                     to="/library"
                     className={({ isActive }) =>
-                        isActive ? 'text-sssorange' : 'hover:text-sssorange'
+                        isActive ? 'text-sssorange' : 'hover:text-sssyellow'
                     }
                 >
                     {({ isActive }) => (
