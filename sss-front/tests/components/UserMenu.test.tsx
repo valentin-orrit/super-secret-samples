@@ -1,8 +1,8 @@
+import { BrowserRouter } from 'react-router-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import UserMenu from '../../app/components/UserMenu'
-import { BrowserRouter } from 'react-router-dom'
 import { useUser, useClerk } from '@clerk/remix'
+import UserMenu from '../../app/components/UserMenu'
 
 vi.mock('@clerk/remix', () => ({
     useUser: vi.fn(),
@@ -31,14 +31,14 @@ describe('UserMenu', () => {
             mockUserState(true, mockSignOut)
         })
 
-        it('renders user menu button with dropdown', () => {
+        it('should render user menu button with dropdown', () => {
             renderWithRouter(<UserMenu />)
             const button = screen.getByRole('button')
             expect(button).toBeInTheDocument()
             expect(button).toHaveAttribute('aria-expanded', 'false')
         })
 
-        it('shows menu items when clicked', async () => {
+        it('should show menu items when clicked', async () => {
             const user = userEvent.setup()
             renderWithRouter(<UserMenu />)
             const button = screen.getByRole('button')
@@ -50,7 +50,7 @@ describe('UserMenu', () => {
             expect(screen.getByText('Sign Out')).toBeInTheDocument()
         })
 
-        it('has correct navigation links', async () => {
+        it('should have correct navigation links', async () => {
             const user = userEvent.setup()
             renderWithRouter(<UserMenu />)
             const button = screen.getByRole('button')
@@ -63,7 +63,7 @@ describe('UserMenu', () => {
             expect(requestLink).toHaveAttribute('href', '/sample-request')
         })
 
-        it('calls signOut when sign out button is clicked', async () => {
+        it('should call signOut when sign out button is clicked', async () => {
             const user = userEvent.setup()
             renderWithRouter(<UserMenu />)
             const button = screen.getByRole('button')
@@ -81,7 +81,7 @@ describe('UserMenu', () => {
             mockUserState(false)
         })
 
-        it('renders sign in link instead of menu', () => {
+        it('should render sign in link instead of menu', () => {
             renderWithRouter(<UserMenu />)
 
             const signInLink = screen.getByText('sign in')
@@ -91,7 +91,7 @@ describe('UserMenu', () => {
             expect(menuButton).not.toBeInTheDocument()
         })
 
-        it('has correct link to sign in page', () => {
+        it('should have correct link to sign in page', () => {
             renderWithRouter(<UserMenu />)
 
             const signInLink = screen.getByRole('link')
@@ -100,7 +100,7 @@ describe('UserMenu', () => {
     })
 
     describe('error handling', () => {
-        it('handles sign out failure gracefully', async () => {
+        it('should handle sign out failure gracefully', async () => {
             const user = userEvent.setup()
             mockUserState(true, mockSignOut)
             mockSignOut.mockRejectedValueOnce(new Error('Sign out failed'))

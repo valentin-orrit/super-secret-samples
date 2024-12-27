@@ -10,7 +10,6 @@ describe('Shape', () => {
         render(<Shape instrument="drums" width={300} />)
         const img = screen.getByRole('img')
 
-        expect(img).toBeInTheDocument()
         expect(img).toHaveProperty(
             'src',
             expect.stringContaining('shape_drums.svg')
