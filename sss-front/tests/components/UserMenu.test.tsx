@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
 import UserMenu from '../../app/components/UserMenu'
 import { BrowserRouter } from 'react-router-dom'
 import { useUser, useClerk } from '@clerk/remix'
@@ -15,24 +14,13 @@ const renderWithRouter = (ui: React.ReactElement) => {
     return render(ui, { wrapper: BrowserRouter })
 }
 
+const mockUserState = (isSignedIn: boolean, signOut = vi.fn()) => {
+    vi.mocked(useUser).mockReturnValue({ isSignedIn } as never)
+    vi.mocked(useClerk).mockReturnValue({ signOut } as never)
+}
+
 describe('UserMenu', () => {
     const mockSignOut = vi.fn()
-
-    const setupSignedIn = () => {
-        vi.mocked(useUser).mockReturnValue({
-            isSignedIn: true,
-        } as never)
-
-        vi.mocked(useClerk).mockReturnValue({
-            signOut: mockSignOut,
-        } as never)
-    }
-
-    const setupSignedOut = () => {
-        vi.mocked(useUser).mockReturnValue({
-            isSignedIn: false,
-        } as never)
-    }
 
     beforeEach(() => {
         vi.clearAllMocks()
@@ -40,7 +28,7 @@ describe('UserMenu', () => {
 
     describe('when user is signed in', () => {
         beforeEach(() => {
-            setupSignedIn()
+            mockUserState(true, mockSignOut)
         })
 
         it('renders user menu button with dropdown', () => {
@@ -90,7 +78,7 @@ describe('UserMenu', () => {
 
     describe('when user is signed out', () => {
         beforeEach(() => {
-            setupSignedOut()
+            mockUserState(false)
         })
 
         it('renders sign in link instead of menu', () => {
@@ -114,7 +102,7 @@ describe('UserMenu', () => {
     describe('error handling', () => {
         it('handles sign out failure gracefully', async () => {
             const user = userEvent.setup()
-            setupSignedIn()
+            mockUserState(true, mockSignOut)
             mockSignOut.mockRejectedValueOnce(new Error('Sign out failed'))
 
             renderWithRouter(<UserMenu />)
