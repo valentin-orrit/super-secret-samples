@@ -1,7 +1,5 @@
-import { it, expect, describe, beforeEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import Shape from '../../app/components/Shape'
-import '@testing-library/jest-dom/vitest'
 
 describe('Shape', () => {
     beforeEach(() => {
