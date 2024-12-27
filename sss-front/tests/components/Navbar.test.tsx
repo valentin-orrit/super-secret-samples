@@ -1,6 +1,5 @@
 import { MemoryRouter } from 'react-router-dom'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { useUser, useClerk } from '@clerk/remix'
 import Navbar from '../../app/components/Navbar'
 
@@ -65,6 +64,19 @@ describe('Navbar', () => {
 
             expect(samplesLink).not.toHaveClass('text-sssorange')
             expect(libraryLink).toHaveClass('text-sssorange')
+        })
+    })
+
+    describe('when user is signed out', () => {
+        beforeEach(() => {
+            mockUserState(false, mockSignOut)
+        })
+
+        it('should render sign in link', () => {
+            renderWithRouter(<Navbar />, '/samples')
+            const signInLink = screen.getByRole('link', { name: /sign/i })
+
+            expect(signInLink).toHaveTextContent('sign in')
         })
     })
 })
