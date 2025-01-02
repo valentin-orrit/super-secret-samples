@@ -17,6 +17,7 @@ CREATE TABLE "Sample" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "s3ReferenceName" TEXT NOT NULL,
+    "s3CompressedReferenceName" TEXT,
     "bpm" INTEGER,
     "key" TEXT,
     "loop" BOOLEAN NOT NULL,
@@ -98,6 +99,9 @@ CREATE UNIQUE INDEX "Sample_name_key" ON "Sample"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Sample_s3ReferenceName_key" ON "Sample"("s3ReferenceName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Sample_s3CompressedReferenceName_key" ON "Sample"("s3CompressedReferenceName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Genre_name_key" ON "Genre"("name");

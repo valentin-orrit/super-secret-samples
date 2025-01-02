@@ -10,6 +10,8 @@ RUN npm install
 
 COPY . .
 
+RUN npx prisma generate
+
 EXPOSE 5174
 
 CMD [ "npm", "run", "dev" ]

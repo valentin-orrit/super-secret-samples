@@ -5,6 +5,13 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from './ui/carousel'
+import prisma from '../../prisma/client'
+
+export async function loader() {
+    const instruments = await prisma.instrument.findMany()
+    console.log(instruments)
+    return { instruments }
+}
 
 interface Samples {
     samples: File[]

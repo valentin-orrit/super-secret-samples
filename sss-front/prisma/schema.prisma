@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -24,17 +25,18 @@ model User {
 }
 
 model Sample {
-  id              Int          @id @default(autoincrement())
-  name            String       @unique
-  s3ReferenceName String       @unique
-  bpm             Int?
-  key             String?
-  genres          Genre[]
-  instruments     Instrument[]
-  tags            Tag[]
-  loop            Boolean
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id                        Int          @id @default(autoincrement())
+  name                      String       @unique
+  s3ReferenceName           String       @unique
+  s3CompressedReferenceName String?      @unique
+  bpm                       Int?
+  key                       String?
+  genres                    Genre[]
+  instruments               Instrument[]
+  tags                      Tag[]
+  loop                      Boolean
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @updatedAt
 }
 
 model Like {
