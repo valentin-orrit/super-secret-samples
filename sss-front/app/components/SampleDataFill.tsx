@@ -18,8 +18,8 @@ export default function SampleDataFill({
     instruments,
     genres,
 }: Samples) {
-    console.log('Instruments in SampleDataFill:', instruments)
-    console.log('Genres in SampleDataFill:', genres)
+    // console.log('Instruments in SampleDataFill:', instruments)
+    // console.log('Genres in SampleDataFill:', genres)
 
     if (!samples || samples.length === 0) {
         return (
@@ -42,6 +42,7 @@ export default function SampleDataFill({
                                 <div className="text-sssblue text-xl mb-4">
                                     sample #{index + 1}/{samples.length}
                                 </div>
+
                                 <div
                                     id="sample-name-input"
                                     className="flex flex-col"
@@ -55,9 +56,60 @@ export default function SampleDataFill({
                                     <input
                                         type="text"
                                         id={sample.name}
-                                        defaultValue={sample.name}
+                                        defaultValue={sample.name.substring(
+                                            0,
+                                            sample.name.length - 4
+                                        )}
                                         className="border rounded-xl p-2 font-light"
                                     />
+                                </div>
+
+                                <div id="instruments" className="my-4">
+                                    <p className="text-sm text-sssaccentgray font-medium p-1">
+                                        Select instruments:
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {instruments.map((instrument) => (
+                                            <label
+                                                key={instrument.id}
+                                                className="flex items-center space-x-2"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    name={`sample-${index}-instrument`}
+                                                    value={instrument.id}
+                                                    className="rounded"
+                                                />
+                                                <span className="text-sm">
+                                                    {instrument.name}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div id="genres" className="my-4">
+                                    <p className="text-sm text-sssaccentgray font-medium p-1">
+                                        Select genres:
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {genres.map((genre) => (
+                                            <label
+                                                key={genre.id}
+                                                className="flex items-center space-x-2"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    name={`sample-${index}-genre`}
+                                                    value={genre.id}
+                                                    className="rounded"
+                                                />
+                                                <span className="text-sm">
+                                                    {genre.name}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </CarouselItem>
