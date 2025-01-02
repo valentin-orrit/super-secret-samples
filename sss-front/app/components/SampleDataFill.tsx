@@ -11,8 +11,6 @@ interface Samples {
 }
 
 export default function SampleDataFill({ samples }: Samples) {
-    //console.log(samples)
-
     if (!samples || samples.length === 0) {
         return (
             <div className="flex justify-center items-center h-64">

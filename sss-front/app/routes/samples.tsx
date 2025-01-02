@@ -24,7 +24,7 @@ export default function SamplesPage() {
             )
             const currentTime = Math.floor(Date.now() / 1000)
 
-            if (currentTime - lastSignIn <= 5) {
+            if (currentTime - lastSignIn <= 20) {
                 toast({
                     title: `Welcome back ${user.emailAddresses[0]}!`,
                     description:

@@ -1,18 +1,13 @@
-import { BrowserRouter } from 'react-router-dom'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useUser, useClerk } from '@clerk/remix'
 import UserMenu from '../../app/components/UserMenu'
+import { renderWithRouter } from '../lib/RenderWithRouter'
 
 vi.mock('@clerk/remix', () => ({
     useUser: vi.fn(),
     useClerk: vi.fn(),
 }))
-
-// Create a wrapper component with BrowserRouter for Link components
-const renderWithRouter = (ui: React.ReactElement) => {
-    return render(ui, { wrapper: BrowserRouter })
-}
 
 const mockUserState = (isSignedIn: boolean, signOut = vi.fn()) => {
     vi.mocked(useUser).mockReturnValue({ isSignedIn } as never)

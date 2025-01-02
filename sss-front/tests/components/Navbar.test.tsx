@@ -1,21 +1,12 @@
-import { MemoryRouter } from 'react-router-dom'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { useUser, useClerk } from '@clerk/remix'
 import Navbar from '../../app/components/Navbar'
+import { renderWithMemoryRouter } from '../lib/RenderWithRouter'
 
 vi.mock('@clerk/remix', () => ({
     useUser: vi.fn(),
     useClerk: vi.fn(),
 }))
-
-// Create a wrapper component with MemoryRouter for NavLink components
-const renderWithRouter = (ui: React.ReactElement, route: string) => {
-    return render(ui, {
-        wrapper: ({ children }) => (
-            <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-        ),
-    })
-}
 
 const mockUserState = (isSignedIn: boolean, signOut = vi.fn()) => {
     vi.mocked(useUser).mockReturnValue({ isSignedIn } as never)
@@ -35,7 +26,7 @@ describe('Navbar', () => {
         })
 
         it('should render Navbar with all its elements', () => {
-            renderWithRouter(<Navbar />, '/samples')
+            renderWithMemoryRouter(<Navbar />, '/samples')
             const samplesLink = screen.getByRole('link', { name: /samples/i })
             const libraryLink = screen.getByRole('link', { name: /library/i })
             const userMenu = screen.getAllByRole('button')[0]
@@ -49,7 +40,7 @@ describe('Navbar', () => {
         })
 
         it('should have active state for samples link', () => {
-            renderWithRouter(<Navbar />, '/samples')
+            renderWithMemoryRouter(<Navbar />, '/samples')
             const samplesLink = screen.getByRole('link', { name: /samples/i })
             const libraryLink = screen.getByRole('link', { name: /library/i })
 
@@ -58,7 +49,7 @@ describe('Navbar', () => {
         })
 
         it('should have active state for library link', () => {
-            renderWithRouter(<Navbar />, '/library')
+            renderWithMemoryRouter(<Navbar />, '/library')
             const samplesLink = screen.getByRole('link', { name: /samples/i })
             const libraryLink = screen.getByRole('link', { name: /library/i })
 
@@ -73,7 +64,7 @@ describe('Navbar', () => {
         })
 
         it('should render sign in link', () => {
-            renderWithRouter(<Navbar />, '/samples')
+            renderWithMemoryRouter(<Navbar />, '/samples')
             const signInLink = screen.getByRole('link', { name: /sign/i })
 
             expect(signInLink).toHaveTextContent('sign in')

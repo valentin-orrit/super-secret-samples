@@ -85,8 +85,9 @@ export default function SampleDropZone() {
             <div
                 {...getRootProps({ className: 'dropzone' })}
                 className="flex flex-col items-center border-dashed border-4 border-sssmutegray rounded-xl cursor-pointer p-16 my-4"
+                aria-label="dropzone"
             >
-                <input {...getInputProps()} />
+                <input {...getInputProps()} alt="samples-input" />
                 <div className="p-8">
                     <CirclePlus size={60} strokeWidth={1} />
                 </div>
