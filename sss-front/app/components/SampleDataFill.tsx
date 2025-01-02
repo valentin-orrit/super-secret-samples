@@ -118,13 +118,13 @@ export default function SampleDataFill({
     return (
         <section
             id="sample-data-fill"
-            className="flex flex-col w-11/12 md:w-3/4 bg-white p-14 mx-4 rounded-2xl shadow-lg"
+            className="flex flex-col w-11/12 md:w-3/4"
         >
             <Carousel>
                 <CarouselContent>
                     {samples?.map((sample, index) => (
                         <CarouselItem key={sample.name}>
-                            <div className="my-4 mx-8">
+                            <div className="my-2 bg-white p-14 mx-4 rounded-2xl shadow-lg">
                                 {/* Sample Header */}
                                 <div className="text-sssblue text-xl mb-4">
                                     sample #{index + 1}/{samples.length}
@@ -291,59 +291,9 @@ export default function SampleDataFill({
                             </div>
                         </CarouselItem>
                     ))}
-
-                    {/* Recap Page */}
-                    <CarouselItem>
-                        <div className="text-sssblue text-xl mb-4">
-                            samples ready to upload :
-                        </div>
-                        <div className="my-4 mx-8 flex flex-col gap-8 flex-wrap">
-                            {samples?.map((_, index) => (
-                                <div key={index} className="my-4">
-                                    <h3 className="text-md font-semibold">
-                                        {sampleNames[index]}
-                                    </h3>
-                                    <div className="my-2">
-                                        <p className="text-xs">
-                                            <span className="text-sssaccentgray">
-                                                instruments:{' '}
-                                            </span>
-                                            {selectedInstruments[index]
-                                                .map(
-                                                    (instrumentId) =>
-                                                        instruments.find(
-                                                            (instrument) =>
-                                                                instrument.id ===
-                                                                instrumentId
-                                                        )?.name
-                                                )
-                                                .join(', ') || 'None'}
-                                        </p>
-                                        <p className="text-xs">
-                                            <span className="text-sssaccentgray">
-                                                genres:{' '}
-                                            </span>
-                                            {selectedGenres[index]
-                                                ?.map(
-                                                    (genreId) =>
-                                                        genres.find(
-                                                            (genre) =>
-                                                                genre.id ===
-                                                                genreId
-                                                        )?.name
-                                                )
-                                                .join(', ') || 'None'}
-                                        </p>
-                                        <p className="text-xs">
-                                            <span className="text-sssaccentgray">
-                                                tags:{' '}
-                                            </span>
-                                            {sampleTags[index]?.join(', ') ||
-                                                'None'}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
+                    <CarouselItem className="flex flex-col justify-center items-center">
+                        <div className="bg-white p-14 mx-4 rounded-2xl shadow-lg">
+                            <button>upload samples</button>
                         </div>
                     </CarouselItem>
                 </CarouselContent>
