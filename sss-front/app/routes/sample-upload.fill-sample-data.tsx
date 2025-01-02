@@ -22,22 +22,23 @@ export const meta: MetaFunction = () => {
 export async function loader() {
     const instruments = await prisma.instrument.findMany()
     const genres = await prisma.genre.findMany()
-    return { instruments, genres }
+    const tags = await prisma.tag.findMany()
+    return { instruments, genres, tags }
 }
 
 export default function FillSampleData() {
-    const { instruments, genres } = useLoaderData<typeof loader>()
+    const { instruments, genres, tags } = useLoaderData<typeof loader>()
     const location = useLocation()
     const state = location.state as LocationState
     const samples = state?.samples
 
-    // console.log(instruments)
     return (
         <div className="flex flex-col items-center justify-center min-w-screen min-h-screen">
             <SampleDataFill
                 samples={samples}
                 instruments={instruments}
                 genres={genres}
+                tags={tags}
             />
         </div>
     )
