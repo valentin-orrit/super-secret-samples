@@ -5,19 +5,22 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from './ui/carousel'
-import prisma from '../../prisma/client'
-
-export async function loader() {
-    const instruments = await prisma.instrument.findMany()
-    console.log(instruments)
-    return { instruments }
-}
+import type { Instrument, Genre } from '../../prisma/client'
 
 interface Samples {
     samples: File[]
+    instruments: Instrument[]
+    genres: Genre[]
 }
 
-export default function SampleDataFill({ samples }: Samples) {
+export default function SampleDataFill({
+    samples,
+    instruments,
+    genres,
+}: Samples) {
+    console.log('Instruments in SampleDataFill:', instruments)
+    console.log('Genres in SampleDataFill:', genres)
+
     if (!samples || samples.length === 0) {
         return (
             <div className="flex justify-center items-center h-64">
