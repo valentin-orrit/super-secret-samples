@@ -47,12 +47,10 @@ const sample1Metadata = {
     tags: ['yo', 'no'],
 }
 
-processAndUploadSample({
-    sampleFilePath: sample1FilePath,
-    sampleMetadata: sample1Metadata,
-})
-
-console.log(awsRegion)
+// processAndUploadSample({
+//     sampleFilePath: sample1FilePath,
+//     sampleMetadata: sample1Metadata,
+// })
 
 export default async function processAndUploadSample({
     sampleFilePath,
@@ -141,7 +139,7 @@ async function uploadToS3(filePath: string, s3Key: string): Promise<void> {
     const fileStream = fs.createReadStream(filePath)
     const uploadParams = {
         Bucket: awsBucket,
-        Key: awsAccessKeyId,
+        Key: s3Key,
         Body: fileStream,
     }
 
