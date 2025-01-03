@@ -22,31 +22,65 @@ export default function SampleDataFill({
     genres,
     tags,
 }: Samples) {
-    const [sampleTags, setSampleTags] = useState<Record<number, string[]>>({})
-    const [tagInput, setTagInput] = useState<Record<number, string>>({})
-    const [sampleNames, setSampleNames] = useState(
-        samples.map((sample) => sample.name.slice(0, -4))
+    const [sampleData, setSampleData] = useState(
+        samples.map((sample) => ({
+            name: sample.name.slice(0, -4),
+            instruments: [] as number[],
+            genres: [] as number[],
+            tags: [] as string[],
+            tagInput: '',
+        }))
     )
-    const [selectedInstruments, setSelectedInstruments] = useState<
-        Record<number, number[]>
-    >(samples.map(() => []))
-    const [selectedGenres, setSelectedGenres] = useState<
-        Record<number, number[]>
-    >(samples.map(() => []))
 
     const handleNameChange = (index: number, newName: string) => {
-        setSampleNames((prev) => {
-            const updatedNames = [...prev]
-            updatedNames[index] = newName
-            return updatedNames
-        })
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === index ? { ...data, name: newName } : data
+            )
+        )
+    }
+
+    const handleInstrumentChange = (
+        sampleIndex: number,
+        instrumentId: number
+    ) => {
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex
+                    ? {
+                          ...data,
+                          instruments: data.instruments.includes(instrumentId)
+                              ? data.instruments.filter(
+                                    (id) => id !== instrumentId
+                                )
+                              : [...data.instruments, instrumentId],
+                      }
+                    : data
+            )
+        )
+    }
+
+    const handleGenreChange = (sampleIndex: number, genreId: number) => {
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex
+                    ? {
+                          ...data,
+                          genres: data.genres.includes(genreId)
+                              ? data.genres.filter((id) => id !== genreId)
+                              : [...data.genres, genreId],
+                      }
+                    : data
+            )
+        )
     }
 
     const handleTagInputChange = (sampleIndex: number, value: string) => {
-        setTagInput((prev) => ({
-            ...prev,
-            [sampleIndex]: value,
-        }))
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex ? { ...data, tagInput: value } : data
+            )
+        )
     }
 
     const handleTagKeyDown = (
@@ -55,65 +89,41 @@ export default function SampleDataFill({
     ) => {
         if (event.key === 'Enter' || event.key === ',') {
             event.preventDefault()
-            const newTag = tagInput[sampleIndex]?.trim()
-            if (newTag) {
-                setSampleTags((prev) => ({
-                    ...prev,
-                    [sampleIndex]: [
-                        ...(prev[sampleIndex] || []),
-                        newTag,
-                    ].filter((tag, i, self) => self.indexOf(tag) === i),
-                }))
-                setTagInput((prev) => ({
-                    ...prev,
-                    [sampleIndex]: '',
-                }))
+            const tagsToAdd = sampleData[sampleIndex].tagInput
+                .split(',')
+                .map((tag) => tag.trim())
+                .filter((tag) => tag)
+
+            if (tagsToAdd.length > 0) {
+                setSampleData((prev) =>
+                    prev.map((data, i) =>
+                        i === sampleIndex
+                            ? {
+                                  ...data,
+                                  tags: [...data.tags, ...tagsToAdd].filter(
+                                      (tag, idx, self) =>
+                                          self.indexOf(tag) === idx // Remove duplicates
+                                  ),
+                                  tagInput: '', // Clear the input
+                              }
+                            : data
+                    )
+                )
             }
         }
     }
 
-    const handleRemoveTag = (sampleIndex: number, tag: string) => {
-        setSampleTags((prev) => ({
-            ...prev,
-            [sampleIndex]: prev[sampleIndex]?.filter((t) => t !== tag) || [],
-        }))
-    }
-
-    const handleInstrumentChange = (
-        sampleIndex: number,
-        instrumentId: number
-    ) => {
-        setSelectedInstruments((prev) => {
-            const selected = prev[sampleIndex] || []
-            if (selected.includes(instrumentId)) {
-                return {
-                    ...prev,
-                    [sampleIndex]: selected.filter((id) => id !== instrumentId),
-                }
-            } else {
-                return {
-                    ...prev,
-                    [sampleIndex]: [...selected, instrumentId],
-                }
-            }
-        })
-    }
-
-    const handleGenreChange = (sampleIndex: number, genreId: number) => {
-        setSelectedGenres((prev) => {
-            const selected = prev[sampleIndex] || []
-            if (selected.includes(genreId)) {
-                return {
-                    ...prev,
-                    [sampleIndex]: selected.filter((id) => id !== genreId),
-                }
-            } else {
-                return {
-                    ...prev,
-                    [sampleIndex]: [...selected, genreId],
-                }
-            }
-        })
+    const handleRemoveTag = (sampleIndex: number, tagToRemove: string) => {
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex
+                    ? {
+                          ...data,
+                          tags: data.tags.filter((tag) => tag !== tagToRemove),
+                      }
+                    : data
+            )
+        )
     }
 
     return (
@@ -145,7 +155,7 @@ export default function SampleDataFill({
                                     <input
                                         type="text"
                                         id={sample.name}
-                                        value={sampleNames[index]}
+                                        value={sampleData[index].name}
                                         onChange={(e) =>
                                             handleNameChange(
                                                 index,
@@ -219,10 +229,10 @@ export default function SampleDataFill({
                                 {/* Tags Input */}
                                 <div id="tags" className="my-4">
                                     <p className="text-sm text-sssaccentgray font-medium p-1">
-                                        add tags:
+                                        Add tags:
                                     </p>
                                     <div className="flex flex-wrap gap-2 mb-2">
-                                        {sampleTags[index]?.map((tag) => (
+                                        {sampleData[index].tags.map((tag) => (
                                             <span
                                                 key={tag}
                                                 className="flex items-center bg-sssdarkblue text-sssoffwhite text-sm px-2 py-0 rounded-full"
@@ -244,7 +254,7 @@ export default function SampleDataFill({
                                     </div>
                                     <input
                                         type="text"
-                                        value={tagInput[index] || ''}
+                                        value={sampleData[index].tagInput}
                                         onChange={(e) =>
                                             handleTagInputChange(
                                                 index,
@@ -257,49 +267,63 @@ export default function SampleDataFill({
                                         placeholder="Add tags, separated by commas"
                                         className="border rounded-xl p-2 font-light w-full"
                                     />
-                                    <div className="mt-2">
-                                        {tags
-                                            ?.filter(
-                                                (tag) =>
-                                                    tag.name
-                                                        .toLowerCase()
-                                                        .includes(
-                                                            tagInput[
-                                                                index
-                                                            ]?.toLowerCase() ||
-                                                                ''
-                                                        ) &&
-                                                    !sampleTags[
-                                                        index
-                                                    ]?.includes(tag.name)
-                                            )
-                                            .map((tag) => (
-                                                <button
-                                                    key={tag.id}
-                                                    onClick={() =>
-                                                        handleTagInputChange(
-                                                            index,
-                                                            tag.name + ','
-                                                        )
-                                                    }
-                                                    className="bg-gray-100 hover:bg-gray-200 text-sm px-2 py-1 rounded-lg m-1"
-                                                >
-                                                    {tag.name}
-                                                </button>
-                                            ))}
-                                    </div>
                                 </div>
                             </div>
                         </CarouselItem>
                     ))}
-                    <CarouselItem className="flex flex-col justify-center items-center bg-white p-14 mx-4 rounded-2xl shadow-lg">
-                        <h3 className="text-sssblue">
+                    <CarouselItem className="flex flex-col justify-center items-center bg-white p-14 m-4 rounded-2xl shadow-lg ">
+                        <h3 className="text-sssorange">
                             samples ready to upload
                         </h3>
-                        <div className="m-4 text-xs font-thin">
-                            {sampleNames?.map((sample) => (
-                                <div className="m-2" key={sample}>
-                                    {sample}
+                        <div className="flex flex-wrap m-4 text-xs">
+                            {sampleData?.map((sample, index) => (
+                                <div className="m-4 p-2 border-b" key={index}>
+                                    {/* Sample Name */}
+                                    <div className="font-medium text-sm text-sssblue">
+                                        {sample.name}
+                                    </div>
+
+                                    {/* Instruments */}
+                                    {sample.instruments.length > 0 && (
+                                        <div className="mt-2">
+                                            <strong>Instruments:</strong>{' '}
+                                            {sample.instruments
+                                                .map(
+                                                    (instrumentId) =>
+                                                        instruments.find(
+                                                            (inst) =>
+                                                                inst.id ===
+                                                                instrumentId
+                                                        )?.name
+                                                )
+                                                .join(', ')}
+                                        </div>
+                                    )}
+
+                                    {/* Genres */}
+                                    {sample.genres.length > 0 && (
+                                        <div className="mt-2">
+                                            <strong>Genres:</strong>{' '}
+                                            {sample.genres
+                                                .map(
+                                                    (genreId) =>
+                                                        genres.find(
+                                                            (genre) =>
+                                                                genre.id ===
+                                                                genreId
+                                                        )?.name
+                                                )
+                                                .join(', ')}
+                                        </div>
+                                    )}
+
+                                    {/* Tags */}
+                                    {sample.tags.length > 0 && (
+                                        <div className="mt-2">
+                                            <strong>Tags:</strong>{' '}
+                                            {sample.tags.join(', ')}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
