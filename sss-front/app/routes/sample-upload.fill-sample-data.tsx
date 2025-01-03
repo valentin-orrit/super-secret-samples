@@ -30,7 +30,15 @@ export default function FillSampleData() {
     const { instruments, genres, tags } = useLoaderData<typeof loader>()
     const location = useLocation()
     const state = location.state as LocationState
-    const samples = state?.samples
+    const samples = state?.samples || []
+
+    if (!samples || samples.length === 0) {
+        return (
+            <div className=" self-center">
+                No samples found. Please upload your samples first.
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col items-center justify-center min-w-screen min-h-screen">

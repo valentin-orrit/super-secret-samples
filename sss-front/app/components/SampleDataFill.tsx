@@ -7,6 +7,7 @@ import {
 } from './ui/carousel'
 import type { Instrument, Genre, Tag } from '../../prisma/client'
 import { useState } from 'react'
+import { Link } from '@remix-run/react'
 
 interface Samples {
     samples: File[]
@@ -291,10 +292,24 @@ export default function SampleDataFill({
                             </div>
                         </CarouselItem>
                     ))}
-                    <CarouselItem className="flex flex-col justify-center items-center">
-                        <div className="bg-white p-14 mx-4 rounded-2xl shadow-lg">
-                            <button>upload samples</button>
+                    <CarouselItem className="flex flex-col justify-center items-center bg-white p-14 mx-4 rounded-2xl shadow-lg">
+                        <h3 className="text-sssblue">
+                            samples ready to upload
+                        </h3>
+                        <div className="m-4 text-xs font-thin">
+                            {sampleNames?.map((sample) => (
+                                <div className="m-2" key={sample}>
+                                    {sample}
+                                </div>
+                            ))}
                         </div>
+                        <Link
+                            to="/sample-upload/fill-sample-data"
+                            // state={{ samples: storedSamples }}
+                            className="m-6 py-2 px-10 bg-sssyellow hover:bg-yellow-400 rounded-full"
+                        >
+                            upload samples
+                        </Link>
                     </CarouselItem>
                 </CarouselContent>
                 <CarouselPrevious />
