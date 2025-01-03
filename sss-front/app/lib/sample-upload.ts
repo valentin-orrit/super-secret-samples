@@ -58,18 +58,18 @@ export default async function processAndUploadSample({
 }: SampleFile): Promise<void> {
     const fileName = path.basename(sampleFilePath, path.extname(sampleFilePath))
     const originalGzippedPath = `${fileName}.gz`
-    // const compressedMp3Path = `${fileName}_compressed.mp3`
+    const compressedMp3Path = `${fileName}_compressed.mp3`
 
     try {
         await gzipFile(sampleFilePath, originalGzippedPath)
 
-        // await compressWithFFmpeg(sampleFilePath, compressedMp3Path)
+        await compressWithFFmpeg(sampleFilePath, compressedMp3Path)
 
         const s3OriginalKey = `original/${path.basename(originalGzippedPath)}`
-        // const s3CompressedKey = `compressed/${path.basename(compressedMp3Path)}`
+        const s3CompressedKey = `compressed/${path.basename(compressedMp3Path)}`
 
         await uploadToS3(originalGzippedPath, s3OriginalKey)
-        // await uploadToS3(compressedMp3Path, s3CompressedKey)
+        await uploadToS3(compressedMp3Path, s3CompressedKey)
 
         // await prisma.sample.create({
         //     data: {
@@ -105,10 +105,11 @@ export default async function processAndUploadSample({
         console.error(`Error processing sample ${sampleMetadata.name}:`, error)
     } finally {
         fs.unlinkSync(originalGzippedPath)
-        // fs.unlinkSync(compressedMp3Path)
+        fs.unlinkSync(compressedMp3Path)
     }
 }
 
+// compress original WAV file to GZ for storage
 function gzipFile(inputPath: string, outputPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
         const input = fs.createReadStream(inputPath)
@@ -119,6 +120,7 @@ function gzipFile(inputPath: string, outputPath: string): Promise<void> {
     })
 }
 
+// compress original WAV file to 192kbps MP3 for streaming
 function compressWithFFmpeg(
     inputPath: string,
     outputPath: string
