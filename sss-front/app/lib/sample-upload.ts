@@ -3,17 +3,18 @@ import path from 'path'
 import zlib from 'zlib'
 import { exec } from 'child_process'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import prisma from '../../prisma/client'
-import type { Instrument, Genre, Tag } from '../../prisma/client'
+// import prisma from '../../prisma/client'
+// import type { Instrument, Genre, Tag } from '../../prisma/client'
+// import { a } from 'vitest/dist/chunks/suite.B2jumIFP.js'
 
 interface SampleMetadata {
     name: string
     bpm?: number
     key?: string
     loop: boolean
-    genres: Genre[]
-    instruments: Instrument[]
-    tags: Tag[]
+    genres: number[]
+    instruments: number[]
+    tags: string[]
 }
 
 interface SampleFile {
@@ -21,13 +22,37 @@ interface SampleFile {
     sampleMetadata: SampleMetadata
 }
 
+const awsBucket = process.env.AWS_S3_BUCKET_NAME
+const awsRegion = process.env.AWS_REGION
+const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+
 const s3 = new S3Client({
-    region: process.env.AWS_REGION,
+    region: awsRegion,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: awsAccessKeyId!,
+        secretAccessKey: awsSecretAccessKey!,
     },
 })
+
+const sample1FilePath = path.resolve('./tests/assets/audio/KICK1.wav')
+
+const sample1Metadata = {
+    name: 'testsample1',
+    bpm: 123,
+    key: 'a',
+    loop: false,
+    genres: [1, 2, 3],
+    instruments: [1, 2, 3],
+    tags: ['yo', 'no'],
+}
+
+processAndUploadSample({
+    sampleFilePath: sample1FilePath,
+    sampleMetadata: sample1Metadata,
+})
+
+console.log(awsRegion)
 
 export default async function processAndUploadSample({
     sampleFilePath,
@@ -35,49 +60,45 @@ export default async function processAndUploadSample({
 }: SampleFile): Promise<void> {
     const fileName = path.basename(sampleFilePath, path.extname(sampleFilePath))
     const originalGzippedPath = `${fileName}.gz`
-    const compressedMp3Path = `${fileName}_compressed.mp3`
+    // const compressedMp3Path = `${fileName}_compressed.mp3`
 
     try {
-        // Step 1: Gzip the original audio file
         await gzipFile(sampleFilePath, originalGzippedPath)
 
-        // Step 2: Compress the audio file to 192kbps MP3 using FFmpeg
-        await compressWithFFmpeg(sampleFilePath, compressedMp3Path)
+        // await compressWithFFmpeg(sampleFilePath, compressedMp3Path)
 
-        // Step 3: Upload both files to S3
         const s3OriginalKey = `original/${path.basename(originalGzippedPath)}`
-        const s3CompressedKey = `compressed/${path.basename(compressedMp3Path)}`
+        // const s3CompressedKey = `compressed/${path.basename(compressedMp3Path)}`
 
         await uploadToS3(originalGzippedPath, s3OriginalKey)
-        await uploadToS3(compressedMp3Path, s3CompressedKey)
+        // await uploadToS3(compressedMp3Path, s3CompressedKey)
 
-        // Step 4: Store metadata in PostgreSQL via Prisma
-        await prisma.sample.create({
-            data: {
-                name: sampleMetadata.name,
-                s3ReferenceName: s3OriginalKey,
-                s3CompressedReferenceName: s3CompressedKey,
-                bpm: sampleMetadata.bpm,
-                key: sampleMetadata.key,
-                loop: sampleMetadata.loop,
-                genres: {
-                    connect: sampleMetadata.genres.map((genre) => ({
-                        id: genre.id,
-                    })),
-                },
-                instruments: {
-                    connect: sampleMetadata.instruments.map((instrument) => ({
-                        id: instrument.id,
-                    })),
-                },
-                tags: {
-                    connectOrCreate: sampleMetadata.tags.map((tag) => ({
-                        where: { name: tag.name },
-                        create: { name: tag.name },
-                    })),
-                },
-            },
-        })
+        // await prisma.sample.create({
+        //     data: {
+        //         name: sampleMetadata.name,
+        //         s3ReferenceName: s3OriginalKey,
+        //         s3CompressedReferenceName: s3CompressedKey,
+        //         bpm: sampleMetadata.bpm,
+        //         key: sampleMetadata.key,
+        //         loop: sampleMetadata.loop,
+        //         genres: {
+        //             connect: sampleMetadata.genres.map((genre) => ({
+        //                 id: genre.id,
+        //             })),
+        //         },
+        //         instruments: {
+        //             connect: sampleMetadata.instruments.map((instrument) => ({
+        //                 id: instrument.id,
+        //             })),
+        //         },
+        //         tags: {
+        //             connectOrCreate: sampleMetadata.tags.map((tag) => ({
+        //                 where: { name: tag.name },
+        //                 create: { name: tag.name },
+        //             })),
+        //         },
+        //     },
+        // })
 
         console.log(
             `Successfully processed and uploaded sample: ${sampleMetadata.name}`
@@ -85,9 +106,8 @@ export default async function processAndUploadSample({
     } catch (error) {
         console.error(`Error processing sample ${sampleMetadata.name}:`, error)
     } finally {
-        // Clean up temporary files
         fs.unlinkSync(originalGzippedPath)
-        fs.unlinkSync(compressedMp3Path)
+        // fs.unlinkSync(compressedMp3Path)
     }
 }
 
@@ -120,8 +140,8 @@ function compressWithFFmpeg(
 async function uploadToS3(filePath: string, s3Key: string): Promise<void> {
     const fileStream = fs.createReadStream(filePath)
     const uploadParams = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: process.env.AWS_ACCESS_KEY_ID,
+        Bucket: awsBucket,
+        Key: awsAccessKeyId,
         Body: fileStream,
     }
 
@@ -130,7 +150,6 @@ async function uploadToS3(filePath: string, s3Key: string): Promise<void> {
         console.log(
             `Uploaded ${filePath} to s3://${uploadParams.Bucket}/${s3Key}`
         )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         throw new Error(`S3 upload error: ${error.message}`)
     }

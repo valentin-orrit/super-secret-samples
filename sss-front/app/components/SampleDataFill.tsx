@@ -7,7 +7,7 @@ import {
 } from './ui/carousel'
 import type { Instrument, Genre, Tag } from '../../prisma/client'
 import { useState } from 'react'
-import { Link } from '@remix-run/react'
+import { Form, useSubmit, useNavigation } from '@remix-run/react'
 
 interface Samples {
     samples: File[]
@@ -22,6 +22,10 @@ export default function SampleDataFill({
     genres,
     tags,
 }: Samples) {
+    const submit = useSubmit()
+    const navigation = useNavigation()
+    const isUploading = navigation.state === 'submitting'
+
     const [sampleData, setSampleData] = useState(
         samples.map((sample) => ({
             name: sample.name.slice(0, -4),
@@ -126,216 +130,264 @@ export default function SampleDataFill({
         )
     }
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const formData = new FormData()
+
+        samples.forEach((file, index) => {
+            formData.append(`sampleFile`, file)
+        })
+
+        sampleData.forEach((data, index) => {
+            formData.append(
+                `metadata`,
+                JSON.stringify({
+                    name: data.name,
+                    instruments: data.instruments,
+                    genres: data.genres,
+                    tags: data.tags,
+                    loop: false,
+                })
+            )
+        })
+
+        formData.append('totalSamples', samples.length.toString())
+
+        submit(formData, {
+            method: 'post',
+            encType: 'multipart/form-data',
+        })
+    }
+
     return (
         <section
             id="sample-data-fill"
             className="flex flex-col w-11/12 md:w-3/4"
         >
             <Carousel>
-                <CarouselContent>
-                    {samples?.map((sample, index) => (
-                        <CarouselItem key={sample.name}>
-                            <div className="my-2 bg-white p-14 mx-4 rounded-2xl shadow-lg">
-                                {/* Sample Header */}
-                                <div className="text-sssblue text-xl mb-4">
-                                    sample #{index + 1}/{samples.length}
-                                </div>
+                <Form
+                    method="post"
+                    encType="multipart/form-data"
+                    onSubmit={handleSubmit}
+                    className="w-full"
+                >
+                    <CarouselContent>
+                        {samples?.map((sample, index) => (
+                            <CarouselItem key={sample.name}>
+                                <div className="my-2 bg-white p-14 mx-4 rounded-2xl shadow-lg">
+                                    {/* Sample Header */}
+                                    <div className="text-sssblue text-xl mb-4">
+                                        sample #{index + 1}/{samples.length}
+                                    </div>
 
-                                {/* Sample Name Input */}
-                                <div
-                                    id="sample-name-input"
-                                    className="flex flex-col mb-4"
-                                >
-                                    <label
-                                        htmlFor={sample.name}
-                                        className="text-sm text-sssaccentgray font-medium p-1"
+                                    {/* Sample Name Input */}
+                                    <div
+                                        id="sample-name-input"
+                                        className="flex flex-col mb-4"
                                     >
-                                        sample name:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id={sample.name}
-                                        value={sampleData[index].name}
-                                        onChange={(e) =>
-                                            handleNameChange(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                        className="border rounded-xl p-2 font-light"
-                                    />
-                                </div>
-
-                                {/* Instruments Checkboxes */}
-                                <div id="instruments" className="my-4">
-                                    <p className="text-sm text-sssaccentgray font-medium p-1">
-                                        select instruments:
-                                    </p>
-                                    <div className="flex gap-2 flex-wrap">
-                                        {instruments?.map((instrument) => (
-                                            <label
-                                                key={instrument.id}
-                                                className="flex items-center space-x-2"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    value={instrument.id}
-                                                    onChange={() =>
-                                                        handleInstrumentChange(
-                                                            index,
-                                                            instrument.id
-                                                        )
-                                                    }
-                                                    className="rounded"
-                                                />
-                                                <span className="text-sm">
-                                                    {instrument.name}
-                                                </span>
-                                            </label>
-                                        ))}
+                                        <label
+                                            htmlFor={sample.name}
+                                            className="text-sm text-sssaccentgray font-medium p-1"
+                                        >
+                                            sample name:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id={sample.name}
+                                            value={sampleData[index].name}
+                                            onChange={(e) =>
+                                                handleNameChange(
+                                                    index,
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="border rounded-xl p-2 font-light"
+                                        />
                                     </div>
-                                </div>
 
-                                {/* Genres Checkboxes */}
-                                <div id="genres" className="my-4">
-                                    <p className="text-sm text-sssaccentgray font-medium p-1">
-                                        select genres:
-                                    </p>
-                                    <div className="flex gap-2 flex-wrap">
-                                        {genres?.map((genre) => (
-                                            <label
-                                                key={genre.id}
-                                                className="flex items-center space-x-2"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    value={genre.id}
-                                                    onChange={() =>
-                                                        handleGenreChange(
-                                                            index,
-                                                            genre.id
-                                                        )
-                                                    }
-                                                    className="rounded"
-                                                />
-                                                <span className="text-sm">
-                                                    {genre.name}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Tags Input */}
-                                <div id="tags" className="my-4">
-                                    <p className="text-sm text-sssaccentgray font-medium p-1">
-                                        Add tags:
-                                    </p>
-                                    <div className="flex flex-wrap gap-2 mb-2">
-                                        {sampleData[index].tags.map((tag) => (
-                                            <span
-                                                key={tag}
-                                                className="flex items-center bg-sssdarkblue text-sssoffwhite text-sm px-2 py-0 rounded-full"
-                                            >
-                                                {tag}
-                                                <button
-                                                    onClick={() =>
-                                                        handleRemoveTag(
-                                                            index,
-                                                            tag
-                                                        )
-                                                    }
-                                                    className="pl-2 text-sssred text-lg font-bold"
+                                    {/* Instruments Checkboxes */}
+                                    <div id="instruments" className="my-4">
+                                        <p className="text-sm text-sssaccentgray font-medium p-1">
+                                            select instruments:
+                                        </p>
+                                        <div className="flex gap-2 flex-wrap">
+                                            {instruments?.map((instrument) => (
+                                                <label
+                                                    key={instrument.id}
+                                                    className="flex items-center space-x-2"
                                                 >
-                                                    ×
-                                                </button>
-                                            </span>
-                                        ))}
+                                                    <input
+                                                        type="checkbox"
+                                                        value={instrument.id}
+                                                        onChange={() =>
+                                                            handleInstrumentChange(
+                                                                index,
+                                                                instrument.id
+                                                            )
+                                                        }
+                                                        className="rounded"
+                                                    />
+                                                    <span className="text-sm">
+                                                        {instrument.name}
+                                                    </span>
+                                                </label>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <input
-                                        type="text"
-                                        value={sampleData[index].tagInput}
-                                        onChange={(e) =>
-                                            handleTagInputChange(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                        onKeyDown={(e) =>
-                                            handleTagKeyDown(index, e)
-                                        }
-                                        placeholder="Add tags, separated by commas"
-                                        className="border rounded-xl p-2 font-light w-full"
-                                    />
+
+                                    {/* Genres Checkboxes */}
+                                    <div id="genres" className="my-4">
+                                        <p className="text-sm text-sssaccentgray font-medium p-1">
+                                            select genres:
+                                        </p>
+                                        <div className="flex gap-2 flex-wrap">
+                                            {genres?.map((genre) => (
+                                                <label
+                                                    key={genre.id}
+                                                    className="flex items-center space-x-2"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        value={genre.id}
+                                                        onChange={() =>
+                                                            handleGenreChange(
+                                                                index,
+                                                                genre.id
+                                                            )
+                                                        }
+                                                        className="rounded"
+                                                    />
+                                                    <span className="text-sm">
+                                                        {genre.name}
+                                                    </span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Tags Input */}
+                                    <div id="tags" className="my-4">
+                                        <p className="text-sm text-sssaccentgray font-medium p-1">
+                                            Add tags:
+                                        </p>
+                                        <div className="flex flex-wrap gap-2 mb-2">
+                                            {sampleData[index].tags.map(
+                                                (tag) => (
+                                                    <span
+                                                        key={tag}
+                                                        className="flex items-center bg-sssdarkblue text-sssoffwhite text-sm px-2 py-0 rounded-full"
+                                                    >
+                                                        {tag}
+                                                        <button
+                                                            onClick={() =>
+                                                                handleRemoveTag(
+                                                                    index,
+                                                                    tag
+                                                                )
+                                                            }
+                                                            className="pl-2 text-sssred text-lg font-bold"
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </span>
+                                                )
+                                            )}
+                                        </div>
+                                        <input
+                                            type="text"
+                                            value={sampleData[index].tagInput}
+                                            onChange={(e) =>
+                                                handleTagInputChange(
+                                                    index,
+                                                    e.target.value
+                                                )
+                                            }
+                                            onKeyDown={(e) =>
+                                                handleTagKeyDown(index, e)
+                                            }
+                                            placeholder="Add tags, separated by commas"
+                                            className="border rounded-xl p-2 font-light w-full"
+                                        />
+                                    </div>
                                 </div>
+                            </CarouselItem>
+                        ))}
+                        <CarouselItem className="flex flex-col justify-center items-center bg-white p-14 m-4 rounded-2xl shadow-lg ">
+                            <h3 className="text-sssorange">
+                                samples ready to upload
+                            </h3>
+                            <div className="flex flex-wrap m-4 text-xs">
+                                {sampleData?.map((sample, index) => (
+                                    <div
+                                        className="m-4 p-2 border-b"
+                                        key={index}
+                                    >
+                                        {/* Sample Name */}
+                                        <div className="font-medium text-sm text-sssblue">
+                                            {sample.name}
+                                        </div>
+
+                                        {/* Instruments */}
+                                        {sample.instruments.length > 0 && (
+                                            <div className="mt-2">
+                                                <strong>Instruments:</strong>{' '}
+                                                {sample.instruments
+                                                    .map(
+                                                        (instrumentId) =>
+                                                            instruments.find(
+                                                                (inst) =>
+                                                                    inst.id ===
+                                                                    instrumentId
+                                                            )?.name
+                                                    )
+                                                    .join(', ')}
+                                            </div>
+                                        )}
+
+                                        {/* Genres */}
+                                        {sample.genres.length > 0 && (
+                                            <div className="mt-2">
+                                                <strong>Genres:</strong>{' '}
+                                                {sample.genres
+                                                    .map(
+                                                        (genreId) =>
+                                                            genres.find(
+                                                                (genre) =>
+                                                                    genre.id ===
+                                                                    genreId
+                                                            )?.name
+                                                    )
+                                                    .join(', ')}
+                                            </div>
+                                        )}
+
+                                        {/* Tags */}
+                                        {sample.tags.length > 0 && (
+                                            <div className="mt-2">
+                                                <strong>Tags:</strong>{' '}
+                                                {sample.tags.join(', ')}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
+                            <button
+                                type="submit"
+                                disabled={isUploading}
+                                className={`m-6 py-2 px-10 rounded-full ${
+                                    isUploading
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-sssyellow hover:bg-yellow-400'
+                                }`}
+                            >
+                                {isUploading
+                                    ? 'Uploading...'
+                                    : 'upload samples'}
+                            </button>
                         </CarouselItem>
-                    ))}
-                    <CarouselItem className="flex flex-col justify-center items-center bg-white p-14 m-4 rounded-2xl shadow-lg ">
-                        <h3 className="text-sssorange">
-                            samples ready to upload
-                        </h3>
-                        <div className="flex flex-wrap m-4 text-xs">
-                            {sampleData?.map((sample, index) => (
-                                <div className="m-4 p-2 border-b" key={index}>
-                                    {/* Sample Name */}
-                                    <div className="font-medium text-sm text-sssblue">
-                                        {sample.name}
-                                    </div>
-
-                                    {/* Instruments */}
-                                    {sample.instruments.length > 0 && (
-                                        <div className="mt-2">
-                                            <strong>Instruments:</strong>{' '}
-                                            {sample.instruments
-                                                .map(
-                                                    (instrumentId) =>
-                                                        instruments.find(
-                                                            (inst) =>
-                                                                inst.id ===
-                                                                instrumentId
-                                                        )?.name
-                                                )
-                                                .join(', ')}
-                                        </div>
-                                    )}
-
-                                    {/* Genres */}
-                                    {sample.genres.length > 0 && (
-                                        <div className="mt-2">
-                                            <strong>Genres:</strong>{' '}
-                                            {sample.genres
-                                                .map(
-                                                    (genreId) =>
-                                                        genres.find(
-                                                            (genre) =>
-                                                                genre.id ===
-                                                                genreId
-                                                        )?.name
-                                                )
-                                                .join(', ')}
-                                        </div>
-                                    )}
-
-                                    {/* Tags */}
-                                    {sample.tags.length > 0 && (
-                                        <div className="mt-2">
-                                            <strong>Tags:</strong>{' '}
-                                            {sample.tags.join(', ')}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                        <Link
-                            to="/sample-upload/fill-sample-data"
-                            // state={{ samples: storedSamples }}
-                            className="m-6 py-2 px-10 bg-sssyellow hover:bg-yellow-400 rounded-full"
-                        >
-                            upload samples
-                        </Link>
-                    </CarouselItem>
-                </CarouselContent>
+                    </CarouselContent>
+                </Form>
                 <CarouselPrevious />
                 <CarouselNext />
             </Carousel>
