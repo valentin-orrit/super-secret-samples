@@ -1,11 +1,11 @@
-import type { ActionFunction, MetaFunction } from '@remix-run/node'
-import { unstable_parseMultipartFormData } from '@remix-run/node'
+import type { MetaFunction } from '@remix-run/node'
 import { useLocation, useLoaderData } from '@remix-run/react'
 import { FileWithPath } from 'react-dropzone-esm'
 import SampleDataFill from '../components/SampleDataFill'
 import prisma from '../../prisma/client'
+import { ActionFunction } from '@remix-run/node'
 import processAndUploadSample from '../lib/sample-upload'
-import * as fs from 'fs'
+import fs from 'fs'
 
 interface LocationState {
     samples: FileWithPath[]
@@ -30,59 +30,37 @@ export async function loader() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-    const uploadHandler = async ({ name, data, filename }: any) => {
-        if (name.startsWith('file-')) {
-            // Create a temporary file path
-            const tempPath = `/tmp/${filename}`
-            const chunks = []
-            for await (const chunk of data) {
-                chunks.push(chunk)
-            }
-            await fs.promises.writeFile(tempPath, Buffer.concat(chunks))
-            return tempPath
-        }
-        const chunks = []
-        for await (const chunk of data) {
-            chunks.push(chunk)
-        }
-        return Buffer.concat(chunks).toString()
-    }
+    const formData = await request.formData()
+    const results = []
 
-    try {
-        const formData = await unstable_parseMultipartFormData(
-            request,
-            uploadHandler
-        )
-        const sampleDataJson = formData.get('sampleData')
-        const sampleData = JSON.parse(sampleDataJson as string)
+    const sampleCount = Array.from(formData.entries()).filter(([key]) =>
+        key.startsWith('sample-')
+    ).length
 
-        // Process each sample
-        for (let i = 0; i < sampleData.length; i++) {
-            const filePath = formData.get(`file-${i}`) as string
-            const metadata = sampleData[i]
+    for (let i = 0; i < sampleCount; i++) {
+        const file = formData.get(`sample-${i}`) as File
+        const metadata = JSON.parse(formData.get(`metadata-${i}`) as string)
 
+        // Write file to temp location
+        const tempFilePath = `/tmp/${file.name}`
+        const buffer = Buffer.from(await file.arrayBuffer())
+        await fs.promises.writeFile(tempFilePath, buffer)
+
+        try {
             await processAndUploadSample({
-                sampleFilePath: filePath,
-                sampleMetadata: {
-                    name: metadata.name,
-                    loop: false,
-                    genres: metadata.genres.map((id: number) => ({ id })),
-                    instruments: metadata.instruments.map((id: number) => ({
-                        id,
-                    })),
-                    tags: metadata.tags.map((name: string) => ({ name })),
-                },
+                sampleFilePath: tempFilePath,
+                sampleMetadata: metadata,
             })
-
+            results.push({ success: true, name: metadata.name })
+        } catch (error) {
+            results.push({ success: false, name: metadata.name, error })
+        } finally {
             // Clean up temp file
-            await fs.promises.unlink(filePath)
+            await fs.promises.unlink(tempFilePath)
         }
-
-        return { success: true }
-    } catch (error) {
-        console.error('Upload error:', error)
-        return { status: 500 }
     }
+
+    return results
 }
 
 export default function FillSampleData() {

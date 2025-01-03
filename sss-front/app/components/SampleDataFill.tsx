@@ -20,7 +20,6 @@ export default function SampleDataFill({
     samples,
     instruments,
     genres,
-    tags,
 }: Samples) {
     const submit = useSubmit()
     const navigation = useNavigation()
@@ -32,6 +31,9 @@ export default function SampleDataFill({
             instruments: [] as number[],
             genres: [] as number[],
             tags: [] as string[],
+            key: '',
+            loop: false,
+            bpm: 0,
             tagInput: '',
         }))
     )
@@ -130,34 +132,33 @@ export default function SampleDataFill({
         )
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const formData = new FormData()
+        try {
+            const formData = new FormData()
 
-        samples.forEach((file, index) => {
-            formData.append(`sampleFile`, file)
-        })
+            samples.forEach((sample, index) => {
+                formData.append(`sample-${index}`, sample)
+                formData.append(
+                    `metadata-${index}`,
+                    JSON.stringify({
+                        name: sampleData[index].name,
+                        instruments: sampleData[index].instruments,
+                        genres: sampleData[index].genres,
+                        tags: sampleData[index].tags,
+                        bpm: sampleData[index].bpm,
+                        key: sampleData[index].key,
+                        loop: sampleData[index].loop,
+                    })
+                )
+            })
 
-        sampleData.forEach((data, index) => {
-            formData.append(
-                `metadata`,
-                JSON.stringify({
-                    name: data.name,
-                    instruments: data.instruments,
-                    genres: data.genres,
-                    tags: data.tags,
-                    loop: false,
-                })
-            )
-        })
-
-        formData.append('totalSamples', samples.length.toString())
-
-        submit(formData, {
-            method: 'post',
-            encType: 'multipart/form-data',
-        })
+            submit(formData, { method: 'POST', encType: 'multipart/form-data' })
+        } catch (error) {
+            console.error('Failed to upload samples:', error)
+            alert('Failed to upload samples. Please try again.')
+        }
     }
 
     return (
