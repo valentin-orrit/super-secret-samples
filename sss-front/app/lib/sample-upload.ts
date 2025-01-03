@@ -3,9 +3,7 @@ import path from 'path'
 import zlib from 'zlib'
 import { exec } from 'child_process'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-// import prisma from '../../prisma/client'
-// import type { Instrument, Genre, Tag } from '../../prisma/client'
-// import { a } from 'vitest/dist/chunks/suite.B2jumIFP.js'
+import prisma from '../../prisma/client'
 
 interface SampleMetadata {
     name: string
@@ -35,22 +33,26 @@ const s3 = new S3Client({
     },
 })
 
-const sample1FilePath = path.resolve('./tests/assets/audio/KICK1.wav')
+// test the whole upload process : TO REMOVE
+function testProcess() {
+    const sample1FilePath = path.resolve('./tests/assets/audio/KICK1.wav')
 
-const sample1Metadata = {
-    name: 'testsample1',
-    bpm: 123,
-    key: 'a',
-    loop: false,
-    genres: [1, 2, 3],
-    instruments: [1, 2, 3],
-    tags: ['yo', 'no'],
+    const sample1Metadata = {
+        name: 'testsample1',
+        bpm: 123,
+        key: 'a',
+        loop: false,
+        genres: [1, 2, 3],
+        instruments: [1, 2, 3],
+        tags: ['yo', 'no'],
+    }
+
+    processAndUploadSample({
+        sampleFilePath: sample1FilePath,
+        sampleMetadata: sample1Metadata,
+    })
 }
-
-// processAndUploadSample({
-//     sampleFilePath: sample1FilePath,
-//     sampleMetadata: sample1Metadata,
-// })
+//testProcess()
 
 export default async function processAndUploadSample({
     sampleFilePath,
@@ -71,32 +73,32 @@ export default async function processAndUploadSample({
         await uploadToS3(originalGzippedPath, s3OriginalKey)
         await uploadToS3(compressedMp3Path, s3CompressedKey)
 
-        // await prisma.sample.create({
-        //     data: {
-        //         name: sampleMetadata.name,
-        //         s3ReferenceName: s3OriginalKey,
-        //         s3CompressedReferenceName: s3CompressedKey,
-        //         bpm: sampleMetadata.bpm,
-        //         key: sampleMetadata.key,
-        //         loop: sampleMetadata.loop,
-        //         genres: {
-        //             connect: sampleMetadata.genres.map((genre) => ({
-        //                 id: genre.id,
-        //             })),
-        //         },
-        //         instruments: {
-        //             connect: sampleMetadata.instruments.map((instrument) => ({
-        //                 id: instrument.id,
-        //             })),
-        //         },
-        //         tags: {
-        //             connectOrCreate: sampleMetadata.tags.map((tag) => ({
-        //                 where: { name: tag.name },
-        //                 create: { name: tag.name },
-        //             })),
-        //         },
-        //     },
-        // })
+        await prisma.sample.create({
+            data: {
+                name: sampleMetadata.name,
+                s3ReferenceName: s3OriginalKey,
+                s3CompressedReferenceName: s3CompressedKey,
+                bpm: sampleMetadata.bpm,
+                key: sampleMetadata.key,
+                loop: sampleMetadata.loop,
+                genres: {
+                    connect: sampleMetadata.genres.map((genre) => ({
+                        id: genre,
+                    })),
+                },
+                instruments: {
+                    connect: sampleMetadata.instruments.map((instrument) => ({
+                        id: instrument,
+                    })),
+                },
+                tags: {
+                    connectOrCreate: sampleMetadata.tags.map((tag) => ({
+                        where: { name: tag },
+                        create: { name: tag },
+                    })),
+                },
+            },
+        })
 
         console.log(
             `Successfully processed and uploaded sample: ${sampleMetadata.name}`
@@ -137,6 +139,7 @@ function compressWithFFmpeg(
     })
 }
 
+// upload file to S3 bucket
 async function uploadToS3(filePath: string, s3Key: string): Promise<void> {
     const fileStream = fs.createReadStream(filePath)
     const uploadParams = {
