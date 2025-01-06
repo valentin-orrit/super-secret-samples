@@ -84,7 +84,9 @@ export default function SampleDataFill({
     const handleTagInputChange = (sampleIndex: number, value: string) => {
         setSampleData((prev) =>
             prev.map((data, i) =>
-                i === sampleIndex ? { ...data, tagInput: value } : data
+                i === sampleIndex
+                    ? { ...data, tagInput: value.toLowerCase() }
+                    : data
             )
         )
     }
@@ -108,9 +110,9 @@ export default function SampleDataFill({
                                   ...data,
                                   tags: [...data.tags, ...tagsToAdd].filter(
                                       (tag, idx, self) =>
-                                          self.indexOf(tag) === idx // Remove duplicates
+                                          self.indexOf(tag) === idx
                                   ),
-                                  tagInput: '', // Clear the input
+                                  tagInput: '',
                               }
                             : data
                     )
@@ -270,7 +272,10 @@ export default function SampleDataFill({
                                     {/* Tags Input */}
                                     <div id="tags" className="my-4">
                                         <p className="text-sm text-sssaccentgray font-medium p-1">
-                                            Add tags:
+                                            Add tags:{' '}
+                                            <span className="text-xs font-extralight">
+                                                (lowercase only)
+                                            </span>
                                         </p>
                                         <div className="flex flex-wrap gap-2 mb-2">
                                             {sampleData[index].tags.map(

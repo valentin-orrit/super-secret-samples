@@ -58,9 +58,8 @@ export default async function processAndUploadSample({
     sampleFilePath,
     sampleMetadata,
 }: SampleFile): Promise<void> {
-    const fileName = path.basename(sampleFilePath, path.extname(sampleFilePath))
-    const originalGzippedPath = `${fileName}.gz`
-    const compressedMp3Path = `${fileName}_compressed.mp3`
+    const originalGzippedPath = `${sampleMetadata.name}.gz`
+    const compressedMp3Path = `${sampleMetadata.name}.mp3`
 
     try {
         await gzipFile(sampleFilePath, originalGzippedPath)
