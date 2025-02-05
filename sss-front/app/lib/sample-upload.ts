@@ -33,27 +33,6 @@ const s3 = new S3Client({
     },
 })
 
-// test the whole upload process : TO REMOVE
-function testProcess() {
-    const sample1FilePath = path.resolve('./tests/assets/audio/KICK1.wav')
-
-    const sample1Metadata = {
-        name: 'testsample1',
-        bpm: 123,
-        key: 'a',
-        loop: false,
-        genres: [1, 2, 3],
-        instruments: [1, 2, 3],
-        tags: ['yo', 'no'],
-    }
-
-    processAndUploadSample({
-        sampleFilePath: sample1FilePath,
-        sampleMetadata: sample1Metadata,
-    })
-}
-//testProcess()
-
 export default async function processAndUploadSample({
     sampleFilePath,
     sampleMetadata,
@@ -152,6 +131,7 @@ async function uploadToS3(filePath: string, s3Key: string): Promise<void> {
         console.log(
             `Uploaded ${filePath} to s3://${uploadParams.Bucket}/${s3Key}`
         )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         throw new Error(`S3 upload error: ${error.message}`)
     }

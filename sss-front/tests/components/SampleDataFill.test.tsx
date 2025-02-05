@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import SampleDataFill from '../../app/components/SampleDataFill'
 
 // Carousel Mocks need for shadcn Carousel
@@ -50,15 +51,40 @@ const audioFile2 = new File(['audio content'], 'test2.wav', {
 
 const samples = [audioFile1, audioFile2]
 
+const renderWithRouter = (
+    ui: React.ReactElement,
+    route = '/sample-upload/fill-sample-data'
+) => {
+    const router = createMemoryRouter(
+        [{ path: '/sample-upload/fill-sample-data', element: ui }],
+        { initialEntries: [route] }
+    )
+    return render(<RouterProvider router={router} />)
+}
+
 describe('SampleDataFill', () => {
     it('should render the error message if samples array is empty', () => {
-        render(<SampleDataFill samples={[]} />)
+        renderWithRouter(
+            <SampleDataFill
+                samples={[]}
+                instruments={[]}
+                genres={[]}
+                tags={[]}
+            />
+        )
 
-        expect(screen.getByText(/No files were provided/i)).toBeInTheDocument()
+        expect(screen.getByText(/upload samples/i)).toBeInTheDocument()
     })
 
     it('should render the samples data fill form if samples array contains samples', () => {
-        render(<SampleDataFill samples={samples} />)
+        renderWithRouter(
+            <SampleDataFill
+                samples={samples}
+                instruments={[]}
+                genres={[]}
+                tags={[]}
+            />
+        )
 
         samples.forEach((sample, index) => {
             expect(
@@ -66,7 +92,9 @@ describe('SampleDataFill', () => {
                     new RegExp(`sample #${index + 1}/${samples.length}`, 'i')
                 )
             ).toBeInTheDocument()
-            expect(screen.getByDisplayValue(sample.name)).toBeInTheDocument()
+            expect(
+                screen.getByDisplayValue(sample.name.slice(0, -4))
+            ).toBeInTheDocument()
         })
     })
 })
