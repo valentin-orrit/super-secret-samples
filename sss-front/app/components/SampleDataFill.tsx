@@ -158,6 +158,14 @@ export default function SampleDataFill({
         )
     }
 
+    const handleLoopChange = (sampleIndex: number) => {
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex ? { ...data, loop: !data.loop } : data
+            )
+        )
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
@@ -371,6 +379,28 @@ export default function SampleDataFill({
                                             className="border rounded-xl p-2 font-light w-1/6"
                                         />
                                     </div>
+
+                                    {/* Loop Checkbox */}
+                                    <div
+                                        id="sample-loop-input"
+                                        className="flex items-center gap-2 mb-4"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            id={`loop-${index}`}
+                                            checked={sampleData[index].loop}
+                                            onChange={() =>
+                                                handleLoopChange(index)
+                                            }
+                                            className="rounded"
+                                        />
+                                        <label
+                                            htmlFor={`loop-${index}`}
+                                            className="text-sm text-sssaccentgray font-medium"
+                                        >
+                                            Loop
+                                        </label>
+                                    </div>
                                 </div>
                             </CarouselItem>
                         ))}
@@ -438,6 +468,11 @@ export default function SampleDataFill({
                                                 {sample.key}
                                             </div>
                                         )}
+
+                                        {/* Loop */}
+                                        <div className="mt-2">
+                                            {sample.loop ? 'loop' : 'one-shot'}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
