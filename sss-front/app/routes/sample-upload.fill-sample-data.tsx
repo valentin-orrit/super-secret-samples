@@ -1,5 +1,5 @@
 import type { MetaFunction } from '@remix-run/node'
-import { useLocation, useLoaderData } from '@remix-run/react'
+import { useLocation, useLoaderData, useActionData } from '@remix-run/react'
 import { FileWithPath } from 'react-dropzone-esm'
 import SampleDataFill from '../components/SampleDataFill'
 import prisma from '../../prisma/client'
@@ -68,10 +68,21 @@ export default function FillSampleData() {
     const location = useLocation()
     const state = location.state as LocationState
     const samples = state?.samples || []
+    const results = useActionData<typeof action>()
+
+    if (results) {
+        return (
+            <div className="flex flex-col items-center justify-center min-w-screen min-h-screen">
+                <div className="text-2xl text-sssblue">
+                    YAY! samples uploaded!
+                </div>
+            </div>
+        )
+    }
 
     if (!samples || samples.length === 0) {
         return (
-            <div className=" self-center">
+            <div className="flex flex-col items-center justify-center min-w-screen min-h-screen">
                 No samples found. Please upload your samples first.
             </div>
         )
