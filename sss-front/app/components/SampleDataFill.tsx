@@ -94,7 +94,14 @@ export default function SampleDataFill({
     const handleKeyChange = (sampleIndex: number, value: string) => {
         setSampleData((prev) =>
             prev.map((data, i) =>
-                i === sampleIndex ? { ...data, key: value.toLowerCase() } : data
+                i === sampleIndex
+                    ? {
+                          ...data,
+                          key:
+                              value.charAt(0).toUpperCase() +
+                              String(value).slice(1),
+                      }
+                    : data
             )
         )
     }
