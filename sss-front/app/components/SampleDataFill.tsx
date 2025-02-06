@@ -91,6 +91,14 @@ export default function SampleDataFill({
         )
     }
 
+    const handleKeyChange = (sampleIndex: number, value: string) => {
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex ? { ...data, key: value.toLowerCase() } : data
+            )
+        )
+    }
+
     const handleTagKeyDown = (
         sampleIndex: number,
         event: React.KeyboardEvent<HTMLInputElement>
@@ -314,6 +322,35 @@ export default function SampleDataFill({
                                             }
                                             placeholder="Add tags, separated by commas"
                                             className="border rounded-xl p-2 font-light w-full"
+                                        />
+                                    </div>
+
+                                    {/* Key Input */}
+                                    <div
+                                        id="sample-name-input"
+                                        className="flex flex-col mb-4 "
+                                    >
+                                        <label
+                                            htmlFor={sampleData[index].key}
+                                            className="text-sm text-sssaccentgray font-medium p-1"
+                                        >
+                                            Add key:{' '}
+                                            <span className="text-xs font-extralight">
+                                                (format key as &quot;Cmaj&quot;
+                                                / &quot;Emin&quot;)
+                                            </span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id={sampleData[index].key}
+                                            value={sampleData[index].key}
+                                            onChange={(e) =>
+                                                handleKeyChange(
+                                                    index,
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="border rounded-xl p-2 font-light w-1/6"
                                         />
                                     </div>
                                 </div>
