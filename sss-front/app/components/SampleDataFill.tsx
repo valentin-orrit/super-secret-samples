@@ -110,7 +110,10 @@ export default function SampleDataFill({
         sampleIndex: number,
         event: React.KeyboardEvent<HTMLInputElement>
     ) => {
-        if (event.key === 'Enter' || event.key === ',') {
+        if (
+            (event.key === 'Enter' || event.key === ',') &&
+            event.currentTarget.id === 'tagInput'
+        ) {
             event.preventDefault()
             const tagsToAdd = sampleData[sampleIndex].tagInput
                 .split(',')
@@ -133,6 +136,12 @@ export default function SampleDataFill({
                     )
                 )
             }
+        }
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault()
         }
     }
 
@@ -188,6 +197,7 @@ export default function SampleDataFill({
                     method="post"
                     encType="multipart/form-data"
                     onSubmit={handleSubmit}
+                    onKeyDown={handleKeyDown}
                     className="w-full"
                 >
                     <CarouselContent>
@@ -329,6 +339,7 @@ export default function SampleDataFill({
                                             }
                                             placeholder="Add tags, separated by commas"
                                             className="border rounded-xl p-2 font-light w-full"
+                                            id="tagInput"
                                         />
                                     </div>
 
@@ -417,6 +428,14 @@ export default function SampleDataFill({
                                             <div className="mt-2">
                                                 <strong>Tags:</strong>{' '}
                                                 {sample.tags.join(', ')}
+                                            </div>
+                                        )}
+
+                                        {/* Key */}
+                                        {sample.key && (
+                                            <div className="mt-2">
+                                                <strong>Key:</strong>{' '}
+                                                {sample.key}
                                             </div>
                                         )}
                                     </div>
