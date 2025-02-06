@@ -158,10 +158,10 @@ export default function SampleDataFill({
         )
     }
 
-    const handleLoopChange = (sampleIndex: number) => {
+    const handleLoopChange = (sampleIndex: number, isLoop: boolean) => {
         setSampleData((prev) =>
             prev.map((data, i) =>
-                i === sampleIndex ? { ...data, loop: !data.loop } : data
+                i === sampleIndex ? { ...data, loop: isLoop } : data
             )
         )
     }
@@ -380,25 +380,49 @@ export default function SampleDataFill({
                                         />
                                     </div>
 
-                                    {/* Loop Checkbox */}
+                                    {/* Loop vs One-Shot Selection */}
                                     <div
-                                        id="sample-loop-input"
-                                        className="flex items-center gap-2 mb-4"
+                                        id="sample-loop-choice"
+                                        className="flex items-center gap-4 mb-4"
                                     >
-                                        <input
-                                            type="checkbox"
-                                            id={`loop-${index}`}
-                                            checked={sampleData[index].loop}
-                                            onChange={() =>
-                                                handleLoopChange(index)
-                                            }
-                                            className="rounded"
-                                        />
-                                        <label
-                                            htmlFor={`loop-${index}`}
-                                            className="text-sm text-sssaccentgray font-medium"
-                                        >
-                                            Loop
+                                        <label className="flex items-center space-x-2">
+                                            <input
+                                                type="radio"
+                                                name={`loop-${index}`}
+                                                value="loop"
+                                                checked={sampleData[index].loop}
+                                                onChange={() =>
+                                                    handleLoopChange(
+                                                        index,
+                                                        true
+                                                    )
+                                                }
+                                                className="rounded"
+                                            />
+                                            <span className="text-sm text-sssaccentgray font-medium">
+                                                Loop
+                                            </span>
+                                        </label>
+
+                                        <label className="flex items-center space-x-2">
+                                            <input
+                                                type="radio"
+                                                name={`loop-${index}`}
+                                                value="one-shot"
+                                                checked={
+                                                    !sampleData[index].loop
+                                                }
+                                                onChange={() =>
+                                                    handleLoopChange(
+                                                        index,
+                                                        false
+                                                    )
+                                                }
+                                                className="rounded"
+                                            />
+                                            <span className="text-sm text-sssaccentgray font-medium">
+                                                One-Shot
+                                            </span>
                                         </label>
                                     </div>
                                 </div>
