@@ -29,7 +29,7 @@ export default function SamplesPage() {
             <WelcomeToast />
             <div
                 id="main"
-                className="flex flex-col justify-center items-center bg-amber-50"
+                className="flex flex-col justify-center items-center bg-white"
             >
                 <div className="w-full my-4 px-4">
                     {samples?.map((sample) => (

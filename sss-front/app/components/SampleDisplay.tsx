@@ -4,6 +4,8 @@ import {
     Instrument,
     Tag,
 } from '../../prisma/client'
+import Shape from '../components/Shape'
+import { Infinity, Route } from 'lucide-react'
 
 interface Sample extends PrismaSample {
     genres: Genre[]
@@ -16,45 +18,49 @@ interface SampleInterface {
 }
 
 export default function SampleDisplay({ sample }: SampleInterface) {
+    const genreAndTags = sample.genres.concat(sample.tags)
+
+    function formatSampleLength(length: number): string {
+        const totalSeconds = Math.max(Math.floor(length), 1)
+        const minutes = Math.floor(totalSeconds / 60)
+        const seconds = totalSeconds % 60
+
+        return `${String(minutes).padStart(1, '0')}:${String(seconds).padStart(
+            1,
+            '0'
+        )}`
+    }
+
     return (
-        <div className="grid grid-flow-col grid-cols-3 border border-gray-300 w-full px-4 py-1 my-1 rounded-lg hover:bg-amber-100 cursor-pointer bg-white">
-            <div className="text-lg text-gray-800 font-semibold text-start">
-                {sample.name}
+        <div className="grid grid-flow-col grid-cols-8 border-b border-gray-300 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer bg-white items-center">
+            <div className="">
+                <Shape instrument={sample.instruments[0].name} width={40} />
             </div>
-            <div className="col-span-2 grid grid-flow-col grid-cols-3 gap-x-2">
-                <div className="text-gray-700 text-start">{`${sample.length}s`}</div>
+
+            <div className="text-gray-700 text-start">
+                {sample.loop ? <Infinity /> : <Route />}
+            </div>
+
+            <div className="text-lg text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
+                <p className="overflow-hidden text-ellipsis">{sample.name}</p>
+                <div className="">
+                    {genreAndTags.map((tag, index) => (
+                        <span
+                            key={index}
+                            className="text-gray-500 text-xs font-thin"
+                        >
+                            {tag.name}{' '}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            <div className="col-span-3 grid grid-flow-col grid-cols-3 gap-x-2">
+                <div className="text-gray-700 text-start">
+                    {formatSampleLength(sample.length)}
+                </div>
                 <div className="text-gray-700 text-start">{sample.key}</div>
                 <div className="text-gray-700 text-start">{sample.bpm}</div>
-                <div className="text-gray-700 text-start">
-                    {sample.loop ? 'Loop' : 'One-shot'}
-                </div>
-
-                <div className="">
-                    {sample.genres.map((genre) => (
-                        <span key={genre.id} className="text-gray-500 text-xs">
-                            {genre.name}
-                        </span>
-                    ))}
-                </div>
-
-                <div className="">
-                    {sample.instruments.map((instrument) => (
-                        <span
-                            key={instrument.id}
-                            className="text-gray-500 text-xs"
-                        >
-                            {instrument.name}
-                        </span>
-                    ))}
-                </div>
-
-                <div className="">
-                    {sample.tags.map((tag) => (
-                        <span key={tag.id} className="text-gray-500 text-xs">
-                            {tag.name}
-                        </span>
-                    ))}
-                </div>
             </div>
         </div>
     )
