@@ -1,9 +1,8 @@
 import type { MetaFunction } from '@remix-run/node'
-import { Link } from '@remix-run/react'
-import { useToast } from '../hooks/use-toast'
-import { useUser } from '@clerk/remix'
-import { useEffect } from 'react'
-import { ToastAction } from '@radix-ui/react-toast'
+import { useLoaderData } from '@remix-run/react'
+import prisma from '../../prisma/client'
+import WelcomeToast from '../components/Toast'
+import SampleDisplay from '../components/SampleDisplay'
 
 export const meta: MetaFunction = () => {
     return [
@@ -12,44 +11,31 @@ export const meta: MetaFunction = () => {
     ]
 }
 
+export async function loader() {
+    const samples = await prisma.sample.findMany({
+        include: { genres: true, instruments: true, tags: true },
+    })
+    const instruments = await prisma.instrument.findMany()
+    const genres = await prisma.genre.findMany()
+    const tags = await prisma.tag.findMany()
+    return { samples, instruments, genres, tags }
+}
+
 export default function SamplesPage() {
-    const { toast } = useToast()
-    const { user } = useUser()
-
-    // Toast when user just signed in
-    useEffect(() => {
-        if (user && user.lastSignInAt) {
-            const lastSignIn = Math.floor(
-                new Date(user.lastSignInAt).getTime() / 1000
-            )
-            const currentTime = Math.floor(Date.now() / 1000)
-
-            if (currentTime - lastSignIn <= 20) {
-                toast({
-                    title: `Welcome back ${user.emailAddresses[0]}!`,
-                    description:
-                        'If you want exclusive samples, please send us a request.',
-                    duration: 5000,
-                    className: 'bg-white text-sssdarkblue text-sm rounded-xl',
-                    action: (
-                        <ToastAction altText="request samples" asChild>
-                            <Link
-                                className="py-2 px-4 bg-sssyellow hover:bg-yellow-400 rounded-full"
-                                to="/sample-request"
-                            >
-                                request
-                            </Link>
-                        </ToastAction>
-                    ),
-                })
-            }
-        }
-    }, [user, toast])
+    const { samples } = useLoaderData<typeof loader>()
 
     return (
         <div>
-            <div id="main">
-                <h1>samples page</h1>
+            <WelcomeToast />
+            <div
+                id="main"
+                className="flex flex-col justify-center items-center bg-amber-50"
+            >
+                <div className="w-full my-4 px-4">
+                    {samples?.map((sample) => (
+                        <SampleDisplay sample={sample} key={sample.id} />
+                    ))}
+                </div>
             </div>
         </div>
     )
