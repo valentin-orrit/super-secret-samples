@@ -40,6 +40,7 @@ export default async function processAndUploadSample({
 }: SampleFile): Promise<void> {
     const originalGzippedPath = `${sampleMetadata.name}.gz`
     const compressedMp3Path = `${sampleMetadata.name}.mp3`
+    const folderName = `${sampleMetadata.name}`
 
     try {
         await gzipFile(sampleFilePath, originalGzippedPath)
@@ -47,8 +48,12 @@ export default async function processAndUploadSample({
         await compressWithFFmpeg(sampleFilePath, compressedMp3Path)
 
         const audioDuration = await getAudioDuration(sampleFilePath)
-        const s3OriginalKey = `original/${path.basename(originalGzippedPath)}`
-        const s3CompressedKey = `compressed/${path.basename(compressedMp3Path)}`
+        const s3OriginalKey = `${folderName}/${path.basename(
+            originalGzippedPath
+        )}`
+        const s3CompressedKey = `${folderName}/${path.basename(
+            compressedMp3Path
+        )}`
 
         await uploadToS3(originalGzippedPath, s3OriginalKey)
         await uploadToS3(compressedMp3Path, s3CompressedKey)
