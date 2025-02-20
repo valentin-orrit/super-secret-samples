@@ -7,6 +7,7 @@ import prisma from '../../prisma/client'
 
 interface SampleMetadata {
     name: string
+    length: number
     bpm?: number
     key?: string
     loop: boolean
@@ -45,6 +46,7 @@ export default async function processAndUploadSample({
 
         await compressWithFFmpeg(sampleFilePath, compressedMp3Path)
 
+        const audioDuration = await getAudioDuration(sampleFilePath)
         const s3OriginalKey = `original/${path.basename(originalGzippedPath)}`
         const s3CompressedKey = `compressed/${path.basename(compressedMp3Path)}`
 
@@ -56,6 +58,7 @@ export default async function processAndUploadSample({
                 name: sampleMetadata.name,
                 s3ReferenceName: s3OriginalKey,
                 s3CompressedReferenceName: s3CompressedKey,
+                length: audioDuration,
                 bpm: sampleMetadata.bpm,
                 key: sampleMetadata.key,
                 loop: sampleMetadata.loop,
@@ -112,6 +115,21 @@ function compressWithFFmpeg(
                 reject(`FFmpeg error: ${stderr}`)
             } else {
                 resolve()
+            }
+        })
+    })
+}
+
+// get the length of the sample
+function getAudioDuration(filePath: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+        const command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${filePath}"`
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                reject(`ffprobe error: ${stderr}`)
+            } else {
+                const duration = parseFloat(stdout)
+                resolve(duration)
             }
         })
     })
