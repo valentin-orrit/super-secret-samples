@@ -43,7 +43,7 @@ export default function SampleDisplay({ sample }: SampleInterface) {
 
             <div className="text-lg text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
                 <p className="overflow-hidden text-ellipsis">{sample.name}</p>
-                <div className="">
+                <div className="flex overflow-hidden text-ellipsis gap-2 my-1">
                     {genreAndTags.map((tag, index) => (
                         <span
                             key={index}
@@ -60,7 +60,9 @@ export default function SampleDisplay({ sample }: SampleInterface) {
                     {formatSampleLength(sample.length)}
                 </div>
                 <div className="text-gray-700 text-start">{sample.key}</div>
-                <div className="text-gray-700 text-start">{sample.bpm}</div>
+                <div className="text-gray-700 text-start">
+                    {sample.bpm !== null && sample.bpm > 0 && sample.bpm}
+                </div>
             </div>
         </div>
     )
