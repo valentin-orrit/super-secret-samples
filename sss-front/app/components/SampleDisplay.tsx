@@ -15,9 +15,10 @@ interface Sample extends PrismaSample {
 
 interface SampleInterface {
     sample: Sample
+    onClick?: () => void
 }
 
-export default function SampleDisplay({ sample }: SampleInterface) {
+export default function SampleDisplay({ sample, onClick }: SampleInterface) {
     const genreAndTags = sample.genres.concat(sample.tags)
 
     function formatSampleLength(length: number): string {
@@ -32,7 +33,10 @@ export default function SampleDisplay({ sample }: SampleInterface) {
     }
 
     return (
-        <div className="grid grid-flow-col grid-cols-8 border-b border-gray-300 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer bg-white items-center">
+        <button
+            className="grid grid-flow-col grid-cols-8 border-b border-gray-300 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer bg-white items-center"
+            onClick={onClick}
+        >
             <div className="">
                 <Shape instrument={sample.instruments[0].name} width={40} />
             </div>
@@ -64,6 +68,6 @@ export default function SampleDisplay({ sample }: SampleInterface) {
                     {sample.bpm !== null && sample.bpm > 0 && sample.bpm}
                 </div>
             </div>
-        </div>
+        </button>
     )
 }

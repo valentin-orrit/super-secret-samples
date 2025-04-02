@@ -28,7 +28,7 @@ model Sample {
   id                        Int          @id @default(autoincrement())
   name                      String       @unique
   s3ReferenceName           String       @unique
-  s3CompressedReferenceName String?      @unique
+  s3CompressedReferenceName String       @unique
   length                    Float
   bpm                       Int?
   key                       String?
