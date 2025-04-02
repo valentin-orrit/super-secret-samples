@@ -453,7 +453,11 @@ export default function SampleDataFill({
                                             id={sampleData[
                                                 index
                                             ].bpm.toString()}
-                                            value={sampleData[index].bpm ?? ''}
+                                            value={
+                                                sampleData[index].bpm > 0
+                                                    ? sampleData[index].bpm
+                                                    : ''
+                                            }
                                             onChange={(e) =>
                                                 handleBPMChange(
                                                     index,
