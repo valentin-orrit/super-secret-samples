@@ -9,6 +9,12 @@ vi.mock('@clerk/remix')
 vi.mock('../../app/hooks/use-toast')
 vi.mock('@remix-run/react', () => ({
     Link: ({ children, ...props }) => <a {...props}>{children}</a>,
+    useLoaderData: () => ({
+        samples: [],
+        instruments: [],
+        genres: [],
+        tags: [],
+    }),
 }))
 
 describe('SamplesPage', () => {
