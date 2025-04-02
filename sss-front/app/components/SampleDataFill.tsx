@@ -106,6 +106,15 @@ export default function SampleDataFill({
         )
     }
 
+    const handleBPMChange = (sampleIndex: number, value: string) => {
+        const parsedValue = parseInt(value, 10) || 0
+        setSampleData((prev) =>
+            prev.map((data, i) =>
+                i === sampleIndex ? { ...data, bpm: parsedValue } : data
+            )
+        )
+    }
+
     const handleTagKeyDown = (
         sampleIndex: number,
         event: React.KeyboardEvent<HTMLInputElement>
@@ -425,6 +434,35 @@ export default function SampleDataFill({
                                             </span>
                                         </label>
                                     </div>
+
+                                    {/* BPM input */}
+                                    <div
+                                        id="sample-bpm-input"
+                                        className="flex flex-col mb-4 "
+                                    >
+                                        <label
+                                            htmlFor={sampleData[
+                                                index
+                                            ].bpm.toString()}
+                                            className="text-sm text-sssaccentgray font-medium p-1"
+                                        >
+                                            BPM:{' '}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id={sampleData[
+                                                index
+                                            ].bpm.toString()}
+                                            value={sampleData[index].bpm ?? ''}
+                                            onChange={(e) =>
+                                                handleBPMChange(
+                                                    index,
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="border rounded-xl p-2 font-light w-1/6"
+                                        />
+                                    </div>
                                 </div>
                             </CarouselItem>
                         ))}
@@ -497,6 +535,14 @@ export default function SampleDataFill({
                                         <div className="mt-2">
                                             {sample.loop ? 'loop' : 'one-shot'}
                                         </div>
+
+                                        {/* BPM */}
+                                        {sample.bpm && (
+                                            <div className="mt-2">
+                                                <strong>BPM:</strong>
+                                                {sample.bpm}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
