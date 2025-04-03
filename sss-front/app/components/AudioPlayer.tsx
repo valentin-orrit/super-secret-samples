@@ -47,7 +47,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     // Load track when streamUrl is ready
     useEffect(() => {
         if (currentSample && streamUrl) {
-            audioController.loadTrack(streamUrl).then(() => {
+            audioController?.loadTrack(streamUrl).then(() => {
                 setCurrentTime(0)
                 if (isPlaying) {
                     audioController.play()
@@ -58,7 +58,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }, [streamUrl])
 
     useEffect(() => {
-        audioController.setLoop(isLooping)
+        audioController?.setLoop(isLooping)
     }, [isLooping])
 
     // Set up an interval to update the current playback time
@@ -73,9 +73,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     const handlePlayPause = () => {
         if (isPlaying) {
-            audioController.pause()
+            audioController?.pause()
         } else {
-            audioController.play()
+            audioController?.play()
         }
         onPlayPause(!isPlaying)
     }
@@ -83,17 +83,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const volume = parseFloat(e.target.value)
         setVolume(volume)
-        audioController.setVolume(volume)
+        audioController?.setVolume(volume)
     }
 
     const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTime = parseFloat(e.target.value)
         setCurrentTime(newTime)
-        audioController.seek(newTime)
+        audioController?.seek(newTime)
     }
 
     return (
-        <div className="flex items-center justify-between gap-4 p-4 bg-white shadow rounded-2xl w-2/3">
+        <div className="flex items-center justify-between gap-4 p-4 m-8 bg-white shadow rounded-2xl w-full max-w-3xl border border-gray-400">
             <div className="flex gap-2">
                 <button
                     onClick={handlePlayPause}
@@ -122,7 +122,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             </div>
 
             {currentSample ? (
-                <div className="text-lg text-gray-800 font-semibold text-start">
+                <div className="text-lg text-gray-800 font-semibold text-start grow-7 overflow-hidden text-ellipsis text-nowrap">
                     {currentSample.name}
                 </div>
             ) : (
@@ -132,7 +132,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             )}
 
             {currentSample && duration > 0 && (
-                <div className="w-full flex items-center gap-1 mx-4">
+                <div className="flex items-center gap-1 mx-4 grow-0">
                     <input
                         type="range"
                         min="0"
@@ -143,7 +143,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                         className="w-full accent-amber-700 cursor-pointer"
                     />
                     <div className="text-sm text-gray-600">
-                        <span>{duration}s</span>
+                        <span>{Math.round(duration * 100) / 100}s</span>
                     </div>
                 </div>
             )}

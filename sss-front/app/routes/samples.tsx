@@ -75,7 +75,8 @@ export default function SamplesPage() {
                             onClick={() => handleSampleClick(sample.id)}
                         />
                     ))}
-
+                </div>
+                <div className="z-100 fixed bottom-0 w-1/2">
                     <AudioPlayer
                         currentSample={currentSample}
                         isPlaying={isPlaying}
