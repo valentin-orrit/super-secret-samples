@@ -16,9 +16,14 @@ interface Sample extends PrismaSample {
 interface SampleInterface {
     sample: Sample
     onClick?: () => void
+    isActive?: boolean
 }
 
-export default function SampleDisplay({ sample, onClick }: SampleInterface) {
+export default function SampleDisplay({
+    sample,
+    onClick,
+    isActive = false,
+}: SampleInterface) {
     const genreAndTags = sample.genres.concat(sample.tags)
 
     function formatSampleLength(length: number): string {
@@ -34,7 +39,12 @@ export default function SampleDisplay({ sample, onClick }: SampleInterface) {
 
     return (
         <button
-            className="grid grid-flow-col grid-cols-8 border-b border-gray-300 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer bg-white items-center"
+            className={`grid grid-flow-col grid-cols-8 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl"
+            ${
+                isActive
+                    ? 'bg-sssoffwhite border border-sssorange hover:bg-sssoffwhite rounded-md'
+                    : 'bg-white border border-gray-200 hover:bg-sssoffwhite rounded-md'
+            }`}
             onClick={onClick}
         >
             <div className="">

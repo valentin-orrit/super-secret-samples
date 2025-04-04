@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import type { MetaFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import prisma, { Sample } from '../../prisma/client'
 import WelcomeToast from '../components/Toast'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
+import SamplePagination from '../components/SamplePagination'
 
 export const meta: MetaFunction = () => {
     return [
@@ -13,25 +14,43 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+    const url = new URL(request.url)
+    const page = parseInt(url.searchParams.get('page') || '1', 10)
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10)
+    const skip = (page - 1) * pageSize
+
+    // Get paginated samples
     const samples = await prisma.sample.findMany({
+        skip,
+        take: pageSize,
         include: { genres: true, instruments: true, tags: true },
+        orderBy: { name: 'asc' }, // Adjust ordering as needed
     })
+
+    // Get total count for pagination
+    const totalCount = await prisma.sample.count()
+
     const instruments = await prisma.instrument.findMany()
     const genres = await prisma.genre.findMany()
     const tags = await prisma.tag.findMany()
+
     return {
         samples,
+        totalCount,
+        page,
+        pageSize,
+        totalPages: Math.ceil(totalCount / pageSize),
         instruments,
         genres,
         tags,
-        awsBucket: process.env.AWS_S3_BUCKET_NAME,
-        awsRegion: process.env.AWS_REGION,
     }
 }
 
 export default function SamplesPage() {
-    const { samples, awsBucket, awsRegion } = useLoaderData<typeof loader>()
+    const { samples, page, pageSize, totalPages } =
+        useLoaderData<typeof loader>()
+    const [searchParams, setSearchParams] = useSearchParams()
     const [currentSampleId, setCurrentSampleId] = useState<Sample['id'] | null>(
         null
     )
@@ -41,7 +60,13 @@ export default function SamplesPage() {
         (sample) => sample.id === currentSampleId
     )
 
-    // Reset loop state
+    // Reset playback state when page changes
+    useEffect(() => {
+        setIsPlaying(false)
+        setCurrentSampleId(null)
+    }, [page, pageSize])
+
+    // Reset loop state when current sample changes
     useEffect(() => {
         if (currentSample) {
             setIsLooping(currentSample.loop)
@@ -60,6 +85,11 @@ export default function SamplesPage() {
         }
     }
 
+    const handlePageChange = (newPage: number) => {
+        searchParams.set('page', newPage.toString())
+        setSearchParams(searchParams)
+    }
+
     return (
         <div>
             <WelcomeToast />
@@ -73,10 +103,19 @@ export default function SamplesPage() {
                             key={sample.id}
                             sample={sample}
                             onClick={() => handleSampleClick(sample.id)}
+                            isActive={currentSampleId === sample.id}
                         />
                     ))}
                 </div>
+
+                <SamplePagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+
                 <div id="empty-margin" className="my-16"></div>
+
                 <div className="z-100 fixed bottom-0 md:w-3/4 xl:w-1/2">
                     <AudioPlayer
                         currentSample={currentSample}
@@ -84,8 +123,6 @@ export default function SamplesPage() {
                         isLooping={isLooping}
                         onPlayPause={setIsPlaying}
                         onLoopChange={setIsLooping}
-                        awsBucket={awsBucket}
-                        awsRegion={awsRegion}
                     />
                 </div>
             </div>

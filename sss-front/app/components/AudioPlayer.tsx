@@ -1,3 +1,4 @@
+// app/components/AudioPlayer.tsx
 import { useEffect, useState } from 'react'
 import { Sample } from '../../prisma/client'
 import { AudioController } from '../lib/audio-controller'
@@ -9,8 +10,6 @@ interface AudioPlayerProps {
     isLooping: boolean
     onPlayPause: (playing: boolean) => void
     onLoopChange: (looping: boolean) => void
-    awsBucket: string | undefined
-    awsRegion: string | undefined
 }
 
 const audioController =
@@ -22,40 +21,47 @@ export default function AudioPlayer({
     isLooping,
     onPlayPause,
     onLoopChange,
-    awsBucket,
-    awsRegion,
 }: AudioPlayerProps) {
     const [volume, setVolume] = useState(1)
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0.0)
     const [streamUrl, setStreamUrl] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     // Fetch stream URL when currentSample changes
     useEffect(() => {
         if (currentSample) {
-            const parts = currentSample.s3CompressedReferenceName.split('/')
-            const folder = parts.slice(0, -1).join('/')
-            const filename = encodeURIComponent(parts[parts.length - 1])
-            const encodedKey = folder ? `${folder}/${filename}` : filename
-            const url = `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${encodedKey}`
+            setIsLoading(true)
+            // Use the secure endpoint instead of direct S3 URL
+            const key = encodeURIComponent(
+                currentSample.s3CompressedReferenceName
+            )
+            const url = `/api/audio/${key}`
             setStreamUrl(url)
         } else {
             setStreamUrl(null)
         }
-    }, [currentSample, awsBucket, awsRegion])
+    }, [currentSample])
 
     // Load track when streamUrl is ready
     useEffect(() => {
         if (currentSample && streamUrl) {
-            audioController?.loadTrack(streamUrl).then(() => {
-                setCurrentTime(0)
-                if (isPlaying) {
-                    audioController.play()
-                }
-                setDuration(currentSample.length)
-            })
+            audioController
+                ?.loadTrack(streamUrl)
+                .then(() => {
+                    setCurrentTime(0)
+                    setIsLoading(false)
+                    if (isPlaying) {
+                        audioController.play()
+                    }
+                    setDuration(currentSample.length)
+                })
+                .catch((error) => {
+                    console.error('Error loading audio track:', error)
+                    setIsLoading(false)
+                })
         }
-    }, [streamUrl])
+    }, [streamUrl, isPlaying, currentSample])
 
     useEffect(() => {
         audioController?.setLoop(isLooping)
@@ -98,9 +104,11 @@ export default function AudioPlayer({
                 <button
                     onClick={handlePlayPause}
                     className="p-4 bg-amber-100 rounded-full hover:bg-amber-200 disabled:bg-gray-300"
-                    disabled={!streamUrl}
+                    disabled={!streamUrl || isLoading}
                 >
-                    {isPlaying ? (
+                    {isLoading ? (
+                        <span className="block w-5 h-5 rounded-full border-2 border-amber-800 border-t-transparent animate-spin" />
+                    ) : isPlaying ? (
                         <Pause size={20} className="text-amber-800" />
                     ) : (
                         <Play size={20} className="text-amber-800" />

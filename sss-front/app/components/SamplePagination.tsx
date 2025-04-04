@@ -1,69 +1,108 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from './ui/pagination'
 
-interface PaginationProps {
+interface PaginationControlsProps {
     currentPage: number
     totalPages: number
     onPageChange: (page: number) => void
 }
 
-export default function SamplePagination({
+export default function PaginationControls({
     currentPage,
     totalPages,
     onPageChange,
-}: PaginationProps) {
+}: PaginationControlsProps) {
+    // Function to generate array of page numbers to display
+    const getPageNumbers = () => {
+        // For very few pages, show all
+        if (totalPages <= 5) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1)
+        }
+
+        // For more pages, use a sliding window approach
+        const pages = []
+
+        // Always include first page
+        pages.push(1)
+
+        // If current page is not near the start, add ellipsis
+        if (currentPage > 3) {
+            pages.push(null) // null represents ellipsis
+        }
+
+        // Add pages around current page
+        const start = Math.max(2, currentPage - 1)
+        const end = Math.min(totalPages - 1, currentPage + 1)
+
+        for (let i = start; i <= end; i++) {
+            pages.push(i)
+        }
+
+        // If current page is not near the end, add ellipsis
+        if (currentPage < totalPages - 2) {
+            pages.push(null) // null represents ellipsis
+        }
+
+        // Always include last page if we have more than 1 page
+        if (totalPages > 1) {
+            pages.push(totalPages)
+        }
+
+        return pages
+    }
+
+    const pageNumbers = getPageNumbers()
+
     return (
-        <div className="flex items-center justify-center my-6 gap-2">
-            <button
-                onClick={() => onPageChange(currentPage - 1)}
-                disabled={currentPage <= 1}
-                className="p-2 rounded-md border border-gray-300 disabled:opacity-50"
-                aria-label="Previous page"
-            >
-                <ChevronLeft size={16} />
-            </button>
+        <Pagination className="my-6">
+            <PaginationContent>
+                <PaginationItem>
+                    <PaginationPrevious
+                        onClick={() => onPageChange(currentPage - 1)}
+                        className={
+                            currentPage <= 1
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                        }
+                    />
+                </PaginationItem>
 
-            <div className="flex gap-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    // Create a simple window of pages
-                    let pageNum = 1
-                    if (totalPages <= 5) {
-                        pageNum = i + 1
-                    } else if (currentPage <= 3) {
-                        pageNum = i + 1
-                    } else if (currentPage >= totalPages - 2) {
-                        pageNum = totalPages - 4 + i
-                    } else {
-                        pageNum = currentPage - 2 + i
-                    }
-
-                    return (
-                        <button
-                            key={i}
-                            onClick={() => onPageChange(pageNum)}
-                            className={`w-8 h-8 rounded-md text-sm ${
-                                currentPage === pageNum
-                                    ? 'bg-amber-600 text-white font-bold'
-                                    : 'border border-gray-300'
-                            }`}
-                        >
-                            {pageNum}
-                        </button>
+                {pageNumbers.map((page, i) =>
+                    page === null ? (
+                        <PaginationItem key={`ellipsis-${i}`}>
+                            <PaginationEllipsis />
+                        </PaginationItem>
+                    ) : (
+                        <PaginationItem key={page}>
+                            <PaginationLink
+                                isActive={page === currentPage}
+                                onClick={() => onPageChange(page)}
+                                className="cursor-pointer"
+                            >
+                                {page}
+                            </PaginationLink>
+                        </PaginationItem>
                     )
-                })}
-            </div>
+                )}
 
-            <button
-                onClick={() => onPageChange(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                className="p-2 rounded-md border border-gray-300 disabled:opacity-50"
-                aria-label="Next page"
-            >
-                <ChevronRight size={16} />
-            </button>
-
-            <span className="text-sm text-gray-500 ml-2">
-                Page {currentPage} of {totalPages}
-            </span>
-        </div>
+                <PaginationItem>
+                    <PaginationNext
+                        onClick={() => onPageChange(currentPage + 1)}
+                        className={
+                            currentPage >= totalPages
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                        }
+                    />
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
     )
 }
