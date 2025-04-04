@@ -32,7 +32,7 @@ export default function AudioPlayer({
     useEffect(() => {
         if (currentSample) {
             setIsLoading(true)
-            // Use the secure endpoint instead of direct S3 URL
+
             const key = encodeURIComponent(
                 currentSample.s3CompressedReferenceName
             )

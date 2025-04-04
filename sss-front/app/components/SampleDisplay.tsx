@@ -48,7 +48,11 @@ export default function SampleDisplay({
             onClick={onClick}
         >
             <div className="">
-                <Shape instrument={sample.instruments[0].name} width={40} />
+                {sample?.instruments[0]?.name ? (
+                    <Shape instrument={sample.instruments[0].name} width={40} />
+                ) : (
+                    <Shape instrument="drums_logo" width={40} />
+                )}
             </div>
 
             <div className="text-gray-700 text-start">

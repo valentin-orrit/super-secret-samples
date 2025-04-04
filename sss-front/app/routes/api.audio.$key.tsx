@@ -24,12 +24,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
             Key: decodeURIComponent(key),
         })
 
-        // Create a pre-signed URL that expires in 5 minutes (300 seconds)
         const signedUrl = await getSignedUrl(s3Client, command, {
             expiresIn: 300,
         })
 
-        // Redirect to the pre-signed URL
         return redirect(signedUrl)
     } catch (error) {
         console.error('Error generating pre-signed URL:', error)
