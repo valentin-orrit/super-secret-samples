@@ -70,7 +70,7 @@ export default function AudioPlayer({
     // Set up an interval to update the current playback time
     useEffect(() => {
         const interval = setInterval(() => {
-            if (isPlaying && currentSample) {
+            if (isPlaying && currentSample && audioController) {
                 setCurrentTime(audioController.getCurrentTime())
             }
         }, 100)
