@@ -54,7 +54,7 @@ export default function PaginationControls({
     const pageNumbers = getPageNumbers()
 
     return (
-        <Pagination className="my-6">
+        <Pagination className="my-1">
             <PaginationContent>
                 <PaginationItem>
                     <PaginationPrevious
