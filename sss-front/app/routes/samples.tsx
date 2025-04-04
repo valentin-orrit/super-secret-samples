@@ -17,7 +17,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1', 10)
-    const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10)
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '10', 10)
     const skip = (page - 1) * pageSize
 
     // Get paginated samples
@@ -25,10 +25,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
         skip,
         take: pageSize,
         include: { genres: true, instruments: true, tags: true },
-        orderBy: { name: 'asc' }, // Adjust ordering as needed
+        orderBy: { name: 'asc' },
     })
 
-    // Get total count for pagination
     const totalCount = await prisma.sample.count()
 
     const instruments = await prisma.instrument.findMany()

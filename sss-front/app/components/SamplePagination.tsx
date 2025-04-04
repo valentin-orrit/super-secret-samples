@@ -19,14 +19,7 @@ export default function PaginationControls({
     totalPages,
     onPageChange,
 }: PaginationControlsProps) {
-    // Function to generate array of page numbers to display
     const getPageNumbers = () => {
-        // For very few pages, show all
-        if (totalPages <= 5) {
-            return Array.from({ length: totalPages }, (_, i) => i + 1)
-        }
-
-        // For more pages, use a sliding window approach
         const pages = []
 
         // Always include first page
@@ -34,7 +27,7 @@ export default function PaginationControls({
 
         // If current page is not near the start, add ellipsis
         if (currentPage > 3) {
-            pages.push(null) // null represents ellipsis
+            pages.push(null)
         }
 
         // Add pages around current page
@@ -47,7 +40,7 @@ export default function PaginationControls({
 
         // If current page is not near the end, add ellipsis
         if (currentPage < totalPages - 2) {
-            pages.push(null) // null represents ellipsis
+            pages.push(null)
         }
 
         // Always include last page if we have more than 1 page
