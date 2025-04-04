@@ -16,7 +16,7 @@ interface AudioPlayerProps {
 const audioController =
     typeof window !== 'undefined' ? new AudioController() : null
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({
+export default function AudioPlayer({
     currentSample,
     isPlaying,
     isLooping,
@@ -24,7 +24,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     onLoopChange,
     awsBucket,
     awsRegion,
-}) => {
+}: AudioPlayerProps) {
     const [volume, setVolume] = useState(1)
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0.0)
@@ -163,5 +163,3 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         </div>
     )
 }
-
-export default AudioPlayer
