@@ -1,4 +1,3 @@
-// app/components/AudioPlayer.tsx
 import { useEffect, useState } from 'react'
 import { Sample } from '../../prisma/client'
 import { AudioController } from '../lib/audio-controller'
@@ -49,7 +48,6 @@ export default function AudioPlayer({
             audioController
                 ?.loadTrack(streamUrl)
                 .then(() => {
-                    setCurrentTime(0)
                     setIsLoading(false)
                     if (isPlaying) {
                         audioController.play()

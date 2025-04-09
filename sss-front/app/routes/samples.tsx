@@ -75,10 +75,14 @@ export default function SamplesPage() {
     }, [currentSample])
 
     const handleSampleClick = (sampleId: Sample['id']) => {
+        setCurrentSampleId(sampleId)
         const newSample = samples.find((sample) => sample.id === sampleId)
 
-        setCurrentSampleId(sampleId)
         setIsPlaying(true)
+
+        console.log('sampleId :', sampleId)
+        console.log('currentSample : ', currentSample?.name)
+        console.log('newSample : ', newSample)
         if (newSample) {
             setIsLooping(newSample.loop)
         }
