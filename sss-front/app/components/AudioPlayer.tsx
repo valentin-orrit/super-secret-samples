@@ -4,7 +4,7 @@ import { AudioController } from '../lib/audio-controller'
 import { Play, Pause, Repeat, Volume2 } from 'lucide-react'
 
 interface AudioPlayerProps {
-    currentSample?: Sample
+    currentSample: Sample | null
     isPlaying: boolean
     isLooping: boolean
     onPlayPause: (playing: boolean) => void

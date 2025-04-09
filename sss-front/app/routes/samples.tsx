@@ -50,19 +50,14 @@ export default function SamplesPage() {
     const { samples, page, pageSize, totalPages } =
         useLoaderData<typeof loader>()
     const [searchParams, setSearchParams] = useSearchParams()
-    const [currentSampleId, setCurrentSampleId] = useState<Sample['id'] | null>(
-        null
-    )
+    const [currentSample, setCurrentSample] = useState<Sample | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isLooping, setIsLooping] = useState(false)
-    const currentSample = samples.find(
-        (sample) => sample.id === currentSampleId
-    )
 
     // Reset playback state when page changes
     useEffect(() => {
         setIsPlaying(false)
-        setCurrentSampleId(null)
+        setCurrentSample(null)
     }, [page, pageSize])
 
     // Reset loop state when current sample changes
@@ -75,17 +70,12 @@ export default function SamplesPage() {
     }, [currentSample])
 
     const handleSampleClick = (sampleId: Sample['id']) => {
-        setCurrentSampleId(sampleId)
         const newSample = samples.find((sample) => sample.id === sampleId)
+        if (!newSample) return
 
+        setCurrentSample(newSample)
         setIsPlaying(true)
-
-        console.log('sampleId :', sampleId)
-        console.log('currentSample : ', currentSample?.name)
-        console.log('newSample : ', newSample)
-        if (newSample) {
-            setIsLooping(newSample.loop)
-        }
+        setIsLooping(newSample.loop)
     }
 
     const handlePageChange = (newPage: number) => {
@@ -106,7 +96,7 @@ export default function SamplesPage() {
                             key={sample.id}
                             sample={sample}
                             onClick={() => handleSampleClick(sample.id)}
-                            isActive={currentSampleId === sample.id}
+                            isActive={currentSample?.id === sample.id}
                         />
                     ))}
                 </div>
