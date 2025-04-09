@@ -7,8 +7,8 @@ interface AudioPlayerProps {
     currentSample: Sample | null
     isPlaying: boolean
     isLooping: boolean
-    onPlayPause: (playing: boolean) => void
-    onLoopChange: (looping: boolean) => void
+    setIsPlaying: (playing: boolean) => void
+    setIsLooping: (looping: boolean) => void
 }
 
 const audioController =
@@ -18,8 +18,8 @@ export default function AudioPlayer({
     currentSample,
     isPlaying,
     isLooping,
-    onPlayPause,
-    onLoopChange,
+    setIsPlaying,
+    setIsLooping,
 }: AudioPlayerProps) {
     const [volume, setVolume] = useState(1)
     const [currentTime, setCurrentTime] = useState(0)
@@ -81,7 +81,7 @@ export default function AudioPlayer({
         } else {
             audioController?.play()
         }
-        onPlayPause(!isPlaying)
+        setIsPlaying(!isPlaying)
     }
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +113,7 @@ export default function AudioPlayer({
                     )}
                 </button>
                 <button
-                    onClick={() => onLoopChange(!isLooping)}
+                    onClick={() => setIsLooping(!isLooping)}
                     className={`p-4 text-gray-700 rounded-full ${
                         isLooping ? 'text-amber-800' : ''
                     } hover:bg-amber-100`}

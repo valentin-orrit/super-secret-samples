@@ -70,6 +70,7 @@ export default function SamplesPage() {
     }, [currentSample])
 
     const handleSampleClick = (sampleId: Sample['id']) => {
+        setIsPlaying(false)
         const newSample = samples.find((sample) => sample.id === sampleId)
         if (!newSample) return
 
@@ -114,8 +115,8 @@ export default function SamplesPage() {
                         currentSample={currentSample}
                         isPlaying={isPlaying}
                         isLooping={isLooping}
-                        onPlayPause={setIsPlaying}
-                        onLoopChange={setIsLooping}
+                        setIsPlaying={setIsPlaying}
+                        setIsLooping={setIsLooping}
                     />
                 </div>
             </div>
