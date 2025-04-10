@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import prisma, { Sample } from '../../prisma/client'
 import WelcomeToast from '../components/Toast'
+import SamplesHeader from '~/components/SamplesHeader'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
@@ -112,6 +113,7 @@ export default function SamplesPage() {
                 className="flex flex-col justify-center items-center bg-white"
             >
                 <div className="w-full my-4 px-4">
+                    <SamplesHeader />
                     {samples?.map((sample) => (
                         <SampleDisplay
                             key={sample.id}
