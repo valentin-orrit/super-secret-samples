@@ -132,7 +132,7 @@ export default function SamplesPage() {
 
                 <div id="empty-margin" className="my-16"></div>
 
-                <div className="z-100 fixed bottom-0 md:w-3/4 xl:w-1/2">
+                <div className="z-100 fixed bottom-0 md:w-3/4">
                     <AudioPlayer
                         currentSample={currentSample}
                         isPlaying={isPlaying}

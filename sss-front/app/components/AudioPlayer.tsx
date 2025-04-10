@@ -137,7 +137,7 @@ export default function AudioPlayer({
             </div>
 
             {currentSample ? (
-                <div className="text-lg text-gray-800 font-semibold text-start grow-7 overflow-hidden text-ellipsis text-nowrap">
+                <div className="text-sm lg:text-md text-gray-800 font-semibold text-start overflow-hidden text-ellipsis text-nowrap w-1/3">
                     {currentSample.name}
                 </div>
             ) : (
@@ -147,7 +147,7 @@ export default function AudioPlayer({
             )}
 
             {currentSample && duration > 0 && (
-                <div className="flex items-center gap-1 mx-4 grow-0">
+                <div className="flex items-center gap-1 mx-4">
                     <input
                         type="range"
                         min="0"
@@ -164,7 +164,7 @@ export default function AudioPlayer({
             )}
 
             <div className="flex items-center justify-center gap-2">
-                <Volume2 size={24} className="text-amber-800" />
+                <Volume2 size={20} className="text-amber-800" />
                 <input
                     type="range"
                     min="0"
@@ -172,7 +172,7 @@ export default function AudioPlayer({
                     step="0.01"
                     value={volume}
                     onChange={handleVolumeChange}
-                    className="w-20 accent-amber-700"
+                    className="w-10 md:w-16 lg:w-20 accent-amber-700"
                 />
             </div>
         </div>
