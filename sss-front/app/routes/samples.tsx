@@ -202,7 +202,7 @@ export default function SamplesPage() {
                         ))
                     ) : (
                         <div className="text-center py-8 text-gray-500">
-                            No samples found matching "{searchTerm}"
+                            No samples found matching &quot;{searchTerm}&quot;
                         </div>
                     )}
                 </div>
