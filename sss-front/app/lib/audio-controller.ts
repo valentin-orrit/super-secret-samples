@@ -102,4 +102,11 @@ export class AudioController {
         }
         return this.currentOffset
     }
+
+    cleanup() {
+        this.stop()
+        this.currentBuffer = null
+        this.currentOffset = 0
+        this.isPlaying = false
+    }
 }

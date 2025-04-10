@@ -6,6 +6,7 @@ import WelcomeToast from '../components/Toast'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
+import { AudioController } from '../lib/audio-controller'
 
 export const meta: MetaFunction = () => {
     return [
@@ -46,6 +47,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 }
 
+const audioController =
+    typeof window !== 'undefined' ? new AudioController() : null
+
 export default function SamplesPage() {
     const { samples, page, pageSize, totalPages } =
         useLoaderData<typeof loader>()
@@ -70,13 +74,29 @@ export default function SamplesPage() {
     }, [currentSample])
 
     const handleSampleClick = (sampleId: Sample['id']) => {
-        setIsPlaying(false)
-        const newSample = samples.find((sample) => sample.id === sampleId)
-        if (!newSample) return
+        if (isPlaying) {
+            audioController?.stop()
+            setIsPlaying(false)
+        }
 
-        setCurrentSample(newSample)
-        setIsPlaying(true)
-        setIsLooping(newSample.loop)
+        if (currentSample?.id === sampleId) {
+            if (isPlaying) {
+                audioController?.pause()
+                setIsPlaying(false)
+            } else {
+                audioController?.play()
+                setIsPlaying(true)
+            }
+            return
+        }
+
+        setCurrentSample(null)
+
+        setTimeout(() => {
+            const newSample = samples.find((sample) => sample.id === sampleId)
+            if (!newSample) return
+            setCurrentSample(newSample)
+        }, 10)
     }
 
     const handlePageChange = (newPage: number) => {
@@ -117,6 +137,7 @@ export default function SamplesPage() {
                         isLooping={isLooping}
                         setIsPlaying={setIsPlaying}
                         setIsLooping={setIsLooping}
+                        audioController={audioController}
                     />
                 </div>
             </div>

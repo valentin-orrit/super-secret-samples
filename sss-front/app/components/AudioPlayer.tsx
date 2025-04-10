@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Sample } from '../../prisma/client'
-import { AudioController } from '../lib/audio-controller'
 import { Play, Pause, Repeat, Volume2 } from 'lucide-react'
+import { AudioController } from '~/lib/audio-controller'
 
 interface AudioPlayerProps {
     currentSample: Sample | null
@@ -9,10 +9,8 @@ interface AudioPlayerProps {
     isLooping: boolean
     setIsPlaying: (playing: boolean) => void
     setIsLooping: (looping: boolean) => void
+    audioController: AudioController | null
 }
-
-const audioController =
-    typeof window !== 'undefined' ? new AudioController() : null
 
 export default function AudioPlayer({
     currentSample,
@@ -20,6 +18,7 @@ export default function AudioPlayer({
     isLooping,
     setIsPlaying,
     setIsLooping,
+    audioController,
 }: AudioPlayerProps) {
     const [volume, setVolume] = useState(1)
     const [currentTime, setCurrentTime] = useState(0)
@@ -29,8 +28,10 @@ export default function AudioPlayer({
 
     // Fetch stream URL when currentSample changes
     useEffect(() => {
+        // Reset audio state when sample changes
         if (currentSample) {
             setIsLoading(true)
+            audioController?.cleanup()
 
             const key = encodeURIComponent(
                 currentSample.s3CompressedReferenceName
@@ -40,30 +41,38 @@ export default function AudioPlayer({
         } else {
             setStreamUrl(null)
         }
-    }, [currentSample])
+    }, [currentSample, audioController])
 
     // Load track when streamUrl is ready
     useEffect(() => {
-        if (currentSample && streamUrl) {
+        let isMounted = true
+
+        if (currentSample && streamUrl && audioController) {
             audioController
-                ?.loadTrack(streamUrl)
+                .loadTrack(streamUrl)
                 .then(() => {
+                    if (!isMounted) return
+
                     setIsLoading(false)
-                    if (isPlaying) {
-                        audioController.play()
-                    }
                     setDuration(currentSample.length)
+                    audioController.play()
+                    setIsPlaying(true)
                 })
                 .catch((error) => {
+                    if (!isMounted) return
                     console.error('Error loading audio track:', error)
                     setIsLoading(false)
                 })
         }
-    }, [streamUrl, isPlaying, currentSample])
+
+        return () => {
+            isMounted = false
+        }
+    }, [streamUrl, currentSample, audioController, setIsPlaying])
 
     useEffect(() => {
         audioController?.setLoop(isLooping)
-    }, [isLooping])
+    }, [isLooping, audioController])
 
     // Set up an interval to update the current playback time
     useEffect(() => {
@@ -73,7 +82,7 @@ export default function AudioPlayer({
             }
         }, 100)
         return () => clearInterval(interval)
-    }, [isPlaying, currentSample])
+    }, [isPlaying, currentSample, audioController])
 
     const handlePlayPause = () => {
         if (isPlaying) {
