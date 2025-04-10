@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import {
+    useLoaderData,
+    useSearchParams,
+    useSubmit,
+    useNavigation,
+} from '@remix-run/react'
 import prisma, { Sample } from '../../prisma/client'
 import WelcomeToast from '../components/Toast'
 import SampleHeader from '../components/SampleHeader'
@@ -9,6 +14,7 @@ import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
 import { AudioController } from '../lib/audio-controller'
+import { useSearchStore } from '../store'
 
 export const meta: MetaFunction = () => {
     return [
@@ -21,17 +27,33 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') || '15', 15)
-    const skip = (page - 1) * pageSize
+    const searchTerm = url.searchParams.get('search') || ''
 
-    // Get paginated samples
+    const whereClause = searchTerm
+        ? {
+              name: {
+                  contains: searchTerm,
+                  mode: 'insensitive' as const,
+              },
+          }
+        : {}
+
+    const totalCount = await prisma.sample.count({
+        where: whereClause,
+    })
+
+    // Calculate pagination
+    const skip = searchTerm ? 0 : (page - 1) * pageSize
+    const take = searchTerm ? undefined : pageSize
+
+    // Get samples with search filter
     const samples = await prisma.sample.findMany({
+        where: whereClause,
         skip,
-        take: pageSize,
+        take,
         include: { genres: true, instruments: true, tags: true },
         orderBy: { name: 'asc' },
     })
-
-    const totalCount = await prisma.sample.count()
 
     const instruments = await prisma.instrument.findMany()
     const genres = await prisma.genre.findMany()
@@ -43,6 +65,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         page,
         pageSize,
         totalPages: Math.ceil(totalCount / pageSize),
+        searchTerm,
         instruments,
         genres,
         tags,
@@ -53,12 +76,51 @@ const audioController =
     typeof window !== 'undefined' ? new AudioController() : null
 
 export default function SamplesPage() {
-    const { samples, page, pageSize, totalPages } =
-        useLoaderData<typeof loader>()
+    const {
+        samples,
+        page,
+        pageSize,
+        totalPages,
+        searchTerm: initialSearchTerm,
+        totalCount,
+    } = useLoaderData<typeof loader>()
     const [searchParams, setSearchParams] = useSearchParams()
     const [currentSample, setCurrentSample] = useState<Sample | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isLooping, setIsLooping] = useState(false)
+    const { searchTerm, setSearchTerm } = useSearchStore()
+    const submit = useSubmit()
+    const navigation = useNavigation()
+
+    // Sync the URL search param with the store when the page loads
+    useEffect(() => {
+        if (initialSearchTerm !== searchTerm) {
+            setSearchTerm(initialSearchTerm)
+        }
+    }, [initialSearchTerm, setSearchTerm])
+
+    // When search term changes in the store, update the URL and reload data
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchParams.get('search') !== searchTerm) {
+                const newParams = new URLSearchParams(searchParams)
+
+                if (searchTerm) {
+                    newParams.set('search', searchTerm)
+                    // Reset to page 1 when searching
+                    if (newParams.has('page')) {
+                        newParams.set('page', '1')
+                    }
+                } else {
+                    newParams.delete('search')
+                }
+
+                submit(newParams, { replace: true })
+            }
+        }, 300)
+
+        return () => clearTimeout(timer)
+    }, [searchTerm, searchParams, submit])
 
     // Reset playback state when page changes
     useEffect(() => {
@@ -106,10 +168,17 @@ export default function SamplesPage() {
         setSearchParams(searchParams)
     }
 
+    const isLoading =
+        navigation.state === 'loading' || navigation.state === 'submitting'
+
     return (
         <div>
             <WelcomeToast />
-            <SampleHeader title="samples" samples={samples} />
+            <SampleHeader
+                title="samples"
+                totalCount={totalCount}
+                isLoading={isLoading}
+            />
             <div
                 id="main"
                 className="flex flex-col justify-center items-center bg-white"
@@ -118,21 +187,34 @@ export default function SamplesPage() {
                     <div className="sticky top-[69px] z-50 bg-white">
                         <SampleTableHead />
                     </div>
-                    {samples?.map((sample) => (
-                        <SampleDisplay
-                            key={sample.id}
-                            sample={sample}
-                            onClick={() => handleSampleClick(sample.id)}
-                            isActive={currentSample?.id === sample.id}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <div className="text-center py-8">
+                            <p>Loading samples...</p>
+                        </div>
+                    ) : samples.length > 0 ? (
+                        samples.map((sample) => (
+                            <SampleDisplay
+                                key={sample.id}
+                                sample={sample}
+                                onClick={() => handleSampleClick(sample.id)}
+                                isActive={currentSample?.id === sample.id}
+                            />
+                        ))
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">
+                            No samples found matching "{searchTerm}"
+                        </div>
+                    )}
                 </div>
 
-                <SamplePagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
+                {/* Only show pagination when not searching */}
+                {!searchTerm && (
+                    <SamplePagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                )}
 
                 <div id="empty-margin" className="my-16"></div>
 
