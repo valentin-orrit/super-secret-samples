@@ -3,7 +3,8 @@ import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import prisma, { Sample } from '../../prisma/client'
 import WelcomeToast from '../components/Toast'
-import SamplesHeader from '~/components/SamplesHeader'
+import SampleHeader from '../components/SampleHeader'
+import SampleTableHead from '../components/SampleTableHead'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
@@ -19,7 +20,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1', 10)
-    const pageSize = parseInt(url.searchParams.get('pageSize') || '10', 10)
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '15', 15)
     const skip = (page - 1) * pageSize
 
     // Get paginated samples
@@ -108,12 +109,15 @@ export default function SamplesPage() {
     return (
         <div>
             <WelcomeToast />
+            <SampleHeader title="samples" />
             <div
                 id="main"
                 className="flex flex-col justify-center items-center bg-white"
             >
-                <div className="w-full my-4 px-4">
-                    <SamplesHeader />
+                <div className="w-full mb-4 px-4">
+                    <div className="sticky top-[69px] z-50 bg-white">
+                        <SampleTableHead />
+                    </div>
                     {samples?.map((sample) => (
                         <SampleDisplay
                             key={sample.id}
