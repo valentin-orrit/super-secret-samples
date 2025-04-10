@@ -7,6 +7,7 @@ import { getAuth } from '@clerk/remix/ssr.server'
 import SampleHeader from '~/components/SampleHeader'
 import WelcomeToast from '~/components/Toast'
 import SampleTableHead from '~/components/SampleTableHead'
+import { Sample } from '../../prisma/client'
 
 export const meta: MetaFunction = () => {
     return [
@@ -24,10 +25,13 @@ export const loader: LoaderFunction = async (args) => {
 }
 
 export default function Library() {
+    // temporary samples to prevent breaking error
+    const samples: Sample[] = []
+
     return (
         <div>
             <WelcomeToast />
-            <SampleHeader title="library" />
+            <SampleHeader title="library" samples={samples} />
             <div
                 id="main"
                 className="flex flex-col justify-center items-center bg-white"
