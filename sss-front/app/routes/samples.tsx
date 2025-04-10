@@ -31,10 +31,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const whereClause = searchTerm
         ? {
-              name: {
-                  contains: searchTerm,
-                  mode: 'insensitive' as const,
-              },
+              OR: [
+                  {
+                      name: {
+                          contains: searchTerm,
+                          mode: 'insensitive' as const,
+                      },
+                  },
+                  {
+                      tags: {
+                          some: {
+                              name: {
+                                  contains: searchTerm,
+                                  mode: 'insensitive' as const,
+                              },
+                          },
+                      },
+                  },
+              ],
           }
         : {}
 
