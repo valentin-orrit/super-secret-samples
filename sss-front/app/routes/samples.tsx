@@ -109,7 +109,7 @@ export default function SamplesPage() {
     return (
         <div>
             <WelcomeToast />
-            <SampleHeader title="samples" />
+            <SampleHeader title="samples" samples={samples} />
             <div
                 id="main"
                 className="flex flex-col justify-center items-center bg-white"
