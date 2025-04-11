@@ -1,5 +1,6 @@
 import { SearchIcon } from 'lucide-react'
 import { useSearchStore } from '../store'
+import SamplefilterMenu from './SampleFilterMenu'
 
 interface SampleHeaderProps {
     title: string
@@ -41,6 +42,16 @@ export default function SampleHeader({
                         {isLoading ? '...' : totalCount} results!
                     </div>
                 </div>
+            </div>
+            <div className="mt-4 flex gap-4">
+                <SamplefilterMenu
+                    menuTitle="instruments"
+                    menuContent={['drums', 'percs']}
+                />
+                <SamplefilterMenu
+                    menuTitle="genres"
+                    menuContent={['house', 'techno']}
+                />
             </div>
         </header>
     )
