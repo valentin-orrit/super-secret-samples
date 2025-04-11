@@ -1,6 +1,7 @@
-import { SearchIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useSearchStore } from '../store'
 import SamplefilterMenu from './SampleFilterMenu'
+import { SearchIcon } from 'lucide-react'
 
 interface SampleHeaderProps {
     title: string
@@ -14,6 +15,32 @@ export default function SampleHeader({
     isLoading = false,
 }: SampleHeaderProps) {
     const { searchTerm, setSearchTerm } = useSearchStore()
+    const [instruments, setInstruments] = useState([])
+    const [genres, setGenres] = useState([])
+
+    // fetch instruments from db
+    useEffect(() => {
+        fetch('/api/get-instruments')
+            .then((res) => res.json())
+            .then((data) => {
+                setInstruments(data)
+            })
+            .catch((err) => {
+                console.error('Fetch error:', err)
+            })
+    }, [])
+
+    // fetch instruments from db
+    useEffect(() => {
+        fetch('/api/get-genres')
+            .then((res) => res.json())
+            .then((data) => {
+                setGenres(data)
+            })
+            .catch((err) => {
+                console.error('Fetch error:', err)
+            })
+    }, [])
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const value = e.target.value
@@ -46,12 +73,9 @@ export default function SampleHeader({
             <div className="mt-4 flex gap-4">
                 <SamplefilterMenu
                     menuTitle="instruments"
-                    menuContent={['drums', 'percs']}
+                    menuContent={instruments}
                 />
-                <SamplefilterMenu
-                    menuTitle="genres"
-                    menuContent={['house', 'techno']}
-                />
+                <SamplefilterMenu menuTitle="genres" menuContent={genres} />
             </div>
         </header>
     )

@@ -81,9 +81,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         orderBy: { name: 'asc' },
     })
 
-    const instruments = await prisma.instrument.findMany()
-    const genres = await prisma.genre.findMany()
-
     return {
         samples,
         totalCount,
@@ -91,8 +88,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         pageSize,
         totalPages: Math.ceil(totalCount / pageSize),
         searchTerm,
-        instruments,
-        genres,
     }
 }
 

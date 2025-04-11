@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Instrument, Genre } from 'prisma/client'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,7 +10,7 @@ import { ChevronDown } from 'lucide-react'
 
 interface SamplefilterMenuProps {
     menuTitle: string
-    menuContent: string[]
+    menuContent: Instrument[] | Genre[]
 }
 
 export default function SamplefilterMenu({
@@ -32,8 +33,8 @@ export default function SamplefilterMenu({
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 {menuContent.map((menuContentItem) => (
-                    <DropdownMenuItem key={menuContentItem}>
-                        {menuContentItem}
+                    <DropdownMenuItem key={menuContentItem.name}>
+                        {menuContentItem.name}
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
