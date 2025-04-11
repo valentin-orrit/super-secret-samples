@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import {
@@ -29,6 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const pageSize = parseInt(url.searchParams.get('pageSize') || '15', 15)
     const searchTerm = url.searchParams.get('search') || ''
 
+    // where clause to search for sample name, genres and tags
     const whereClause = searchTerm
         ? {
               OR: [
@@ -40,6 +42,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
                   },
                   {
                       tags: {
+                          some: {
+                              name: {
+                                  contains: searchTerm,
+                                  mode: 'insensitive' as const,
+                              },
+                          },
+                      },
+                  },
+                  {
+                      genres: {
                           some: {
                               name: {
                                   contains: searchTerm,
@@ -71,7 +83,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const instruments = await prisma.instrument.findMany()
     const genres = await prisma.genre.findMany()
-    const tags = await prisma.tag.findMany()
 
     return {
         samples,
@@ -82,7 +93,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         searchTerm,
         instruments,
         genres,
-        tags,
     }
 }
 
@@ -116,25 +126,24 @@ export default function SamplesPage() {
     // When search term changes in the store, update the URL and reload data
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (searchParams.get('search') !== searchTerm) {
+            const currentSearchParam = searchParams.get('search') || ''
+            if (currentSearchParam !== searchTerm) {
                 const newParams = new URLSearchParams(searchParams)
 
                 if (searchTerm) {
                     newParams.set('search', searchTerm)
                     // Reset to page 1 when searching
-                    if (newParams.has('page')) {
-                        newParams.set('page', '1')
-                    }
+                    newParams.set('page', '1')
                 } else {
                     newParams.delete('search')
                 }
 
                 submit(newParams, { replace: true })
             }
-        }, 300)
+        }, 300) // debounce
 
         return () => clearTimeout(timer)
-    }, [searchTerm, searchParams, submit])
+    }, [searchTerm])
 
     // Reset playback state when page changes
     useEffect(() => {

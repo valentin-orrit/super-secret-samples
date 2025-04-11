@@ -28,11 +28,11 @@ export default function SampleHeader({
                         35 credits
                     </p>
                 </div>
-                <div className="flex w-1/2 justify-center items-start bg-white rounded-xl p-2 border-2 border-transparent group focus-within:border-sssyellow">
+                <div className="flex w-1/2 justify-center items-start bg-white rounded-lg p-2 border-2 border-sssmutegray group focus-within:border-sssyellow">
                     <SearchIcon />
                     <input
                         type="text"
-                        placeholder="Search Here..."
+                        placeholder="search by name, genre and tags..."
                         onChange={handleChange}
                         value={searchTerm}
                         className="search-input w-full px-4 outline-none"
