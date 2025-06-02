@@ -5,7 +5,13 @@ export default [
     index('./routes/_index.tsx'),
     route('samples', './routes/samples.tsx'),
     route('sample-request', './routes/sample-request.tsx'),
-    // route('sample-upload', './routes/sample-upload.tsx'),
+
+    // Sample upload routes
+    route('sample-upload', './routes/sample-upload._index.tsx'),
+    route(
+        'sample-upload/fill-sample-data',
+        './routes/sample-upload.fill-sample-data.tsx'
+    ),
 
     // API routes
     route('api/audio/:key', './routes/api.audio.$key.tsx'),

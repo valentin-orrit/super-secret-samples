@@ -19,6 +19,12 @@ type Pages = {
   "/sample-request": {
     params: {};
   };
+  "/sample-upload": {
+    params: {};
+  };
+  "/sample-upload/fill-sample-data": {
+    params: {};
+  };
   "/api/audio/:key": {
     params: {
       "key": string;
@@ -35,7 +41,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/samples" | "/sample-request" | "/api/audio/:key" | "/api/get-genres" | "/api/get-instruments";
+    page: "/" | "/samples" | "/sample-request" | "/sample-upload" | "/sample-upload/fill-sample-data" | "/api/audio/:key" | "/api/get-genres" | "/api/get-instruments";
   };
   "./routes/_index.tsx": {
     id: "routes/_index";
@@ -48,6 +54,14 @@ type RouteFiles = {
   "./routes/sample-request.tsx": {
     id: "routes/sample-request";
     page: "/sample-request";
+  };
+  "./routes/sample-upload._index.tsx": {
+    id: "routes/sample-upload._index";
+    page: "/sample-upload";
+  };
+  "./routes/sample-upload.fill-sample-data.tsx": {
+    id: "routes/sample-upload.fill-sample-data";
+    page: "/sample-upload/fill-sample-data";
   };
   "./routes/api.audio.$key.tsx": {
     id: "routes/api.audio.$key";
