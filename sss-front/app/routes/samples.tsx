@@ -8,7 +8,6 @@ import {
     useNavigation,
 } from '@remix-run/react'
 import prisma, { Sample } from '../../prisma/client'
-import WelcomeToast from '../components/Toast'
 import SampleHeader from '../components/SampleHeader'
 import SampleTableHead from '../components/SampleTableHead'
 import SampleDisplay from '../components/SampleDisplay'
@@ -191,7 +190,6 @@ export default function SamplesPage() {
 
     return (
         <div>
-            <WelcomeToast />
             <SampleHeader
                 title="samples"
                 totalCount={totalCount}

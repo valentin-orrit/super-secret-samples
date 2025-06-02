@@ -1,6 +1,5 @@
 import { type MetaFunction } from '@remix-run/node'
 import SampleHeader from '../components/SampleHeader'
-import WelcomeToast from '../components/Toast'
 import SampleTableHead from '../components/SampleTableHead'
 import { Sample } from '../../prisma/client'
 
@@ -17,7 +16,6 @@ export default function Library() {
 
     return (
         <div>
-            <WelcomeToast />
             <SampleHeader title="library" samples={samples} />
             <div
                 id="main"
