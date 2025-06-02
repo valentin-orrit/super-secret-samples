@@ -1,30 +1,13 @@
 import { screen } from '@testing-library/react'
-import { useUser, useClerk } from '@clerk/remix'
 import Navbar from '../../app/components/Navbar'
 import { renderWithMemoryRouter } from '../lib/RenderWithRouter'
 
-vi.mock('@clerk/remix', () => ({
-    useUser: vi.fn(),
-    useClerk: vi.fn(),
-}))
-
-const mockUserState = (isSignedIn: boolean, signOut = vi.fn()) => {
-    vi.mocked(useUser).mockReturnValue({ isSignedIn } as never)
-    vi.mocked(useClerk).mockReturnValue({ signOut } as never)
-}
-
 describe('Navbar', () => {
-    const mockSignOut = vi.fn()
-
     beforeEach(() => {
         vi.clearAllMocks()
     })
 
     describe('when user is signed in', () => {
-        beforeEach(() => {
-            mockUserState(true, mockSignOut)
-        })
-
         it('should render Navbar with all its elements', () => {
             renderWithMemoryRouter(<Navbar />, '/samples')
             const samplesLink = screen.getByRole('link', { name: /samples/i })
@@ -59,10 +42,6 @@ describe('Navbar', () => {
     })
 
     describe('when user is signed out', () => {
-        beforeEach(() => {
-            mockUserState(false, mockSignOut)
-        })
-
         it('should render sign in link', () => {
             renderWithMemoryRouter(<Navbar />, '/samples')
             const signInLink = screen.getByRole('link', { name: /sign/i })

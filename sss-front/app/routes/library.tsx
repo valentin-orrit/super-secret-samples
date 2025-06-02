@@ -1,12 +1,7 @@
-import {
-    type MetaFunction,
-    type LoaderFunction,
-    redirect,
-} from '@remix-run/node'
-import { getAuth } from '@clerk/remix/ssr.server'
-import SampleHeader from '~/components/SampleHeader'
-import WelcomeToast from '~/components/Toast'
-import SampleTableHead from '~/components/SampleTableHead'
+import { type MetaFunction } from '@remix-run/node'
+import SampleHeader from '../components/SampleHeader'
+import WelcomeToast from '../components/Toast'
+import SampleTableHead from '../components/SampleTableHead'
 import { Sample } from '../../prisma/client'
 
 export const meta: MetaFunction = () => {
@@ -14,14 +9,6 @@ export const meta: MetaFunction = () => {
         { title: 'samples page - super secret samples' },
         { name: 'description', content: 'browse samples!' },
     ]
-}
-
-export const loader: LoaderFunction = async (args) => {
-    const { userId } = await getAuth(args)
-    if (!userId) {
-        return redirect('/sign-in')
-    }
-    return {}
 }
 
 export default function Library() {

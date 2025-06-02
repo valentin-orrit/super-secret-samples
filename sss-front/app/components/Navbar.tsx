@@ -1,7 +1,5 @@
 import { NavLink, Link } from '@remix-run/react'
 import Shape from './Shape'
-import UserMenu from './UserMenu'
-import { VolumeSliderMenu } from './VolumeSliderMenu'
 
 export default function Navbar() {
     return (
@@ -69,15 +67,6 @@ export default function Navbar() {
                         </div>
                     )}
                 </NavLink>
-            </div>
-
-            <div id="menus" className="flex items-center">
-                <div id="user-menu" className="mx-2 flex items-center">
-                    <UserMenu />
-                </div>
-                <div id="user-menu" className="mx-2">
-                    <VolumeSliderMenu />
-                </div>
             </div>
         </div>
     )
