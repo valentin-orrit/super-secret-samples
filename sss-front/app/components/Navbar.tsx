@@ -45,28 +45,6 @@ export default function Navbar() {
                         </div>
                     )}
                 </NavLink>
-                <NavLink
-                    to="/library"
-                    className={({ isActive }) =>
-                        isActive ? 'text-sssorange' : 'hover:text-sssyellow'
-                    }
-                >
-                    {({ isActive }) => (
-                        <div className="relative flex flex-col items-center">
-                            <span
-                                id="library"
-                                className="hover:text-sssyellow  mx-1 sm:mx-4"
-                            >
-                                library
-                            </span>
-                            <span className="w-14 absolute top-6">
-                                {isActive && (
-                                    <Shape instrument="nav_selector" />
-                                )}
-                            </span>
-                        </div>
-                    )}
-                </NavLink>
             </div>
         </div>
     )
