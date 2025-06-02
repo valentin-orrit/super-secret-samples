@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Sample } from '../../prisma/client'
 import { Play, Pause, Repeat, Volume2 } from 'lucide-react'
-import { AudioController } from '~/lib/audio-controller'
+import { AudioController } from '../lib/audio-controller'
 
 interface AudioPlayerProps {
     currentSample: Sample | null

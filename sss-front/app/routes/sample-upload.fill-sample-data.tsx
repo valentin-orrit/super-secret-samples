@@ -1,9 +1,13 @@
-import type { MetaFunction } from 'react-router';
-import { useLocation, useLoaderData, useActionData } from 'react-router';
+import {
+    useLocation,
+    useLoaderData,
+    useActionData,
+    MetaFunction,
+    ActionFunction,
+} from 'react-router'
 import { FileWithPath } from 'react-dropzone-esm'
 import SampleDataFill from '../components/SampleDataFill'
 import prisma from '../../prisma/client'
-import { ActionFunction } from 'react-router';
 import processAndUploadSample from '../lib/sample-upload'
 import fs from 'fs'
 
