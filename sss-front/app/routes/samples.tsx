@@ -1,12 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import {
-    useLoaderData,
-    useSearchParams,
-    useSubmit,
-    useNavigation,
-} from '@remix-run/react'
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
+import { useLoaderData, useSearchParams, useSubmit, useNavigation } from 'react-router';
 import prisma, { Sample } from '../../prisma/client'
 import SampleHeader from '../components/SampleHeader'
 import SampleTableHead from '../components/SampleTableHead'

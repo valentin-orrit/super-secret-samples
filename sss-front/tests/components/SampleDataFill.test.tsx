@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import SampleDataFill from '../../app/components/SampleDataFill'
 
 // Carousel Mocks need for shadcn Carousel

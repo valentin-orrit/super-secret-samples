@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import { useToast } from '../../app/hooks/use-toast'
 
 vi.mock('../../app/hooks/use-toast')
-vi.mock('@remix-run/react', () => ({
+vi.mock('react-router', () => ({
     useLoaderData: () => ({
         samples: [],
         instruments: [],

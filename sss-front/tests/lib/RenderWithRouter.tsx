@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { BrowserRouter, MemoryRouter } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter } from 'react-router';
 
 // Wrapper component with BrowserRouter
 export const renderWithRouter = (ui: React.ReactElement) => {
