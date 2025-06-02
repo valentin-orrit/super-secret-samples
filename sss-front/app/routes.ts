@@ -1,20 +1,14 @@
 import { type RouteConfig, route, index } from '@react-router/dev/routes'
 
-import { loader as audioLoader } from './routes/api.audio.$key'
-import { loader as genresLoader } from './routes/api.get-genres'
-
 export default [
+    // Main routes
     index('./routes/_index.tsx'),
-
     route('samples', './routes/samples.tsx'),
+    route('sample-request', './routes/sample-request.tsx'),
+    // route('sample-upload', './routes/sample-upload.tsx'),
 
-    // Define dynamic route for /api/audio/:key
-    route('api/audio/:key', {
-        loader: audioLoader,
-    }),
-
-    // Define static route for /api/get-genres
-    route('api/get-genres', {
-        loader: genresLoader,
-    }),
+    // API routes
+    route('api/audio/:key', './routes/api.audio.$key.tsx'),
+    route('api/get-genres', './routes/api.get-genres.tsx'),
+    route('api/get-instruments', './routes/api.get-instruments.tsx'),
 ] satisfies RouteConfig

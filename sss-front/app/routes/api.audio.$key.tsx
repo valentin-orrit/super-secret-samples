@@ -1,11 +1,10 @@
-import type { LoaderFunctionArgs } from 'react-router';
-import { redirect } from 'react-router';
+import type { LoaderFunctionArgs } from 'react-router'
+import { redirect } from 'react-router'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 export async function loader({ params }: LoaderFunctionArgs) {
     const key = params.key
-
     if (!key) {
         return new Response('Missing audio key', { status: 400 })
     }
