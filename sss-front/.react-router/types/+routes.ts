@@ -36,12 +36,17 @@ type Pages = {
   "/api/get-instruments": {
     params: {};
   };
+  "/*": {
+    params: {
+      "*": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/samples" | "/sample-request" | "/sample-upload" | "/sample-upload/fill-sample-data" | "/api/audio/:key" | "/api/get-genres" | "/api/get-instruments";
+    page: "/" | "/samples" | "/sample-request" | "/sample-upload" | "/sample-upload/fill-sample-data" | "/api/audio/:key" | "/api/get-genres" | "/api/get-instruments" | "/*";
   };
   "./routes/_index.tsx": {
     id: "routes/_index";
@@ -74,5 +79,9 @@ type RouteFiles = {
   "./routes/api.get-instruments.tsx": {
     id: "routes/api.get-instruments";
     page: "/api/get-instruments";
+  };
+  "./routes/$.tsx": {
+    id: "routes/$";
+    page: "/*";
   };
 };
