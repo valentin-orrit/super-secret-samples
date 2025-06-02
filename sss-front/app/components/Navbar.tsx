@@ -1,4 +1,4 @@
-import { NavLink, Link } from '@remix-run/react'
+import { NavLink, Link } from 'react-router';
 import Shape from './Shape'
 
 export default function Navbar() {

@@ -1,4 +1,4 @@
-import { type MetaFunction } from '@remix-run/node'
+import { type MetaFunction } from 'react-router';
 import SampleHeader from '../components/SampleHeader'
 import SampleTableHead from '../components/SampleTableHead'
 import { Sample } from '../../prisma/client'

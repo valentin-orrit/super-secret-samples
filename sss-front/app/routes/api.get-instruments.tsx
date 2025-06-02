@@ -1,9 +1,9 @@
-import prisma from 'prisma/client'
+import prisma from '../../prisma/client'
 
 export async function loader() {
     try {
         const instruments = await prisma.instrument.findMany()
-        return instruments
+        return Response.json(instruments)
     } catch (error) {
         console.error('Error fetching instruments:', error)
         return new Response('Error accessing instruments', { status: 500 })

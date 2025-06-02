@@ -1,9 +1,13 @@
-import type { MetaFunction } from '@remix-run/node'
-import { useLocation, useLoaderData, useActionData } from '@remix-run/react'
+import {
+    useLocation,
+    useLoaderData,
+    useActionData,
+    MetaFunction,
+    ActionFunction,
+} from 'react-router'
 import { FileWithPath } from 'react-dropzone-esm'
 import SampleDataFill from '../components/SampleDataFill'
 import prisma from '../../prisma/client'
-import { ActionFunction } from '@remix-run/node'
 import processAndUploadSample from '../lib/sample-upload'
 import fs from 'fs'
 

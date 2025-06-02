@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Instrument, Genre } from 'prisma/client'
+import { Instrument, Genre } from '../../prisma/client'
 import {
     DropdownMenu,
     DropdownMenuContent,

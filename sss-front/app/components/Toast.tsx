@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { ToastAction } from '@radix-ui/react-toast'
-import { Link } from '@remix-run/react'
+import { Link } from 'react-router';
 import { useToast } from '../hooks/use-toast'
 
 export default function WelcomeToast() {

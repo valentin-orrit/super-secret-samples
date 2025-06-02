@@ -7,7 +7,7 @@ import {
 } from './ui/carousel'
 import type { Instrument, Genre, Tag } from '../../prisma/client'
 import { useState } from 'react'
-import { Form, useSubmit, useNavigation } from '@remix-run/react'
+import { Form, useSubmit, useNavigation } from 'react-router';
 
 interface Samples {
     samples: File[]
