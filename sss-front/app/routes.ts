@@ -17,6 +17,10 @@ export default [
     route('api/audio/:key', './routes/api.audio.$key.tsx'),
     route('api/get-genres', './routes/api.get-genres.tsx'),
     route('api/get-instruments', './routes/api.get-instruments.tsx'),
+    route(
+        'api/download-sample/:sampleId',
+        './routes/api.download-sample.$sampleId.tsx'
+    ),
 
     // Catch-all route for unmatched URLs
     route('*', './routes/$.tsx'),

@@ -5,7 +5,7 @@ import {
     Tag,
 } from '../../prisma/client'
 import Shape from '../components/Shape'
-import { Infinity, Route } from 'lucide-react'
+import { Infinity, Route, Download } from 'lucide-react'
 
 interface Sample extends PrismaSample {
     genres: Genre[]
@@ -30,22 +30,61 @@ export default function SampleDisplay({
         const totalSeconds = Math.max(Math.floor(length), 1)
         const minutes = Math.floor(totalSeconds / 60)
         const seconds = totalSeconds % 60
-
         return `${String(minutes).padStart(1, '0')}:${String(seconds).padStart(
             1,
             '0'
         )}`
     }
 
+    const handleDownload = async (e: React.MouseEvent) => {
+        // Prevent event bubbling to play the sample
+        e.stopPropagation()
+
+        try {
+            const downloadUrl = `/api/download-sample/${sample.id}`
+
+            const link = document.createElement('a')
+            link.href = downloadUrl
+            link.download = `${sample.name}.wav`
+            link.target = '_blank'
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        } catch (error) {
+            console.error('Download failed:', error)
+        }
+    }
+
+    const handleSampleClick = (e: React.MouseEvent) => {
+        const target = e.target as HTMLElement
+        if (!target.closest('[data-download-button]')) {
+            onClick?.()
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            const target = e.target as HTMLElement
+            if (!target.closest('[data-download-button]')) {
+                e.preventDefault()
+                onClick?.()
+            }
+        }
+    }
+
     return (
-        <button
-            className={`grid grid-flow-col grid-cols-8 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl"
-            ${
+        <div
+            className={`grid grid-flow-col grid-cols-9 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
                 isActive
                     ? 'bg-sssoffwhite border border-sssorange hover:bg-sssoffwhite rounded-md'
                     : 'bg-white border border-gray-200 hover:bg-sssoffwhite rounded-md'
             }`}
-            onClick={onClick}
+            onClick={handleSampleClick}
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
+            role="button"
+            aria-label={`Play sample: ${sample.name}`}
+            aria-pressed={isActive}
         >
             <div className="">
                 {sample?.instruments[0]?.name ? (
@@ -54,11 +93,9 @@ export default function SampleDisplay({
                     <Shape instrument="drums_logo" width={40} />
                 )}
             </div>
-
             <div className="text-gray-700 text-start">
                 {sample.loop ? <Infinity /> : <Route />}
             </div>
-
             <div className="text-lg text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap">
                     {sample.name}
@@ -74,7 +111,6 @@ export default function SampleDisplay({
                     ))}
                 </div>
             </div>
-
             <div className="col-span-3 grid grid-flow-col grid-cols-3 gap-x-2">
                 <div className="text-gray-700 text-start">
                     {formatSampleLength(sample.length)}
@@ -84,6 +120,17 @@ export default function SampleDisplay({
                     {sample.bpm !== null && sample.bpm > 0 && sample.bpm}
                 </div>
             </div>
-        </button>
+            <div className="flex justify-end">
+                <button
+                    onClick={handleDownload}
+                    data-download-button
+                    className="p-2 text-sssblue hover:text-sssyellow hover:bg-sssblue rounded-lg transition-colors opacity-100"
+                    title={`Download ${sample.name}`}
+                    aria-label={`Download ${sample.name}`}
+                >
+                    <Download size={20} />
+                </button>
+            </div>
+        </div>
     )
 }

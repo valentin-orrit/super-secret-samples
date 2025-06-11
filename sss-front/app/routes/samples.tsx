@@ -14,6 +14,7 @@ import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
 import { AudioController } from '../lib/audio-controller'
+import { getStreamUrl } from '../lib/sample-urls'
 import { useSearchStore } from '../store'
 
 export const meta: MetaFunction = () => {
@@ -118,8 +119,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
         orderBy: { name: 'asc' },
     })
 
+    // Add URLs to samples
+    const samplesWithUrls = samples.map((sample) => ({
+        ...sample,
+        url: getStreamUrl(sample),
+    }))
+
     return {
-        samples,
+        samples: samplesWithUrls,
         totalCount,
         page,
         pageSize,
@@ -217,9 +224,6 @@ export default function SamplesPage() {
 
         return () => clearTimeout(timer)
     }, [searchTerm, selectedInstrument, selectedGenre, searchParams, submit])
-
-    // Rest of your existing component logic remains the same...
-    // (handleSampleClick, handlePageChange, etc.)
 
     const handleSampleClick = (sampleId: Sample['id']) => {
         if (isPlaying) {
