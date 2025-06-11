@@ -52,9 +52,6 @@ export default function SampleHeader({
             <div className="flex w-full justify-between items-start">
                 <div className="flex flex-row items-end justify-start gap-4">
                     <h1 className="text-3xl text-center font-bold">{title}</h1>
-                    <p className="text-sssblue text-sm pb-[3px] mx-4">
-                        35 credits
-                    </p>
                 </div>
                 <div className="flex w-1/2 justify-center items-start bg-white rounded-lg p-2 border-2 border-sssmutegray group focus-within:border-sssyellow">
                     <SearchIcon />
