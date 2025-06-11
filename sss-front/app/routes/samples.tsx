@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
-import { useLoaderData, useSearchParams, useSubmit, useNavigation } from 'react-router';
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router'
+import {
+    useLoaderData,
+    useSearchParams,
+    useSubmit,
+    useNavigation,
+} from 'react-router'
 import prisma, { Sample } from '../../prisma/client'
 import SampleHeader from '../components/SampleHeader'
 import SampleTableHead from '../components/SampleTableHead'
@@ -23,50 +28,88 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const page = parseInt(url.searchParams.get('page') || '1', 10)
     const pageSize = parseInt(url.searchParams.get('pageSize') || '15', 15)
     const searchTerm = url.searchParams.get('search') || ''
+    const selectedInstrument = url.searchParams.get('instrument') || ''
+    const selectedGenre = url.searchParams.get('genre') || ''
 
-    // where clause to search for sample name, genres and tags
-    const whereClause = searchTerm
-        ? {
-              OR: [
-                  {
-                      name: {
-                          contains: searchTerm,
-                          mode: 'insensitive' as const,
-                      },
-                  },
-                  {
-                      tags: {
-                          some: {
-                              name: {
-                                  contains: searchTerm,
-                                  mode: 'insensitive' as const,
-                              },
-                          },
-                      },
-                  },
-                  {
-                      genres: {
-                          some: {
-                              name: {
-                                  contains: searchTerm,
-                                  mode: 'insensitive' as const,
-                              },
-                          },
-                      },
-                  },
-              ],
-          }
-        : {}
+    // Build where clause with all filters
+    const whereConditions = []
+
+    // Search term filter
+    if (searchTerm) {
+        whereConditions.push({
+            OR: [
+                {
+                    name: {
+                        contains: searchTerm,
+                        mode: 'insensitive' as const,
+                    },
+                },
+                {
+                    tags: {
+                        some: {
+                            name: {
+                                contains: searchTerm,
+                                mode: 'insensitive' as const,
+                            },
+                        },
+                    },
+                },
+                {
+                    genres: {
+                        some: {
+                            name: {
+                                contains: searchTerm,
+                                mode: 'insensitive' as const,
+                            },
+                        },
+                    },
+                },
+            ],
+        })
+    }
+
+    // Instrument filter
+    if (selectedInstrument) {
+        whereConditions.push({
+            instruments: {
+                some: {
+                    name: {
+                        equals: selectedInstrument,
+                        mode: 'insensitive' as const,
+                    },
+                },
+            },
+        })
+    }
+
+    // Genre filter
+    if (selectedGenre) {
+        whereConditions.push({
+            genres: {
+                some: {
+                    name: {
+                        equals: selectedGenre,
+                        mode: 'insensitive' as const,
+                    },
+                },
+            },
+        })
+    }
+
+    // Combine all conditions with AND
+    const whereClause =
+        whereConditions.length > 0 ? { AND: whereConditions } : {}
 
     const totalCount = await prisma.sample.count({
         where: whereClause,
     })
 
-    // Calculate pagination
-    const skip = searchTerm ? 0 : (page - 1) * pageSize
-    const take = searchTerm ? undefined : pageSize
+    // Calculate pagination - disable pagination when any filter is active
+    const hasFilters = searchTerm || selectedInstrument || selectedGenre
+    const skip = hasFilters ? 0 : (page - 1) * pageSize
+    const take = hasFilters ? undefined : pageSize
 
-    // Get samples with search filter
+    // Get samples with filters
     const samples = await prisma.sample.findMany({
         where: whereClause,
         skip,
@@ -82,72 +125,103 @@ export async function loader({ request }: LoaderFunctionArgs) {
         pageSize,
         totalPages: Math.ceil(totalCount / pageSize),
         searchTerm,
+        selectedInstrument,
+        selectedGenre,
     }
 }
 
 const audioController =
     typeof window !== 'undefined' ? new AudioController() : null
 
+// Add this to your SamplesPage component, replace the existing useEffect for search handling
+
 export default function SamplesPage() {
     const {
         samples,
         page,
-        pageSize,
         totalPages,
         searchTerm: initialSearchTerm,
+        selectedInstrument: initialSelectedInstrument,
+        selectedGenre: initialSelectedGenre,
         totalCount,
     } = useLoaderData<typeof loader>()
+
     const [searchParams, setSearchParams] = useSearchParams()
     const [currentSample, setCurrentSample] = useState<Sample | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isLooping, setIsLooping] = useState(false)
-    const { searchTerm, setSearchTerm } = useSearchStore()
+    const {
+        searchTerm,
+        selectedInstrument,
+        selectedGenre,
+        setSearchTerm,
+        setSelectedInstrument,
+        setSelectedGenre,
+    } = useSearchStore()
     const submit = useSubmit()
     const navigation = useNavigation()
 
-    // Sync the URL search param with the store when the page loads
+    // Sync URL params with store when page loads
     useEffect(() => {
         if (initialSearchTerm !== searchTerm) {
             setSearchTerm(initialSearchTerm)
         }
-    }, [initialSearchTerm, setSearchTerm])
+        if (initialSelectedInstrument !== selectedInstrument) {
+            setSelectedInstrument(initialSelectedInstrument || null)
+        }
+        if (initialSelectedGenre !== selectedGenre) {
+            setSelectedGenre(initialSelectedGenre || null)
+        }
+    }, [initialSearchTerm, initialSelectedInstrument, initialSelectedGenre])
 
-    // When search term changes in the store, update the URL and reload data
+    // When any filter changes in the store, update URL and reload data
     useEffect(() => {
         const timer = setTimeout(() => {
             const currentSearchParam = searchParams.get('search') || ''
-            if (currentSearchParam !== searchTerm) {
+            const currentInstrumentParam = searchParams.get('instrument') || ''
+            const currentGenreParam = searchParams.get('genre') || ''
+
+            const needsUpdate =
+                currentSearchParam !== searchTerm ||
+                currentInstrumentParam !== (selectedInstrument || '') ||
+                currentGenreParam !== (selectedGenre || '')
+
+            if (needsUpdate) {
                 const newParams = new URLSearchParams(searchParams)
 
+                // Update search term
                 if (searchTerm) {
                     newParams.set('search', searchTerm)
-                    // Reset to page 1 when searching
-                    newParams.set('page', '1')
                 } else {
                     newParams.delete('search')
                 }
+
+                // Update instrument filter
+                if (selectedInstrument) {
+                    newParams.set('instrument', selectedInstrument)
+                } else {
+                    newParams.delete('instrument')
+                }
+
+                // Update genre filter
+                if (selectedGenre) {
+                    newParams.set('genre', selectedGenre)
+                } else {
+                    newParams.delete('genre')
+                }
+
+                // Reset to page 1 when any filter changes
+                newParams.set('page', '1')
 
                 submit(newParams, { replace: true })
             }
         }, 300) // debounce
 
         return () => clearTimeout(timer)
-    }, [searchTerm])
+    }, [searchTerm, selectedInstrument, selectedGenre, searchParams, submit])
 
-    // Reset playback state when page changes
-    useEffect(() => {
-        setIsPlaying(false)
-        setCurrentSample(null)
-    }, [page, pageSize])
-
-    // Reset loop state when current sample changes
-    useEffect(() => {
-        if (currentSample) {
-            setIsLooping(currentSample.loop)
-        } else {
-            setIsLooping(false)
-        }
-    }, [currentSample])
+    // Rest of your existing component logic remains the same...
+    // (handleSampleClick, handlePageChange, etc.)
 
     const handleSampleClick = (sampleId: Sample['id']) => {
         if (isPlaying) {
@@ -183,6 +257,8 @@ export default function SamplesPage() {
     const isLoading =
         navigation.state === 'loading' || navigation.state === 'submitting'
 
+    const hasActiveFilters = searchTerm || selectedInstrument || selectedGenre
+
     return (
         <div>
             <SampleHeader
@@ -213,13 +289,16 @@ export default function SamplesPage() {
                         ))
                     ) : (
                         <div className="text-center py-8 text-gray-500">
-                            No samples found matching &quot;{searchTerm}&quot;
+                            No samples found
+                            {hasActiveFilters && (
+                                <span> matching your filters</span>
+                            )}
                         </div>
                     )}
                 </div>
 
-                {/* Only show pagination when not searching */}
-                {!searchTerm && (
+                {/* Only show pagination when no filters are active */}
+                {!hasActiveFilters && (
                     <SamplePagination
                         currentPage={page}
                         totalPages={totalPages}

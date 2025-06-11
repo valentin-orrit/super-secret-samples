@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchStore } from '../store'
 import SamplefilterMenu from './SampleFilterMenu'
-import { SearchIcon } from 'lucide-react'
+import { SearchIcon, X } from 'lucide-react'
 
 interface SampleHeaderProps {
     title: string
@@ -14,7 +14,15 @@ export default function SampleHeader({
     totalCount,
     isLoading = false,
 }: SampleHeaderProps) {
-    const { searchTerm, setSearchTerm } = useSearchStore()
+    const {
+        searchTerm,
+        selectedInstrument,
+        selectedGenre,
+        setSearchTerm,
+        setSelectedInstrument,
+        setSelectedGenre,
+        clearAllFilters,
+    } = useSearchStore()
     const [instruments, setInstruments] = useState([])
     const [genres, setGenres] = useState([])
 
@@ -30,7 +38,7 @@ export default function SampleHeader({
             })
     }, [])
 
-    // fetch instruments from db
+    // fetch genres from db
     useEffect(() => {
         fetch('/api/get-genres')
             .then((res) => res.json())
@@ -46,6 +54,8 @@ export default function SampleHeader({
         const value = e.target.value
         setSearchTerm(value)
     }
+
+    const hasActiveFilters = searchTerm || (selectedInstrument && selectedGenre)
 
     return (
         <header className="w-full flex flex-col align-middle justify-center p-6">
@@ -67,12 +77,51 @@ export default function SampleHeader({
                     </div>
                 </div>
             </div>
-            <div className="mt-4 flex gap-4">
+            <div className="mt-6 flex gap-4 items-center flex-wrap">
                 <SamplefilterMenu
                     menuTitle="instruments"
                     menuContent={instruments}
+                    filterType="instrument"
                 />
-                <SamplefilterMenu menuTitle="genres" menuContent={genres} />
+                <SamplefilterMenu
+                    menuTitle="genres"
+                    menuContent={genres}
+                    filterType="genre"
+                />
+
+                {/* Active filter tags */}
+                {selectedInstrument && (
+                    <button
+                        onClick={() => setSelectedInstrument(null)}
+                        className="hover:bg-yellow-200 p-0.5 ml-1 flex items-center gap-1 px-3 py-1 bg-sssyellow text-sssdarkblue rounded-full text-sm"
+                        title="Remove instrument filter"
+                    >
+                        <span>{selectedInstrument}</span>
+                        <X size={14} />
+                    </button>
+                )}
+
+                {selectedGenre && (
+                    <button
+                        onClick={() => setSelectedGenre(null)}
+                        className="flex items-center gap-1 px-3 py-1 bg-sssorange text-sssdarkblue text-sm hover:bg-orange-200 rounded-full p-0.5 ml-1"
+                        title="Remove genre filter"
+                    >
+                        <span>{selectedGenre}</span>
+                        <X size={14} />
+                    </button>
+                )}
+
+                {hasActiveFilters && (
+                    <button
+                        onClick={clearAllFilters}
+                        className="flex items-center gap-1 px-3 py-1 text-sm text-sssaccentgray hover:text-gray-800 hover:bg-red-300 rounded-full transition-colors"
+                        title="Clear all filters"
+                    >
+                        Clear all
+                        <X size={16} className="stroke-sssred" />
+                    </button>
+                )}
             </div>
         </header>
     )
