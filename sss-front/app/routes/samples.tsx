@@ -133,8 +133,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 const audioController =
     typeof window !== 'undefined' ? new AudioController() : null
 
-// Add this to your SamplesPage component, replace the existing useEffect for search handling
-
 export default function SamplesPage() {
     const {
         samples,
