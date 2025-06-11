@@ -60,7 +60,9 @@ export default function SampleDisplay({
             </div>
 
             <div className="text-lg text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
-                <p className="overflow-hidden text-ellipsis">{sample.name}</p>
+                <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                    {sample.name}
+                </p>
                 <div className="flex overflow-hidden text-ellipsis gap-2 my-1">
                     {genreAndTags.map((tag, index) => (
                         <span
