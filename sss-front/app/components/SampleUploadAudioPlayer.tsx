@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import { useEffect, useState, useRef } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
+import { AudioController } from '../lib/audio-controller'
 
 interface SimpleAudioPlayerProps {
     file: File | null
@@ -14,14 +15,30 @@ export default function SampleUploadAudioPlayer({
     const [isPlaying, setIsPlaying] = useState(false)
     const [volume, setVolume] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
-    const audioRef = useRef<HTMLAudioElement | null>(null)
+    const audioControllerRef = useRef<AudioController | null>(null)
     const [audioUrl, setAudioUrl] = useState<string | null>(null)
+
+    // Initialize AudioController
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            audioControllerRef.current = new AudioController()
+        }
+
+        return () => {
+            audioControllerRef.current?.cleanup()
+        }
+    }, [])
 
     useEffect(() => {
         if (file) {
             const url = URL.createObjectURL(file)
             setAudioUrl(url)
             setIsPlaying(false)
+
+            // Stop any currently playing audio
+            if (audioControllerRef.current) {
+                audioControllerRef.current.cleanup()
+            }
 
             return () => {
                 URL.revokeObjectURL(url)
@@ -32,49 +49,48 @@ export default function SampleUploadAudioPlayer({
     }, [file])
 
     useEffect(() => {
-        // Update audio element when URL changes
-        if (audioRef.current && audioUrl) {
-            audioRef.current.src = audioUrl
-            audioRef.current.volume = volume
+        // Load track when URL changes
+        if (audioUrl && audioControllerRef.current) {
+            setIsLoading(true)
+            audioControllerRef.current
+                .loadTrack(audioUrl)
+                .then(() => {
+                    setIsLoading(false)
+                    audioControllerRef.current?.setVolume(volume)
+                })
+                .catch((error) => {
+                    console.error('Error loading track:', error)
+                    setIsLoading(false)
+                })
         }
-    }, [audioUrl, volume])
+    }, [audioUrl])
 
-    const handlePlayPause = async () => {
-        if (!audioRef.current || !audioUrl) return
+    // Apply volume changes
+    useEffect(() => {
+        if (audioControllerRef.current) {
+            audioControllerRef.current.setVolume(volume)
+        }
+    }, [volume])
 
-        try {
-            if (isPlaying) {
-                audioRef.current.pause()
-                setIsPlaying(false)
-            } else {
-                setIsLoading(true)
-                await audioRef.current.play()
-                setIsPlaying(true)
-                setIsLoading(false)
-            }
-        } catch (error) {
-            console.error('Error playing audio:', error)
-            setIsLoading(false)
+    const handlePlayPause = () => {
+        if (!audioControllerRef.current || !audioUrl || isLoading) return
+
+        if (isPlaying) {
+            audioControllerRef.current.stop()
+            setIsPlaying(false)
+        } else {
+            audioControllerRef.current.play()
+            setIsPlaying(true)
         }
     }
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newVolume = parseFloat(e.target.value)
         setVolume(newVolume)
-        if (audioRef.current) {
-            audioRef.current.volume = newVolume
-        }
     }
 
     return (
-        <div className="flex items-center justify-between gap-4 p-4 bg-white shadow-xl rounded-2xl w-full border border-gray-400">
-            {/* Hidden audio element */}
-            <audio
-                ref={audioRef}
-                onEnded={() => setIsPlaying(false)}
-                preload="none"
-            />
-
+        <div className="flex items-center justify-between gap-4 p-4 bg-white shadow-xl rounded-2xl w-full">
             <div className="flex gap-2">
                 <button
                     onClick={handlePlayPause}
