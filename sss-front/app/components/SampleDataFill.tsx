@@ -5,9 +5,11 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from './ui/carousel'
+import type { CarouselApi } from './ui/carousel'
 import type { Instrument, Genre, Tag } from '../../prisma/client'
-import { useState } from 'react'
-import { Form, useSubmit, useNavigation } from 'react-router';
+import { useState, useEffect } from 'react'
+import { Form, useSubmit, useNavigation } from 'react-router'
+import SampleUploadAudioPlayer from './SampleUploadAudioPlayer'
 
 interface Samples {
     samples: File[]
@@ -24,6 +26,9 @@ export default function SampleDataFill({
     const submit = useSubmit()
     const navigation = useNavigation()
     const isUploading = navigation.state === 'submitting'
+    const [currentSampleIndex, setCurrentSampleIndex] = useState(0)
+    // API from embla carousel used in Shadcn
+    const [emblaApi, setEmblaApi] = useState<CarouselApi>()
 
     const [sampleData, setSampleData] = useState(
         samples.map((sample) => ({
@@ -37,6 +42,25 @@ export default function SampleDataFill({
             tagInput: '',
         }))
     )
+
+    // Update current sample when carousel changes
+    useEffect(() => {
+        if (!emblaApi) return
+
+        const onSelect = () => {
+            const index = emblaApi.selectedScrollSnap()
+            if (index < samples.length) {
+                setCurrentSampleIndex(index)
+            }
+        }
+
+        emblaApi.on('select', onSelect)
+        onSelect()
+
+        return () => {
+            emblaApi.off('select', onSelect)
+        }
+    }, [emblaApi, samples.length])
 
     const handleNameChange = (index: number, newName: string) => {
         setSampleData((prev) =>
@@ -204,12 +228,27 @@ export default function SampleDataFill({
         }
     }
 
+    // Get current file and sample name for the audio player
+    const currentFile =
+        currentSampleIndex < samples.length ? samples[currentSampleIndex] : null
+    const currentSampleName =
+        currentSampleIndex < samples.length
+            ? sampleData[currentSampleIndex].name
+            : ''
+
     return (
         <section
             id="sample-data-fill"
-            className="flex flex-col w-11/12 md:w-3/4"
+            className="flex flex-col w-11/12 md:w-3/4 items-center"
         >
-            <Carousel>
+            <div className="mb-4 w-1/2">
+                <SampleUploadAudioPlayer
+                    file={currentFile}
+                    sampleName={currentSampleName}
+                />
+            </div>
+
+            <Carousel setApi={setEmblaApi} className="w-3/4">
                 <Form
                     method="post"
                     encType="multipart/form-data"
