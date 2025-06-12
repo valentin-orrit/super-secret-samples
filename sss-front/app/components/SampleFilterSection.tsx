@@ -9,7 +9,7 @@ interface SampleHeaderProps {
     isLoading?: boolean
 }
 
-export default function SampleHeader({
+export default function SampleFilterSection({
     title,
     totalCount,
     isLoading = false,
@@ -115,11 +115,11 @@ export default function SampleHeader({
                 {hasActiveFilters && (
                     <button
                         onClick={clearAllFilters}
-                        className="flex items-center gap-1 px-3 py-1 text-sm text-sssaccentgray hover:text-gray-800 hover:bg-red-300 rounded-full transition-colors"
+                        className="flex items-center gap-1 px-3 py-1 text-sm underline underline-offset-2 text-sssaccentgray hover:text-gray-800 transition-colors"
                         title="Clear all filters"
                     >
                         Clear all
-                        <X size={16} className="stroke-sssred" />
+                        {/* <X size={16} className="stroke-sssred" /> */}
                     </button>
                 )}
             </div>

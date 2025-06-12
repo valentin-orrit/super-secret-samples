@@ -1,5 +1,5 @@
-import { type MetaFunction } from 'react-router';
-import SampleHeader from '../components/SampleHeader'
+import { type MetaFunction } from 'react-router'
+import SampleHeader from '../components/SampleFilterSection'
 import SampleTableHead from '../components/SampleTableHead'
 import { Sample } from '../../prisma/client'
 

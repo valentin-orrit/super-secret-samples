@@ -8,7 +8,7 @@ import {
     useNavigation,
 } from 'react-router'
 import prisma, { Sample } from '../../prisma/client'
-import SampleHeader from '../components/SampleHeader'
+import SampleFilterSection from '../components/SampleFilterSection'
 import SampleTableHead from '../components/SampleTableHead'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
@@ -263,7 +263,7 @@ export default function SamplesPage() {
 
     return (
         <div>
-            <SampleHeader
+            <SampleFilterSection
                 title="samples"
                 totalCount={totalCount}
                 isLoading={isLoading}
