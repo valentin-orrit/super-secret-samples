@@ -31,6 +31,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const searchTerm = url.searchParams.get('search') || ''
     const selectedInstrument = url.searchParams.get('instrument') || ''
     const selectedGenre = url.searchParams.get('genre') || ''
+    const sortField = url.searchParams.get('sortField') || 'name'
+    const sortDirection = (url.searchParams.get('sortDirection') || 'asc') as
+        | 'asc'
+        | 'desc'
 
     // Build where clause with all filters
     const whereConditions = []
@@ -110,17 +114,59 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const skip = hasFilters ? 0 : (page - 1) * pageSize
     const take = hasFilters ? undefined : pageSize
 
+    // Build order by clause
+    let orderBy: any = { name: 'asc' }
+
+    switch (sortField) {
+        case 'name':
+            orderBy = { name: sortDirection }
+            break
+        case 'length':
+            orderBy = { length: sortDirection }
+            break
+        case 'bpm':
+            orderBy = { bpm: sortDirection === 'asc' ? 'asc' : 'desc' }
+            break
+        case 'key':
+            orderBy = { key: sortDirection }
+            break
+        case 'loop':
+            orderBy = { loop: sortDirection }
+            break
+        case 'instrument':
+            orderBy = {
+                instruments: {
+                    _count: sortDirection,
+                },
+            }
+            break
+        default:
+            orderBy = { name: 'asc' }
+    }
+
     // Get samples with filters
     const samples = await prisma.sample.findMany({
         where: whereClause,
         skip,
         take,
         include: { genres: true, instruments: true, tags: true },
-        orderBy: { name: 'asc' },
+        orderBy,
     })
 
+    // If sorting by instrument name specifically, we need to do client-side sorting
+    // since Prisma doesn't easily support sorting by related field names
+    let sortedSamples = samples
+    if (sortField === 'instrument') {
+        sortedSamples = [...samples].sort((a, b) => {
+            const aInstrument = a.instruments[0]?.name || ''
+            const bInstrument = b.instruments[0]?.name || ''
+            const comparison = aInstrument.localeCompare(bInstrument)
+            return sortDirection === 'asc' ? comparison : -comparison
+        })
+    }
+
     // Add URLs to samples
-    const samplesWithUrls = samples.map((sample) => ({
+    const samplesWithUrls = sortedSamples.map((sample) => ({
         ...sample,
         url: getStreamUrl(sample),
     }))
@@ -134,6 +180,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         searchTerm,
         selectedInstrument,
         selectedGenre,
+        sortField,
+        sortDirection,
     }
 }
 
@@ -149,6 +197,8 @@ export default function SamplesPage() {
         selectedInstrument: initialSelectedInstrument,
         selectedGenre: initialSelectedGenre,
         totalCount,
+        sortField,
+        sortDirection,
     } = useLoaderData<typeof loader>()
 
     const [searchParams, setSearchParams] = useSearchParams()
@@ -256,6 +306,22 @@ export default function SamplesPage() {
         setSearchParams(searchParams)
     }
 
+    const handleSort = (field: string) => {
+        const newParams = new URLSearchParams(searchParams)
+
+        if (sortField === field) {
+            const newDirection = sortDirection === 'asc' ? 'desc' : 'asc'
+            newParams.set('sortDirection', newDirection)
+        } else {
+            newParams.set('sortField', field)
+            newParams.set('sortDirection', 'asc')
+        }
+
+        newParams.set('page', '1')
+
+        submit(newParams, { replace: true })
+    }
+
     const isLoading =
         navigation.state === 'loading' || navigation.state === 'submitting'
 
@@ -274,7 +340,11 @@ export default function SamplesPage() {
             >
                 <div className="w-full mb-4 px-4">
                     <div className="sticky top-[69px] z-50 bg-white">
-                        <SampleTableHead />
+                        <SampleTableHead
+                            sortField={sortField}
+                            sortDirection={sortDirection}
+                            onSort={handleSort}
+                        />
                     </div>
                     {isLoading ? (
                         <div className="text-center py-8">
