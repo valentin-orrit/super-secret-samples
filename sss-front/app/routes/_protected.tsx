@@ -53,13 +53,13 @@ export default function ProtectedServerLayout() {
 
     if (!authenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-sssoffwhite p-4">
+            <div className="min-h-screen flex items-center justify-center bg-sssoffwhite text-sssdarkblue p-4">
                 <Card className="w-full max-w-md">
                     <CardHeader className="space-y-1">
-                        <CardTitle className="text-2xl font-bold text-center">
-                            Site Access
+                        <CardTitle className="text-2xl font-bold text-center text-sssblue">
+                            super secret samples
                         </CardTitle>
-                        <CardDescription className="text-center">
+                        <CardDescription className="text-center text-sssred">
                             Enter the password to access the site
                         </CardDescription>
                     </CardHeader>
@@ -69,7 +69,7 @@ export default function ProtectedServerLayout() {
                             name="from"
                             value={location.pathname}
                         />
-                        <CardContent className="space-y-4">
+                        <CardContent className="space-y-4 text-sssdarkblue">
                             <div className="space-y-2">
                                 <Label htmlFor="password">Password</Label>
                                 <Input
@@ -89,7 +89,7 @@ export default function ProtectedServerLayout() {
                         <CardFooter>
                             <Button
                                 type="submit"
-                                className="w-full"
+                                className="w-full bg-sssyellow text-sssdarkblue hover:bg-sssorange font-bold"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Checking...' : 'Access Site'}
