@@ -1,4 +1,10 @@
-import { Outlet, useLoaderData, Form, useLocation } from 'react-router'
+import {
+    Outlet,
+    useLoaderData,
+    Form,
+    useLocation,
+    useNavigation,
+} from 'react-router'
 import type { LoaderFunctionArgs } from 'react-router'
 import { requireSiteAuth } from '../lib/authStore.server'
 import { Button } from '../components/ui/button'
@@ -12,14 +18,38 @@ import {
     CardHeader,
     CardTitle,
 } from '../components/ui/card'
+import { useToast } from '../hooks/use-toast'
+import { useEffect, useState } from 'react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    return requireSiteAuth(request)
+    const url = new URL(request.url)
+    const error = url.searchParams.get('error')
+    const authData = await requireSiteAuth(request)
+
+    return {
+        ...authData,
+        error,
+    }
 }
 
 export default function ProtectedServerLayout() {
-    const { authenticated } = useLoaderData<typeof loader>()
+    const { authenticated, error } = useLoaderData<typeof loader>()
     const location = useLocation()
+    const navigation = useNavigation()
+    const { toast } = useToast()
+    const [password, setPassword] = useState('')
+    const isSubmitting = navigation.state === 'submitting'
+
+    useEffect(() => {
+        if (error === 'invalid-password') {
+            toast({
+                title: 'Access Denied',
+                description: 'Invalid password. Please try again.',
+                variant: 'destructive',
+            })
+            setPassword('')
+        }
+    }, [error, toast])
 
     if (!authenticated) {
         return (
@@ -47,14 +77,22 @@ export default function ProtectedServerLayout() {
                                     name="password"
                                     type="password"
                                     placeholder="Enter password"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     required
                                     className="w-full"
                                 />
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button type="submit" className="w-full">
-                                Access Site
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Checking...' : 'Access Site'}
                             </Button>
                         </CardFooter>
                     </Form>

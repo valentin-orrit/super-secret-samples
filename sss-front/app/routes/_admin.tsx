@@ -1,4 +1,10 @@
-import { Outlet, useLoaderData, Form, useLocation } from 'react-router'
+import {
+    Outlet,
+    useLoaderData,
+    Form,
+    useLocation,
+    useNavigation,
+} from 'react-router'
 import type { LoaderFunctionArgs } from 'react-router'
 import { requireAdminAuth } from '../lib/authStore.server'
 import { Button } from '../components/ui/button'
@@ -13,14 +19,38 @@ import {
     CardTitle,
 } from '../components/ui/card'
 import { ShieldAlert } from 'lucide-react'
+import { useToast } from '../hooks/use-toast'
+import { useEffect, useState } from 'react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    return requireAdminAuth(request)
+    const url = new URL(request.url)
+    const error = url.searchParams.get('error')
+    const authData = await requireAdminAuth(request)
+
+    return {
+        ...authData,
+        error,
+    }
 }
 
 export default function AdminServerLayout() {
-    const { authenticated } = useLoaderData<typeof loader>()
+    const { authenticated, error } = useLoaderData<typeof loader>()
     const location = useLocation()
+    const navigation = useNavigation()
+    const { toast } = useToast()
+    const [password, setPassword] = useState('')
+    const isSubmitting = navigation.state === 'submitting'
+
+    useEffect(() => {
+        if (error === 'invalid-password') {
+            toast({
+                title: 'Access Denied',
+                description: 'Invalid admin password. Please try again.',
+                variant: 'destructive',
+            })
+            setPassword('')
+        }
+    }, [error, toast])
 
     if (!authenticated) {
         return (
@@ -51,6 +81,10 @@ export default function AdminServerLayout() {
                                     name="password"
                                     type="password"
                                     placeholder="Enter admin password"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     required
                                     className="w-full"
                                 />
@@ -60,8 +94,11 @@ export default function AdminServerLayout() {
                             <Button
                                 type="submit"
                                 className="w-full bg-red-600 hover:bg-red-700"
+                                disabled={isSubmitting}
                             >
-                                Access Admin Area
+                                {isSubmitting
+                                    ? 'Verifying...'
+                                    : 'Access Admin Area'}
                             </Button>
                         </CardFooter>
                     </Form>

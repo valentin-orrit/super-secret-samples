@@ -1,8 +1,6 @@
-import type { ActionFunctionArgs } from 'react-router'
 import { redirect } from 'react-router'
 
-export async function action({ request }: ActionFunctionArgs) {
-    // Clear the auth cookie
+export async function action() {
     return new Response(null, {
         status: 302,
         headers: {
@@ -14,6 +12,5 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader() {
-    // Redirect to home if accessed via GET
     return redirect('/')
 }

@@ -22,11 +22,9 @@ export async function action({ request }: ActionFunctionArgs) {
         })
     }
 
-    // If failed, redirect back with error (you could also return json error)
-    return redirect(from)
+    return redirect(`${from}?error=invalid-password`)
 }
 
 export async function loader() {
-    // This route only handles POST requests
     return redirect('/')
 }
