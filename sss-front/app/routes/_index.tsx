@@ -15,12 +15,13 @@ export default function Index() {
             <div id="shapes" className="flex flex-col items-center m-4">
                 <div className="flex m-4 w-44 sm:w-96">
                     <div id="shapes-top" className="flex flex-col sm:flex-row">
-                        <Shape instrument="arps" />
-                        <Shape instrument="synths" />
+                        <Shape instrument="bass" />
+                        <Shape instrument="drums" />
                     </div>
                     <div id="shapes-bot" className="flex flex-col sm:flex-row">
-                        <Shape instrument="pads_logo" />
-                        <Shape instrument="drums_logo" />
+                        <Shape instrument="synths" />
+                        <Shape instrument="percs" />
+                        <Shape instrument="pads" />
                     </div>
                 </div>
 
