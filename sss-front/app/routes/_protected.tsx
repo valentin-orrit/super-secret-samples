@@ -7,6 +7,7 @@ import {
 } from 'react-router'
 import type { LoaderFunctionArgs } from 'react-router'
 import { requireSiteAuth } from '../lib/authStore.server'
+import Shape from '../components/Shape'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
@@ -53,13 +54,23 @@ export default function ProtectedServerLayout() {
 
     if (!authenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-sssoffwhite text-sssdarkblue p-4">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-sssdarkblue text-sssdarkblue p-4">
+                <div className="flex mb-8 w-44 sm:w-96">
+                    <div id="shapes-top" className="flex flex-col sm:flex-row">
+                        <Shape instrument="arps" />
+                        <Shape instrument="synths" />
+                    </div>
+                    <div id="shapes-bot" className="flex flex-col sm:flex-row">
+                        <Shape instrument="pads_logo" />
+                        <Shape instrument="drums_logo" />
+                    </div>
+                </div>
                 <Card className="w-full max-w-md">
                     <CardHeader className="space-y-1">
                         <CardTitle className="text-2xl font-bold text-center text-sssblue">
                             super secret samples
                         </CardTitle>
-                        <CardDescription className="text-center text-sssred">
+                        <CardDescription className="text-center text-sssdarkblue">
                             Enter the password to access the site
                         </CardDescription>
                     </CardHeader>
@@ -89,7 +100,7 @@ export default function ProtectedServerLayout() {
                         <CardFooter>
                             <Button
                                 type="submit"
-                                className="w-full bg-sssyellow text-sssdarkblue hover:bg-sssorange font-bold"
+                                className="w-full hover:bg-sssyellow text-sssdarkblue bg-sssorange font-bold"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Checking...' : 'Access Site'}
