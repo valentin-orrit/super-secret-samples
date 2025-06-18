@@ -1,26 +1,42 @@
-import { type RouteConfig, route, index } from '@react-router/dev/routes'
+import {
+    type RouteConfig,
+    route,
+    index,
+    layout,
+} from '@react-router/dev/routes'
 
 export default [
-    // Main routes
+    // Public routes
     index('./routes/_index.tsx'),
-    route('samples', './routes/samples.tsx'),
-    route('sample-request', './routes/sample-request.tsx'),
+    route('logout', './routes/logout.tsx'),
 
-    // Sample upload routes
-    route('sample-upload', './routes/sample-upload._index.tsx'),
-    route(
-        'sample-upload/fill-sample-data',
-        './routes/sample-upload.fill-sample-data.tsx'
-    ),
+    // Auth action routes
+    route('auth/site', './routes/auth.site.tsx'),
+    route('auth/admin', './routes/auth.admin.tsx'),
 
-    // API routes
-    route('api/audio/:key', './routes/api.audio.$key.tsx'),
-    route('api/get-genres', './routes/api.get-genres.tsx'),
-    route('api/get-instruments', './routes/api.get-instruments.tsx'),
-    route(
-        'api/download-sample/:sampleId',
-        './routes/api.download-sample.$sampleId.tsx'
-    ),
+    // Protected routes
+    layout('./routes/_protected.tsx', [
+        route('samples', './routes/samples.tsx'),
+        route('sample-request', './routes/sample-request.tsx'),
+
+        // API routes
+        route('api/audio/:key', './routes/api.audio.$key.tsx'),
+        route('api/get-genres', './routes/api.get-genres.tsx'),
+        route('api/get-instruments', './routes/api.get-instruments.tsx'),
+        route(
+            'api/download-sample/:sampleId',
+            './routes/api.download-sample.$sampleId.tsx'
+        ),
+    ]),
+
+    // Admin protected routes
+    layout('./routes/_admin.tsx', [
+        route('sample-upload', './routes/sample-upload._index.tsx'),
+        route(
+            'sample-upload/fill-sample-data',
+            './routes/sample-upload.fill-sample-data.tsx'
+        ),
+    ]),
 
     // Catch-all route for unmatched URLs
     route('*', './routes/$.tsx'),
