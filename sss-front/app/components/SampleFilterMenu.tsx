@@ -10,17 +10,17 @@ import {
 import { ChevronDown } from 'lucide-react'
 import Shape from "~/components/Shape";
 
-interface SamplefilterMenuProps {
+interface SampleFilterMenuProps {
     menuTitle: string
     menuContent: Instrument[] | Genre[]
     filterType: 'instrument' | 'genre'
 }
 
-export default function SamplefilterMenu({
+export default function SampleFilterMenu({
     menuTitle,
     menuContent,
     filterType,
-}: SamplefilterMenuProps) {
+}: SampleFilterMenuProps) {
     const [open, setOpen] = useState(false)
     const {
         selectedInstrument,

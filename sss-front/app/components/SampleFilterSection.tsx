@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { useSearchStore } from '../store'
-import SamplefilterMenu from './SampleFilterMenu'
+import React, { useEffect, useState } from 'react'
+import { useSearchStore } from '~/store'
+import SampleFilterMenu from './SampleFilterMenu'
 import { SearchIcon, X } from 'lucide-react'
 import Shape from "~/components/Shape";
 
@@ -79,12 +79,12 @@ export default function SampleFilterSection({
                 </div>
             </div>
             <div className="mt-6 flex gap-4 items-center flex-wrap">
-                <SamplefilterMenu
+                <SampleFilterMenu
                     menuTitle="instruments"
                     menuContent={instruments}
                     filterType="instrument"
                 />
-                <SamplefilterMenu
+                <SampleFilterMenu
                     menuTitle="genres"
                     menuContent={genres}
                     filterType="genre"
@@ -125,7 +125,6 @@ export default function SampleFilterSection({
                         title="Clear all filters"
                     >
                         Clear all
-                        {/* <X size={16} className="stroke-sssred" /> */}
                     </button>
                 )}
             </div>
