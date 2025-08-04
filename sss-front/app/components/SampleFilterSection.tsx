@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchStore } from '../store'
 import SamplefilterMenu from './SampleFilterMenu'
 import { SearchIcon, X } from 'lucide-react'
+import Shape from "~/components/Shape";
 
 interface SampleHeaderProps {
     title: string
@@ -96,6 +97,11 @@ export default function SampleFilterSection({
                         className="hover:bg-yellow-200 p-0.5 ml-1 flex items-center gap-1 px-3 py-1 bg-sssyellow text-sssdarkblue rounded-full text-sm"
                         title="Remove instrument filter"
                     >
+                        <span className="p-0 m-0">
+                                {
+                                    selectedInstrument && <Shape instrument={selectedInstrument} width={20} />
+                                    }
+                            </span>
                         <span>{selectedInstrument}</span>
                         <X size={14} />
                     </button>
