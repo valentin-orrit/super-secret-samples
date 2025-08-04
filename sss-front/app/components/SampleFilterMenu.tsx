@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Instrument, Genre } from '../../prisma/client'
-import { useSearchStore } from '../store'
+import { useSearchStore } from '~/store'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,6 +8,7 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { ChevronDown } from 'lucide-react'
+import Shape from "~/components/Shape";
 
 interface SamplefilterMenuProps {
     menuTitle: string
@@ -72,6 +73,11 @@ export default function SamplefilterMenu({
                                     : ''
                             }`}
                         >
+                            <span>
+                                {menuTitle === "instruments"
+                                    ? menuContentItem.name && <Shape instrument={menuContentItem.name} width={24} />
+                                    : ""}
+                            </span>
                             {menuContentItem.name}
                         </DropdownMenuItem>
                     ))}
