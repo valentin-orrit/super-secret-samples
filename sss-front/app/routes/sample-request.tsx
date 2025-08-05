@@ -1,6 +1,6 @@
 import {type MetaFunction} from 'react-router'
 import {Form} from 'react-router'
-import {useEffect, useState} from "react";
+import {useEffect, useState} from 'react'
 import type {Genre, Instrument} from '../../prisma/client'
 
 export const meta: MetaFunction = () => {
@@ -60,8 +60,8 @@ export default function SampleRequest() {
             prev.includes(instrumentId)
                 ? prev.filter(id => id !== instrumentId)
                 : [...prev, instrumentId]
-        );
-    };
+        )
+    }
 
     return (
         <div
