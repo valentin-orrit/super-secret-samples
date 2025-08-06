@@ -5,7 +5,7 @@ import {
     Tag,
 } from '../../prisma/client'
 import Shape from '../components/Shape'
-import { Infinity, Route, Download } from 'lucide-react'
+import {Infinity, Route, Download} from 'lucide-react'
 
 interface Sample extends PrismaSample {
     genres: Genre[]
@@ -20,10 +20,10 @@ interface SampleInterface {
 }
 
 export default function SampleDisplay({
-    sample,
-    onClick,
-    isActive = false,
-}: SampleInterface) {
+                                          sample,
+                                          onClick,
+                                          isActive = false,
+                                      }: SampleInterface) {
     const genreAndTags = sample.genres.concat(sample.tags)
 
     function formatSampleLength(length: number): string {
@@ -74,7 +74,7 @@ export default function SampleDisplay({
 
     return (
         <div
-            className={`grid grid-flow-col grid-cols-9 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
+            className={`grid grid-flow-col grid-cols-8 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
                 isActive
                     ? 'bg-sssoffwhite border border-sssorange hover:bg-sssoffwhite rounded-md'
                     : 'bg-white border border-gray-200 hover:bg-sssoffwhite rounded-md'
@@ -88,13 +88,13 @@ export default function SampleDisplay({
         >
             <div className="">
                 {sample?.instruments[0]?.name ? (
-                    <Shape instrument={sample.instruments[0].name} width={40} />
+                    <Shape instrument={sample.instruments[0].name} width={40}/>
                 ) : (
-                    <Shape instrument="drums" width={40} />
+                    <Shape instrument="drums" width={40}/>
                 )}
             </div>
             <div className="text-gray-700 text-start">
-                {sample.loop ? <Infinity /> : <Route />}
+                {sample.loop ? <Infinity/> : <Route/>}
             </div>
             <div className="text-lg text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap">
@@ -111,7 +111,7 @@ export default function SampleDisplay({
                     ))}
                 </div>
             </div>
-            <div className="col-span-3 grid grid-flow-col grid-cols-3 gap-x-2">
+            <div className="col-span-2 grid grid-flow-col grid-cols-4 gap-x-2">
                 <div className="text-gray-700 text-start">
                     {formatSampleLength(sample.length)}
                 </div>
@@ -128,7 +128,7 @@ export default function SampleDisplay({
                     title={`Download ${sample.name}`}
                     aria-label={`Download ${sample.name}`}
                 >
-                    <Download size={20} />
+                    <Download size={20}/>
                 </button>
             </div>
         </div>

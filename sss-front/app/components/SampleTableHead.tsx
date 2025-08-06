@@ -1,4 +1,4 @@
-import { ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react'
+import {ChevronUp, ChevronDown, ChevronsUpDown} from 'lucide-react'
 
 interface SampleTableHeadProps {
     sortField: string | null
@@ -7,18 +7,18 @@ interface SampleTableHeadProps {
 }
 
 export default function SampleTableHead({
-    sortField,
-    sortDirection,
-    onSort,
-}: SampleTableHeadProps) {
+                                            sortField,
+                                            sortDirection,
+                                            onSort,
+                                        }: SampleTableHeadProps) {
     const getSortIcon = (field: string) => {
         if (sortField !== field) {
-            return <ChevronsUpDown className="w-4 h-4 text-sssaccentgray" />
+            return <ChevronsUpDown className="w-4 h-4 text-sssaccentgray"/>
         }
         return sortDirection === 'asc' ? (
-            <ChevronUp className="w-4 h-4 text-sssblue" />
+            <ChevronUp className="w-4 h-4 text-sssblue"/>
         ) : (
-            <ChevronDown className="w-4 h-4 text-sssblue" />
+            <ChevronDown className="w-4 h-4 text-sssblue"/>
         )
     }
 
@@ -27,7 +27,8 @@ export default function SampleTableHead({
     }
 
     return (
-        <div className="grid grid-flow-col grid-cols-9 border-b border-gray-200 w-full px-4 py-4 items-center justify-center text-sssaccentgray text-sm font-thin">
+        <div
+            className="grid grid-flow-col grid-cols-8 border-b border-gray-200 w-full px-4 py-4 items-center justify-center text-sssaccentgray text-sm font-thin">
             <button
                 onClick={() => handleSort('instrument')}
                 className="flex items-center gap-1 hover:text-gray-700 transition-colors text-left"
@@ -60,13 +61,13 @@ export default function SampleTableHead({
                 {getSortIcon('length')}
             </button>
 
-            <button
-                onClick={() => handleSort('key')}
-                className="flex items-center gap-1 hover:text-gray-700 transition-colors text-left"
-            >
-                key
-                {getSortIcon('key')}
-            </button>
+            {/*<button*/}
+            {/*    onClick={() => handleSort('key')}*/}
+            {/*    className="flex items-center gap-1 hover:text-gray-700 transition-colors text-left"*/}
+            {/*>*/}
+            {/*    key*/}
+            {/*    {getSortIcon('key')}*/}
+            {/*</button>*/}
 
             <button
                 onClick={() => handleSort('bpm')}
