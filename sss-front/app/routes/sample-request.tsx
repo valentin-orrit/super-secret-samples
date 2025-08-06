@@ -154,7 +154,7 @@ export default function SampleRequest() {
 
     return (
         <div
-            id="samples-page"
+            id="sample-request-page"
             className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen align-middle items-center justify-center w-full py-10"
         >
             <h1 className="text-2xl font-semibold text-sssblue mb-4">request exclusive samples</h1>

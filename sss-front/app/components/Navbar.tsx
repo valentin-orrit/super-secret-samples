@@ -1,4 +1,4 @@
-import { NavLink, Link } from 'react-router';
+import {NavLink, Link} from 'react-router';
 import Shape from './Shape'
 
 export default function Navbar() {
@@ -25,11 +25,11 @@ export default function Navbar() {
             <div id="nav-list" className="flex">
                 <NavLink
                     to="/samples"
-                    className={({ isActive }) =>
+                    className={({isActive}) =>
                         isActive ? 'text-sssorange' : 'hover:text-sssyellow'
                     }
                 >
-                    {({ isActive }) => (
+                    {({isActive}) => (
                         <div className="relative flex flex-col items-center">
                             <span
                                 id="samples"
@@ -39,7 +39,51 @@ export default function Navbar() {
                             </span>
                             <span className="w-14 absolute top-6">
                                 {isActive && (
-                                    <Shape instrument="nav_selector" />
+                                    <Shape instrument="nav_selector"/>
+                                )}
+                            </span>
+                        </div>
+                    )}
+                </NavLink>
+                <NavLink
+                    to="/sample-request"
+                    className={({isActive}) =>
+                        isActive ? 'text-sssorange' : 'hover:text-sssyellow'
+                    }
+                >
+                    {({isActive}) => (
+                        <div className="relative flex flex-col items-center">
+                            <span
+                                id="sample-request"
+                                className="hover:text-sssyellow mx-1 sm:mx-4"
+                            >
+                                request
+                            </span>
+                            <span className="w-14 absolute top-6">
+                                {isActive && (
+                                    <Shape instrument="nav_selector"/>
+                                )}
+                            </span>
+                        </div>
+                    )}
+                </NavLink>
+                <NavLink
+                    to="/about"
+                    className={({isActive}) =>
+                        isActive ? 'text-sssorange' : 'hover:text-sssyellow'
+                    }
+                >
+                    {({isActive}) => (
+                        <div className="relative flex flex-col items-center">
+                            <span
+                                id="about"
+                                className="hover:text-sssyellow mx-1 sm:mx-4"
+                            >
+                                about
+                            </span>
+                            <span className="w-14 absolute top-6">
+                                {isActive && (
+                                    <Shape instrument="nav_selector"/>
                                 )}
                             </span>
                         </div>

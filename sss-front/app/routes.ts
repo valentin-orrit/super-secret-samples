@@ -18,6 +18,7 @@ export default [
     layout('./routes/_protected.tsx', [
         route('samples', './routes/samples.tsx'),
         route('sample-request', './routes/sample-request.tsx'),
+        route('about', './routes/about.tsx'),
 
         // API routes
         route('api/audio/:key', './routes/api.audio.$key.tsx'),
