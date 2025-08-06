@@ -1,7 +1,8 @@
 import {type MetaFunction} from 'react-router'
 import {Form} from 'react-router'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {Genre, Instrument} from '../../prisma/client'
+import Shape from "~/components/Shape"
 
 export const meta: MetaFunction = () => {
     return [
@@ -63,12 +64,24 @@ export default function SampleRequest() {
         )
     }
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        try {
+            // const formData = new FormData()
+            // submit(formData, {method: 'POST', encType: 'multipart/form-data'})
+        } catch (error) {
+            console.error('Failed to send form:', error)
+            alert('Failed to send form. Service might be unavailable. Please try again.')
+        }
+    }
+
     return (
         <div
             id="samples-page"
-            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen align-middle items-center justify-center w-full gap-y-10 py-10"
+            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen align-middle items-center justify-center w-full py-10"
         >
-            <h1 className="text-2xl font-semibold text-sssblue">request exclusive samples</h1>
+            <h1 className="text-2xl font-semibold text-sssblue mb-4">request exclusive samples</h1>
 
             <p className="w-1/2 text-center">
                 Do you like the samples produced for super secret samples? If so, we can produce exclusive samples for
@@ -76,8 +89,11 @@ export default function SampleRequest() {
                 You would be the only producer in possession of those samples and would be able to use them as you wish.
             </p>
 
-            <section className="min-w-1/2 max-w-2xl flex flex-col bg-white my-8 p-14 rounded-2xl shadow-lg">
-                <Form action="/sample-request" method="POST" className="flex flex-col gap-y-8">
+            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-8 p-14 rounded-2xl shadow-lg">
+                <Form action="/sample-request"
+                      method="POST"
+                      onSubmit={handleSubmit}
+                      className="flex flex-col gap-y-8">
                     {/* Description */}
                     <div>
                         <p className="mb-2 font-semibold">describe the kind of samples you would like to produce with
@@ -104,13 +120,20 @@ export default function SampleRequest() {
                                         key={instrument.id}
                                         type="button"
                                         onClick={() => handleInstrumentToggle(instrument.id)}
-                                        className={`px-4 py-2 rounded-full border-2 transition-colors ${
+                                        className={`flex items-center pl-1 pr-3 py-2 rounded-full border-2 transition-colors ${
                                             selectedInstruments.includes(instrument.id)
                                                 ? 'bg-sssyellow border-sssyellow text-sssdarkblue'
                                                 : 'bg-white border-sssmutegray text-sssdarkblue hover:border-sssyellow'
                                         }`}
                                     >
-                                        {instrument.name}
+                                        <span className="p-0 m-0">
+                                {
+                                    instrument && <Shape instrument={instrument.name} width={20}/>
+                                }
+                                        </span>
+                                        <span>
+                                            {instrument.name}
+                                        </span>
                                     </button>
                                 ))}
                             </div>
