@@ -17,7 +17,7 @@ export default async function sendSampleRequestEmail({description, email, instru
     const htmlContent = `
         <html lang="en">
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                <h2 style="color: #2c3e50;">New Sample Request - Super Secret Samples</h2>
+                <h2 style="color: #2c3e50;">New Sample Request - super secret samples</h2>
                 
                 <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <h3 style="margin-top: 0; color: #495057;">Client Information</h3>
@@ -49,7 +49,7 @@ export default async function sendSampleRequestEmail({description, email, instru
 
                 <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px; text-align: center;">
                     <p style="margin: 0; color: #6c757d; font-size: 14px;">
-                        This request was submitted through the Super Secret Samples website on ${new Date().toLocaleString()}
+                        This request was submitted through the super secret samples website on ${new Date().toLocaleString()}
                     </p>
                 </div>
             </body>
@@ -57,7 +57,7 @@ export default async function sendSampleRequestEmail({description, email, instru
     `
 
     const textContent = `
-New Sample Request from Super Secret Samples
+New Sample Request from super secret samples
 
 Client Email: ${email}
 
@@ -69,7 +69,7 @@ Requested Instruments: ${instruments.join(', ')}
 Requested Genres: ${genres.join(', ')}
 
 ---
-This request was submitted through the Super Secret Samples website on ${new Date().toLocaleString()}.
+This request was submitted through the super secret samples website on ${new Date().toLocaleString()}.
     `.trim()
 
     const params = {

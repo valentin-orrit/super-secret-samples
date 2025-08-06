@@ -5,6 +5,7 @@ import type {Genre, Instrument} from '../../prisma/client'
 import Shape from "~/components/Shape"
 import sendSampleRequestEmail from "~/components/email/sendSampleRequestEmail"
 import sendConfirmationEmail from "~/components/email/sendConfirmationEmail"
+import {toast} from "sonner"
 
 export const meta: MetaFunction = () => {
     return [
@@ -100,9 +101,13 @@ export default function SampleRequest() {
     useEffect(() => {
         if (actionData) {
             if (actionData.success) {
-                alert('Sample request sent successfully! We\'ll contact you via email soon.')
+                toast.success("sample request sent successfully!", {
+                    description: "You will receive a confirmation email soon."
+                })
             } else {
-                alert(`Error: ${actionData.message}`)
+                toast.error("Error:", {
+                    description: "service unavailable. Please try again later."
+                })
             }
         }
     }, [actionData])
@@ -155,15 +160,12 @@ export default function SampleRequest() {
             <h1 className="text-2xl font-semibold text-sssblue mb-4">request exclusive samples</h1>
 
             <p className="min-w-2/3 max-w-3xl text-left mb-2">
-                Do you like the samples produced for <span
-                className="font-bold text-sssred">super secret samples</span>? If so, we
-                can produce exclusive
-                samples for
-                you only.
-                You would be the only producer in possession of those samples and would be able to use them as you wish.
+                Do you like the samples produced for <span className="font-bold text-sssred">super secret samples</span>?
+                We can produce exclusive samples for you only. You would be the only producer in possession of those
+                samples and would be able to use them as you wish. If you wish to proceed, fill this form.
             </p>
 
-            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-8 p-14 rounded-2xl shadow-lg">
+            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-4 p-14 rounded-2xl shadow-lg">
                 <Form method="POST" className="flex flex-col gap-y-8">
                     {/* Description */}
                     <div>
@@ -219,7 +221,7 @@ export default function SampleRequest() {
 
                     {/* Genres */}
                     <div>
-                        <p className="mb-4 font-semibold">genre :</p>
+                        <p className="mb-4 font-semibold text-ss">genre :</p>
                         {genres.length === 0 ? (
                             <p className="text-gray-500">Loading genres...</p>
                         ) : (
@@ -255,7 +257,7 @@ export default function SampleRequest() {
                     {/* Email */}
                     <div>
                         <p className="mb-2 font-semibold">
-                            email : <span className="text-sm text-gray-500 font-normal">(we will contact you via email regarding the process and pricing)</span>
+                            email : <span className="text-sm text-sssorange">(we will contact you via email regarding the process and pricing)</span>
                         </p>
                         <input
                             type="email"

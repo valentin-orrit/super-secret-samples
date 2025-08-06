@@ -13,7 +13,7 @@ export default async function sendConfirmationEmail(clientEmail: string, descrip
         <html lang="en">
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                    <h2 style="color: #2c3e50; text-align: center;">Thank you for your sample request! 🎵</h2>
+                    <h2 style="color: #2c3e50; text-align: center;">Thank you for your exclusive sample request! 🎵</h2>
                     
                     <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
                         <p>Hi there!</p>
@@ -33,7 +33,7 @@ export default async function sendConfirmationEmail(clientEmail: string, descrip
 
                     <div style="text-align: center; margin: 30px 0;">
                         <p style="color: #6c757d;">Questions? Just reply to this email!</p>
-                        <p><strong>The Super Secret Samples Team</strong></p>
+                        <p><strong>The super secret samples Team</strong></p>
                     </div>
                 </div>
             </body>
@@ -54,7 +54,7 @@ What happens next?
 
 Questions? Just reply to this email!
 
-The Super Secret Samples Team
+The super secret samples Team
     `.trim()
 
     const params = {
@@ -64,7 +64,7 @@ The Super Secret Samples Team
         },
         Message: {
             Subject: {
-                Data: `🎵 Your sample request has been received - Super Secret Samples`,
+                Data: `🎵 Your sample request has been received - super secret samples`,
                 Charset: 'UTF-8',
             },
             Body: {
