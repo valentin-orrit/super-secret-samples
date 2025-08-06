@@ -1,8 +1,10 @@
-import {type MetaFunction} from 'react-router'
+import {type MetaFunction, type ActionFunctionArgs, useActionData, useNavigation} from 'react-router'
 import {Form} from 'react-router'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import type {Genre, Instrument} from '../../prisma/client'
 import Shape from "~/components/Shape"
+import sendSampleRequestEmail from "~/components/email/sendSampleRequestEmail"
+import sendConfirmationEmail from "~/components/email/sendConfirmationEmail"
 
 export const meta: MetaFunction = () => {
     return [
@@ -15,6 +17,61 @@ export const meta: MetaFunction = () => {
     ]
 }
 
+export async function action({request}: ActionFunctionArgs) {
+    console.log('Action handler called')
+
+    try {
+        const formData = await request.formData()
+
+        const description = formData.get('description') as string
+        const email = formData.get('email') as string
+        const instrumentIds = formData.getAll('instruments').map(id => Number(id))
+        const genreIds = formData.getAll('genres').map(id => Number(id))
+
+        console.log('Form data:', {description, email, instrumentIds, genreIds})
+
+        if (!description || !email) {
+            return {
+                success: false,
+                message: 'Description and email are required'
+            }
+        }
+
+        const prisma = (await import('../../prisma/client')).default
+
+        const [selectedInstruments, selectedGenres] = await Promise.all([
+            instrumentIds.length > 0 ? prisma.instrument.findMany({
+                where: {id: {in: instrumentIds}},
+                select: {name: true}
+            }) : [],
+            genreIds.length > 0 ? prisma.genre.findMany({
+                where: {id: {in: genreIds}},
+                select: {name: true}
+            }) : []
+        ])
+
+        await sendSampleRequestEmail({
+            description,
+            email,
+            instruments: selectedInstruments.map(i => i.name),
+            genres: selectedGenres.map(g => g.name)
+        })
+
+        await sendConfirmationEmail(email, description)
+
+        return {
+            success: true,
+            message: 'Sample request sent successfully!'
+        }
+    } catch (error) {
+        console.error('Error processing sample request:', error)
+        return {
+            success: false,
+            message: 'Failed to send sample request. Please try again.',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        }
+    }
+}
 
 export default function SampleRequest() {
     const [instruments, setInstruments] = useState<Instrument[]>([])
@@ -23,6 +80,32 @@ export default function SampleRequest() {
     const [selectedGenres, setSelectedGenres] = useState<number[]>([])
     const [selectedInstruments, setSelectedInstruments] = useState<number[]>([])
     const [email, setEmail] = useState<string>('')
+
+    // Get action data and navigation state from React Router
+    const actionData = useActionData() as { success: boolean; message: string } | undefined
+    const navigation = useNavigation()
+    const isSubmitting = navigation.state === 'submitting'
+
+    // Reset form on successful submission
+    useEffect(() => {
+        if (actionData?.success) {
+            setDescription('')
+            setEmail('')
+            setSelectedGenres([])
+            setSelectedInstruments([])
+        }
+    }, [actionData])
+
+    // Show success/error messages
+    useEffect(() => {
+        if (actionData) {
+            if (actionData.success) {
+                alert('Sample request sent successfully! We\'ll contact you via email soon.')
+            } else {
+                alert(`Error: ${actionData.message}`)
+            }
+        }
+    }, [actionData])
 
     // fetch instruments from db
     useEffect(() => {
@@ -64,18 +147,6 @@ export default function SampleRequest() {
         )
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        try {
-            // const formData = new FormData()
-            // submit(formData, {method: 'POST', encType: 'multipart/form-data'})
-        } catch (error) {
-            console.error('Failed to send form:', error)
-            alert('Failed to send form. Service might be unavailable. Please try again.')
-        }
-    }
-
     return (
         <div
             id="samples-page"
@@ -90,14 +161,11 @@ export default function SampleRequest() {
             </p>
 
             <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-8 p-14 rounded-2xl shadow-lg">
-                <Form action="/sample-request"
-                      method="POST"
-                      onSubmit={handleSubmit}
-                      className="flex flex-col gap-y-8">
+                <Form method="POST" className="flex flex-col gap-y-8">
                     {/* Description */}
                     <div>
-                        <p className="mb-2 font-semibold">describe the kind of samples you would like to produce with
-                            :</p>
+                        <p className="mb-2 font-semibold">describe the kind of samples you would like to produce
+                            with:</p>
                         <textarea
                             name="description"
                             value={description}
@@ -127,17 +195,14 @@ export default function SampleRequest() {
                                         }`}
                                     >
                                         <span className="p-0 m-0">
-                                {
-                                    instrument && <Shape instrument={instrument.name} width={20}/>
-                                }
+                                            {instrument && <Shape instrument={instrument.name} width={20}/>}
                                         </span>
-                                        <span>
-                                            {instrument.name}
-                                        </span>
+                                        <span>{instrument.name}</span>
                                     </button>
                                 ))}
                             </div>
                         )}
+
                         {/* Hidden inputs for selected instruments */}
                         {selectedInstruments.map((instrumentId) => (
                             <input
@@ -172,6 +237,7 @@ export default function SampleRequest() {
                                 ))}
                             </div>
                         )}
+
                         {/* Hidden inputs for selected genres */}
                         {selectedGenres.map((genreId) => (
                             <input
@@ -201,9 +267,14 @@ export default function SampleRequest() {
 
                     <button
                         type="submit"
-                        className='mt-6 py-3 px-10 rounded-full bg-sssyellow hover:bg-yellow-400 transition-colors font-semibold'
+                        disabled={isSubmitting}
+                        className={`mt-6 py-3 px-10 rounded-full transition-colors font-semibold ${
+                            isSubmitting
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-sssyellow hover:bg-yellow-400'
+                        }`}
                     >
-                        submit
+                        {isSubmitting ? 'sending...' : 'submit'}
                     </button>
                 </Form>
             </section>

@@ -1,31 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react'
-import type { MetaFunction } from 'react-router'
+import {useState, useEffect} from 'react'
+import type {MetaFunction} from 'react-router'
 import {
     useLoaderData,
     useSearchParams,
     useSubmit,
     useNavigation,
 } from 'react-router'
-import { Sample } from '../../prisma/client'
+import {Sample} from '../../prisma/client'
 import SampleFilterSection from '../components/SampleFilterSection'
 import SampleTableHead from '../components/SampleTableHead'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
 import loader from '../lib/sample-loader'
-import { AudioController } from '../lib/audio-controller'
-import { useSearchStore } from '../store'
+import {AudioController} from '../lib/audio-controller'
+import {useSearchStore} from '../store'
 
 export const meta: MetaFunction = () => {
     return [
-        { title: 'samples page - super secret samples' },
-        { name: 'description', content: 'browse samples!' },
+        {title: 'samples page - super secret samples'},
+        {name: 'description', content: 'browse samples!'},
     ]
 }
 
 // use sample loader
-export { loader }
+export {loader}
 
 const audioController =
     typeof window !== 'undefined' ? new AudioController() : null
@@ -110,7 +110,7 @@ export default function SamplesPage() {
                 // Reset to page 1 when any filter changes
                 newParams.set('page', '1')
 
-                submit(newParams, { replace: true })
+                submit(newParams, {replace: true})
             }
         }, 300) // debounce
 
@@ -161,7 +161,7 @@ export default function SamplesPage() {
 
         newParams.set('page', '1')
 
-        submit(newParams, { replace: true })
+        submit(newParams, {replace: true})
     }
 
     const isLoading =
