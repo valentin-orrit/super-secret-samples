@@ -154,8 +154,11 @@ export default function SampleRequest() {
         >
             <h1 className="text-2xl font-semibold text-sssblue mb-4">request exclusive samples</h1>
 
-            <p className="w-1/2 text-center">
-                Do you like the samples produced for super secret samples? If so, we can produce exclusive samples for
+            <p className="min-w-2/3 max-w-3xl text-left mb-2">
+                Do you like the samples produced for <span
+                className="font-bold text-sssred">super secret samples</span>? If so, we
+                can produce exclusive
+                samples for
                 you only.
                 You would be the only producer in possession of those samples and would be able to use them as you wish.
             </p>
