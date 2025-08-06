@@ -10,7 +10,7 @@ export default async function sendConfirmationEmail(clientEmail: string, descrip
     })
 
     const htmlContent = `
-        <html>
+        <html lang="en">
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
                     <h2 style="color: #2c3e50; text-align: center;">Thank you for your sample request! 🎵</h2>

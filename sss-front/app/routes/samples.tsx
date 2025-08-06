@@ -14,8 +14,8 @@ import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
 import loader from '../lib/sample-loader'
-import {AudioController} from '../lib/audio-controller'
-import {useSearchStore} from '../store'
+import {AudioController} from '~/lib/audio-controller'
+import {useSearchStore} from '~/store'
 
 export const meta: MetaFunction = () => {
     return [

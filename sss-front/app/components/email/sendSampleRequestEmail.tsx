@@ -15,7 +15,7 @@ export default async function sendSampleRequestEmail({description, email, instru
     })
 
     const htmlContent = `
-        <html>
+        <html lang="en">
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <h2 style="color: #2c3e50;">New Sample Request - Super Secret Samples</h2>
                 
