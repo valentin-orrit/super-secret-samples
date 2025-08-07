@@ -96,7 +96,7 @@ export default function SampleDisplay({
             <div className="text-gray-700 text-start">
                 {sample.loop ? <Infinity/> : <Route/>}
             </div>
-            <div className="text-lg text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
+            <div className="text-md text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap">
                     {sample.name}
                 </p>

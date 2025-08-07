@@ -5,24 +5,24 @@ export default function Navbar() {
     return (
         <div
             id="navbar"
-            className="flex py-1 px-4 min-h-16 items-center justify-between text-sssoffwhite bg-sssdarkblue w-full sticky top-0 z-10"
+            className="flex pr-4 min-h-12 items-center justify-between text-sssoffwhite bg-sssdarkblue w-full sticky top-0 z-10"
         >
             <Link to={'/'}>
                 <img
-                    src="/logos/logo-dark-text.svg"
+                    src="/logos/logo-dark-text.png"
                     alt="website logo"
                     className="hidden sm:block"
-                    width="130px"
+                    width="112px"
                 />
                 <img
-                    src="/logos/logo-dark.svg"
+                    src="/logos/logo-dark.png"
                     alt="website logo small"
                     className="block sm:hidden"
-                    width="60px"
+                    width="56px"
                 />
             </Link>
 
-            <div id="nav-list" className="flex">
+            <div id="nav-list" className="flex text-md font-normal">
                 <NavLink
                     to="/samples"
                     className={({isActive}) =>
@@ -37,9 +37,9 @@ export default function Navbar() {
                             >
                                 samples
                             </span>
-                            <span className="w-14 absolute top-6">
+                            <span className="w-10 absolute top-6">
                                 {isActive && (
-                                    <Shape instrument="nav_selector"/>
+                                    <Shape instrument="nav_selector" width={24}/>
                                 )}
                             </span>
                         </div>
@@ -59,9 +59,9 @@ export default function Navbar() {
                             >
                                 request
                             </span>
-                            <span className="w-14 absolute top-6">
+                            <span className="w-10 absolute top-6">
                                 {isActive && (
-                                    <Shape instrument="nav_selector"/>
+                                    <Shape instrument="nav_selector" width={24}/>
                                 )}
                             </span>
                         </div>
@@ -81,9 +81,9 @@ export default function Navbar() {
                             >
                                 about
                             </span>
-                            <span className="w-14 absolute top-6">
+                            <span className="w-10 absolute top-6">
                                 {isActive && (
-                                    <Shape instrument="nav_selector"/>
+                                    <Shape instrument="nav_selector" width={24}/>
                                 )}
                             </span>
                         </div>

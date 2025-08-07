@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { Sample } from '../../prisma/client'
-import { Play, Pause, Repeat, Volume2 } from 'lucide-react'
-import { AudioController } from '../lib/audio-controller'
+import {useEffect, useState} from 'react'
+import {Sample} from '../../prisma/client'
+import {Play, Pause, Repeat, Volume2} from 'lucide-react'
+import {AudioController} from '../lib/audio-controller'
 
 interface AudioPlayerProps {
     currentSample: Sample | null
@@ -13,13 +13,13 @@ interface AudioPlayerProps {
 }
 
 export default function AudioPlayer({
-    currentSample,
-    isPlaying,
-    isLooping,
-    setIsPlaying,
-    setIsLooping,
-    audioController,
-}: AudioPlayerProps) {
+                                        currentSample,
+                                        isPlaying,
+                                        isLooping,
+                                        setIsPlaying,
+                                        setIsLooping,
+                                        audioController,
+                                    }: AudioPlayerProps) {
     const [volume, setVolume] = useState(1)
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0.0)
@@ -106,7 +106,8 @@ export default function AudioPlayer({
     }
 
     return (
-        <div className="flex items-center justify-between gap-4 p-4 mb-8 bg-white shadow-xl rounded-2xl w-full border border-gray-400">
+        <div
+            className="flex items-center justify-between gap-4 p-4 mb-8 bg-white shadow-xl rounded-2xl w-full border border-gray-400">
             <div className="flex gap-2">
                 <button
                     onClick={handlePlayPause}
@@ -114,11 +115,12 @@ export default function AudioPlayer({
                     disabled={!streamUrl || isLoading}
                 >
                     {isLoading ? (
-                        <span className="block w-5 h-5 rounded-full border-2 border-amber-800 border-t-transparent animate-spin" />
+                        <span
+                            className="block w-5 h-5 rounded-full border-2 border-amber-800 border-t-transparent animate-spin"/>
                     ) : isPlaying ? (
-                        <Pause size={20} className="text-amber-800" />
+                        <Pause size={20} className="text-amber-800"/>
                     ) : (
-                        <Play size={20} className="text-amber-800" />
+                        <Play size={20} className="text-amber-800"/>
                     )}
                 </button>
                 <button
@@ -137,7 +139,8 @@ export default function AudioPlayer({
             </div>
 
             {currentSample ? (
-                <div className="text-sm lg:text-md text-gray-800 font-semibold text-start overflow-hidden text-ellipsis text-nowrap w-1/3">
+                <div
+                    className="text-sm lg:text-md text-gray-800 font-semibold text-start overflow-hidden text-ellipsis text-nowrap w-1/3">
                     {currentSample.name}
                 </div>
             ) : (
@@ -147,7 +150,7 @@ export default function AudioPlayer({
             )}
 
             {currentSample && duration > 0 && (
-                <div className="flex items-center gap-1 mx-4">
+                <div className="flex items-center gap-1 mx-4 w-3/4">
                     <input
                         type="range"
                         min="0"
@@ -164,7 +167,7 @@ export default function AudioPlayer({
             )}
 
             <div className="flex items-center justify-center gap-2">
-                <Volume2 size={20} className="text-amber-800" />
+                <Volume2 size={20} className="text-amber-800"/>
                 <input
                     type="range"
                     min="0"
