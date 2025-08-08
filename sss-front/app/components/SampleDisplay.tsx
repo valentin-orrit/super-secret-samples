@@ -74,7 +74,7 @@ export default function SampleDisplay({
 
     return (
         <div
-            className={`grid grid-flow-col grid-cols-8 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
+            className={`grid grid-flow-col grid-cols-9 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
                 isActive
                     ? 'bg-sssoffwhite border border-sssorange hover:bg-sssoffwhite rounded-md'
                     : 'bg-white border border-gray-200 hover:bg-sssoffwhite rounded-md'
@@ -93,18 +93,18 @@ export default function SampleDisplay({
                     <Shape instrument="drums" width={40}/>
                 )}
             </div>
-            <div className="text-gray-700 text-start">
+            <div className="text-gray-500 text-start">
                 {sample.loop ? <Infinity/> : <Route/>}
             </div>
-            <div className="text-md text-gray-800 font-semibold text-start flex flex-col col-span-3 justify-evenly">
+            <div className="text-md text-gray-800 font-semibold text-start flex flex-col col-span-4 justify-evenly">
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap">
                     {sample.name}
                 </p>
-                <div className="flex overflow-hidden text-ellipsis gap-2 my-1">
+                <div className="flex overflow-hidden text-ellipsis gap-2 my-1 mr-4">
                     {genreAndTags.map((tag, index) => (
                         <span
                             key={index}
-                            className="text-gray-500 text-xs font-thin"
+                            className="text-gray-500 text-xs font-thin text-nowrap border px-1 rounded-lg border-sssmutegray"
                         >
                             {tag.name}{' '}
                         </span>

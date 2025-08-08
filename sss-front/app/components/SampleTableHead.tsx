@@ -28,12 +28,12 @@ export default function SampleTableHead({
 
     return (
         <div
-            className="grid grid-flow-col grid-cols-8 border-b border-gray-200 w-full px-4 py-4 items-center justify-center text-sssaccentgray text-sm font-thin">
+            className="grid grid-flow-col grid-cols-9 border-b border-gray-200 w-full px-4 py-4 items-center justify-center text-sssaccentgray text-sm font-thin">
             <button
                 onClick={() => handleSort('instrument')}
                 className="flex items-center gap-1 hover:text-gray-700 transition-colors text-left"
             >
-                instrument
+                instr
                 {getSortIcon('instrument')}
             </button>
 
@@ -47,7 +47,7 @@ export default function SampleTableHead({
 
             <button
                 onClick={() => handleSort('name')}
-                className="text-start flex items-center gap-1 col-span-3 hover:text-gray-700 transition-colors"
+                className="text-start flex items-center gap-1 col-span-4 hover:text-gray-700 transition-colors"
             >
                 name
                 {getSortIcon('name')}
