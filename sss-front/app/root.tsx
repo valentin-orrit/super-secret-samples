@@ -12,6 +12,7 @@ import {checkSiteAuth} from './lib/authStore.server'
 import './tailwind.css'
 import {Toaster} from './components/ui/sonner'
 import Navbar from './components/Navbar'
+import Footer from "~/components/Footer"
 
 export async function loader({request}: LoaderFunctionArgs) {
     const isAuthenticated = checkSiteAuth(request)
@@ -53,6 +54,7 @@ function App() {
             {!isRoot && isAuthenticated && <Navbar/>}
             <main className="flex-grow">
                 <Outlet/>
+                {!isRoot && <Footer/>}
             </main>
         </div>
     )
