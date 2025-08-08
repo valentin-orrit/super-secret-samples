@@ -19,6 +19,7 @@ export default [
         route('samples', './routes/samples.tsx'),
         route('sample-request', './routes/sample-request.tsx'),
         route('about', './routes/about.tsx'),
+        route('terms-of-use', './routes/terms-of-use.tsx'),
 
         // API routes
         route('api/audio/:key', './routes/api.audio.$key.tsx'),
