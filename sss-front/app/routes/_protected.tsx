@@ -21,7 +21,7 @@ import {
     CardHeader,
     CardTitle,
 } from '~/components/ui/card'
-import { useToast } from '~/hooks/use-toast'
+import { toast } from "sonner"
 import { useEffect, useState } from 'react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -39,21 +39,16 @@ export default function ProtectedServerLayout() {
     const { authenticated, error } = useLoaderData<typeof loader>()
     const location = useLocation()
     const navigation = useNavigation()
-    const { toast } = useToast()
     const [password, setPassword] = useState('')
     const [agreedToTerms, setAgreedToTerms] = useState(false)
     const isSubmitting = navigation.state === 'submitting'
 
     useEffect(() => {
         if (error === 'invalid-password') {
-            toast({
-                title: 'Access Denied',
-                description: 'Invalid password. Please try again.',
-                variant: 'destructive',
-            })
+            toast.error('invalid password')
             setPassword('')
         }
-    }, [error, toast])
+    }, [error, location.key])
 
     if (!authenticated) {
         return (
