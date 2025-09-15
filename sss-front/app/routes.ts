@@ -9,6 +9,7 @@ export default [
     // Public routes
     index('./routes/_index.tsx'),
     route('logout', './routes/logout.tsx'),
+    route('terms-of-use', './routes/terms-of-use.tsx'),
 
     // Auth action routes
     route('auth/site', './routes/auth.site.tsx'),
@@ -19,7 +20,6 @@ export default [
         route('samples', './routes/samples.tsx'),
         route('sample-request', './routes/sample-request.tsx'),
         route('about', './routes/about.tsx'),
-        route('terms-of-use', './routes/terms-of-use.tsx'),
 
         // API routes
         route('api/audio/:key', './routes/api.audio.$key.tsx'),
