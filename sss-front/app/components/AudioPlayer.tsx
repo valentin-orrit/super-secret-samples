@@ -1,7 +1,7 @@
-import {useEffect, useState} from 'react'
-import {Sample} from '../../prisma/client'
-import {Play, Pause, Repeat, Volume2} from 'lucide-react'
-import {AudioController} from '../lib/audio-controller'
+import { useEffect, useState } from 'react'
+import { Sample } from '../../prisma/client'
+import { Play, Pause, Repeat, Volume2 } from 'lucide-react'
+import { AudioController } from '~/lib/audio-controller'
 
 interface AudioPlayerProps {
     currentSample: Sample | null
@@ -33,6 +33,8 @@ export default function AudioPlayer({
             setIsLoading(true)
             audioController?.cleanup()
 
+            setIsLooping(currentSample.loop)
+
             const key = encodeURIComponent(
                 currentSample.s3CompressedReferenceName
             )
@@ -41,7 +43,7 @@ export default function AudioPlayer({
         } else {
             setStreamUrl(null)
         }
-    }, [currentSample, audioController])
+    }, [currentSample, audioController, setIsLooping])
 
     // Load track when streamUrl is ready
     useEffect(() => {
