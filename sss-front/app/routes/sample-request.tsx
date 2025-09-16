@@ -1,15 +1,15 @@
-import {type MetaFunction, type ActionFunctionArgs, useActionData, useNavigation} from 'react-router'
-import {Form} from 'react-router'
-import {useEffect, useState} from 'react'
-import type {Genre, Instrument} from '../../prisma/client'
+import { type MetaFunction, type ActionFunctionArgs, useActionData, useNavigation } from 'react-router'
+import { Form } from 'react-router'
+import { useEffect, useState } from 'react'
+import type { Genre, Instrument } from '../../prisma/client'
 import Shape from "~/components/Shape"
 import sendSampleRequestEmail from "~/components/email/sendSampleRequestEmail"
 import sendConfirmationEmail from "~/components/email/sendConfirmationEmail"
-import {toast} from "sonner"
+import { toast } from "sonner"
 
 export const meta: MetaFunction = () => {
     return [
-        {title: 'request samples - super secret samples'},
+        { title: 'request samples - super secret samples' },
         {
             name: 'description',
             content:
@@ -18,7 +18,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export async function action({request}: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
     console.log('Action handler called')
 
     try {
@@ -29,7 +29,7 @@ export async function action({request}: ActionFunctionArgs) {
         const instrumentIds = formData.getAll('instruments').map(id => Number(id))
         const genreIds = formData.getAll('genres').map(id => Number(id))
 
-        console.log('Form data:', {description, email, instrumentIds, genreIds})
+        console.log('Form data:', { description, email, instrumentIds, genreIds })
 
         if (!description || !email) {
             return {
@@ -42,12 +42,12 @@ export async function action({request}: ActionFunctionArgs) {
 
         const [selectedInstruments, selectedGenres] = await Promise.all([
             instrumentIds.length > 0 ? prisma.instrument.findMany({
-                where: {id: {in: instrumentIds}},
-                select: {name: true}
+                where: { id: { in: instrumentIds } },
+                select: { name: true }
             }) : [],
             genreIds.length > 0 ? prisma.genre.findMany({
-                where: {id: {in: genreIds}},
-                select: {name: true}
+                where: { id: { in: genreIds } },
+                select: { name: true }
             }) : []
         ])
 
@@ -160,17 +160,23 @@ export default function SampleRequest() {
             <h1 className="text-2xl font-semibold text-sssblue mb-4">request exclusive samples</h1>
 
             <p className="min-w-2/3 max-w-3xl text-left mb-2">
-                Do you like the samples produced for <span className="font-bold text-sssred">super secret samples</span>?
-                We can produce exclusive samples for you only. You would be the only producer in possession of those
-                samples and would be able to use them as you wish. If you wish to proceed, fill this form.
+                Do you like the samples produced for <span
+                className="font-bold text-sssdarkblue">super secret <span
+                className="text-sssred">samples</span></span>?
+                We can produce exclusive samples for you. You would be the only producer in possession of those
+                samples and would be able to use them as you wish. To proceed, fill this form. <span
+                className="min-w-2/3 max-w-3xl text-left mb-2 font-thin text-xs">
+                (This is a paid service, once
+                you fill the form we will contact you via email regarding the process and pricing).
+            </span>
             </p>
+
 
             <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-4 p-14 rounded-2xl shadow-lg">
                 <Form method="POST" className="flex flex-col gap-y-8">
                     {/* Description */}
                     <div>
-                        <p className="mb-2 font-semibold">describe the kind of samples you would like to produce
-                            with:</p>
+                        <p className="mb-2 font-semibold">describe the kind of samples you are looking for:</p>
                         <textarea
                             name="description"
                             value={description}
