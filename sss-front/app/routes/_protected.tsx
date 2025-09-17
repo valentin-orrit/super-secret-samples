@@ -53,18 +53,28 @@ export default function ProtectedServerLayout() {
     if (!authenticated) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-sssdarkblue text-sssdarkblue p-4">
-                <div className="flex mb-8 w-44 sm:w-96">
+                <div className="flex m-4 w-44 sm:w-96">
                     <div id="shapes-top" className="flex flex-col sm:flex-row">
-                        <Shape instrument="bass"/>
-                        <Shape instrument="drums"/>
+                        <div className="animate-in slide-in-from-bottom spin-in-3 duration-300">
+                            <Shape instrument="bass"/>
+                        </div>
+                        <div className="animate-in slide-in-from-bottom spin-in-6 duration-300">
+                            <Shape instrument="drums"/>
+                        </div>
                     </div>
                     <div id="shapes-bot" className="flex flex-col sm:flex-row">
-                        <Shape instrument="synths"/>
-                        <Shape instrument="percs"/>
-                        <Shape instrument="pads"/>
+                        <div className="animate-in slide-in-from-bottom spin-in-12 duration-500">
+                            <Shape instrument="synths"/>
+                        </div>
+                        <div className="animate-in slide-in-from-bottom spin-in-45 duration-700">
+                            <Shape instrument="percs"/>
+                        </div>
+                        <div className="animate-in slide-in-from-bottom spin-in-90 duration-1000">
+                            <Shape instrument="pads"/>
+                        </div>
                     </div>
                 </div>
-                <Card className="w-full max-w-md">
+                <Card className="w-full max-w-md z-50 animate-in zoom-in-75">
                     <CardHeader className="space-y-1">
                         <CardTitle className="text-2xl font-bold text-center text-sssblue">
                             super secret <span className="text-sssred">samples</span>
