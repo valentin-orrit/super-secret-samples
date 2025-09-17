@@ -1,31 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useState, useEffect} from 'react'
-import type {MetaFunction} from 'react-router'
+import { useState, useEffect } from 'react'
+import type { MetaFunction } from 'react-router'
 import {
     useLoaderData,
     useSearchParams,
     useSubmit,
     useNavigation,
 } from 'react-router'
-import {Sample} from '../../prisma/client'
+import { Sample } from '../../prisma/client'
 import SampleFilterSection from '../components/SampleFilterSection'
 import SampleTableHead from '../components/SampleTableHead'
 import SampleDisplay from '../components/SampleDisplay'
 import AudioPlayer from '../components/AudioPlayer'
 import SamplePagination from '../components/SamplePagination'
 import loader from '../lib/sample-loader'
-import {AudioController} from '~/lib/audio-controller'
-import {useSearchStore} from '~/store'
+import { AudioController } from '~/lib/audio-controller'
+import { useSearchStore } from '~/store'
+import { Loader2 } from "lucide-react"
 
 export const meta: MetaFunction = () => {
     return [
-        {title: 'samples page - super secret samples'},
-        {name: 'description', content: 'browse samples!'},
+        { title: 'samples page - super secret samples' },
+        { name: 'description', content: 'browse samples!' },
     ]
 }
 
 // use sample loader
-export {loader}
+export { loader }
 
 const audioController =
     typeof window !== 'undefined' ? new AudioController() : null
@@ -110,7 +111,7 @@ export default function SamplesPage() {
                 // Reset to page 1 when any filter changes
                 newParams.set('page', '1')
 
-                submit(newParams, {replace: true})
+                submit(newParams, { replace: true })
             }
         }, 300) // debounce
 
@@ -161,7 +162,7 @@ export default function SamplesPage() {
 
         newParams.set('page', '1')
 
-        submit(newParams, {replace: true})
+        submit(newParams, { replace: true })
     }
 
     const isLoading =
@@ -178,9 +179,9 @@ export default function SamplesPage() {
             />
             <div
                 id="main"
-                className="flex flex-col justify-center items-center bg-white"
+                className="flex flex-col items-center min-h-[calc(100vh-400px)] bg-white"
             >
-                <div className="w-full mb-4 px-4">
+                <div className="w-full mb-4 px-4 flex-grow flex flex-col">
                     <div className="sticky top-[49px] z-50 bg-white">
                         <SampleTableHead
                             sortField={sortField}
@@ -189,8 +190,8 @@ export default function SamplesPage() {
                         />
                     </div>
                     {isLoading ? (
-                        <div className="text-center py-8">
-                            <p>Loading samples...</p>
+                        <div className="self-center mt-16">
+                            <Loader2 className="animate-spin direction-reverse " size="40"/>
                         </div>
                     ) : samples.length > 0 ? (
                         samples.map((sample) => (

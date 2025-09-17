@@ -7,19 +7,19 @@ import {
     useLoaderData,
     useLocation,
 } from 'react-router'
-import type {LoaderFunctionArgs} from 'react-router'
-import {checkSiteAuth} from './lib/authStore.server'
+import type { LoaderFunctionArgs } from 'react-router'
+import { checkSiteAuth } from './lib/authStore.server'
 import './tailwind.css'
-import {Toaster} from './components/ui/sonner'
+import { Toaster } from './components/ui/sonner'
 import Navbar from './components/Navbar'
-import {Footer} from "~/components/Footer"
+import { Footer } from "~/components/Footer"
 
-export async function loader({request}: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
     const isAuthenticated = checkSiteAuth(request)
-    return {isAuthenticated}
+    return { isAuthenticated }
 }
 
-export function Layout({children}: { children: React.ReactNode }) {
+export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className="h-dvh">
         <head title="super secret samples">
@@ -45,7 +45,7 @@ export function Layout({children}: { children: React.ReactNode }) {
 function App() {
     const location = useLocation()
     const isRoot = location.pathname === '/'
-    const {isAuthenticated} = useLoaderData() as { isAuthenticated: boolean }
+    const { isAuthenticated } = useLoaderData() as { isAuthenticated: boolean }
 
     return (
         <div
@@ -55,8 +55,8 @@ function App() {
             {!isRoot && isAuthenticated && <Navbar/>}
             <main className="flex-grow">
                 <Outlet/>
-                {!isRoot && <Footer/>}
             </main>
+            {!isRoot && <Footer/>}
         </div>
     )
 }
