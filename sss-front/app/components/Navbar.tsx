@@ -1,7 +1,11 @@
 import { NavLink, Link } from 'react-router';
 import Shape from './Shape'
 
-export default function Navbar() {
+interface NavbarProps {
+    isShowroomMode: boolean
+}
+
+export default function Navbar({ isShowroomMode }: NavbarProps) {
     return (
         <div
             id="navbar"
@@ -22,7 +26,7 @@ export default function Navbar() {
                 />
             </Link>
 
-            {import.meta.env.VITE_SHOWROOM_MODE === 'true' && (
+            {isShowroomMode && (
                 <div
                     className="text-3xl text-sssyellow font-thin">SHOWROOM
                 </div>

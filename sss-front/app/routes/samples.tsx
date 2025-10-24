@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import type { MetaFunction } from 'react-router'
+import { MetaFunction } from 'react-router'
 import {
     useLoaderData,
     useSearchParams,
@@ -42,6 +42,7 @@ export default function SamplesPage() {
         totalCount,
         sortField,
         sortDirection,
+        isShowroomMode,
     } = useLoaderData<typeof loader>()
 
     const [searchParams, setSearchParams] = useSearchParams()
@@ -200,6 +201,7 @@ export default function SamplesPage() {
                                 sample={sample}
                                 onClick={() => handleSampleClick(sample.id)}
                                 isActive={currentSample?.id === sample.id}
+                                isShowroomMode={isShowroomMode}
                             />
                         ))
                     ) : (

@@ -18,12 +18,14 @@ interface SampleInterface {
     sample: Sample
     onClick?: () => void
     isActive?: boolean
+    isShowroomMode?: boolean
 }
 
 export default function SampleDisplay({
                                           sample,
                                           onClick,
                                           isActive = false,
+                                          isShowroomMode,
                                       }: SampleInterface) {
     const genreAndTags = sample.genres.concat(sample.tags)
 
@@ -127,7 +129,7 @@ export default function SampleDisplay({
                 </div>
             </div>
             <div className="flex justify-end">
-                {import.meta.env.VITE_SHOWROOM_MODE !== 'true' ? (
+                {!isShowroomMode ? (
                     <button
                         onClick={handleDownload}
                         data-download-button

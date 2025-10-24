@@ -151,6 +151,8 @@ export default async function loader({ request }: LoaderFunctionArgs) {
         url: getStreamUrl(sample),
     }))
 
+    const isShowroomMode = process.env.SHOWROOM_MODE === 'true'
+    
     return {
         samples: samplesWithUrls,
         totalCount,
@@ -162,5 +164,6 @@ export default async function loader({ request }: LoaderFunctionArgs) {
         selectedGenre,
         sortField,
         sortDirection,
+        isShowroomMode,
     }
 }

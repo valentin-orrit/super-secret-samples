@@ -16,7 +16,8 @@ import { Footer } from "~/components/Footer"
 
 export async function loader({ request }: LoaderFunctionArgs) {
     const isAuthenticated = checkSiteAuth(request)
-    return { isAuthenticated }
+    const isShowroomMode = process.env.SHOWROOM_MODE === 'true'
+    return { isAuthenticated, isShowroomMode }
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -45,14 +46,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 function App() {
     const location = useLocation()
     const isRoot = location.pathname === '/'
-    const { isAuthenticated } = useLoaderData() as { isAuthenticated: boolean }
+    const { isAuthenticated, isShowroomMode } = useLoaderData<typeof loader>()
 
     return (
         <div
             id="root"
             className="flex flex-col min-h-screen font-mono text-sssdarkblue bg-sssoffwhite"
         >
-            {!isRoot && isAuthenticated && <Navbar/>}
+            {!isRoot && isAuthenticated && <Navbar isShowroomMode={isShowroomMode}/>}
             <main className="flex-grow">
                 <Outlet/>
             </main>
