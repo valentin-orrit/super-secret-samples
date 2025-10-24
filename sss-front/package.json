@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "build:showroom": "dotenv -e .env.showroom -- react-router build",
     "dev": "react-router dev --host 0.0.0.0 --port 5174",
+    "dev:showroom": "dotenv -e .env.showroom -- react-router dev --host 0.0.0.0 --port 5174",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "node server.js",
     "typecheck": "react-router typegen && tsc",
     "seed": "npx tsx prisma/seed/seed.ts",
+    "seed:showroom": "dotenv -e .env.showroom -- npx tsx prisma/seed/seed.ts",
     "seed:dev": "npx prisma migrate reset && npx tsx prisma/seed/seed.ts && npx tsx prisma/seed/seed.dev.ts",
     "test": "vitest",
     "test:ui": "vitest --ui"
