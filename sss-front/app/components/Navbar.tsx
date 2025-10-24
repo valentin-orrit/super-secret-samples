@@ -1,4 +1,4 @@
-import {NavLink, Link} from 'react-router';
+import { NavLink, Link } from 'react-router';
 import Shape from './Shape'
 
 export default function Navbar() {
@@ -22,14 +22,20 @@ export default function Navbar() {
                 />
             </Link>
 
+            {import.meta.env.VITE_SHOWROOM_MODE === 'true' && (
+                <div
+                    className="text-3xl text-sssyellow font-thin">SHOWROOM
+                </div>
+            )}
+
             <div id="nav-list" className="flex text-md font-normal">
                 <NavLink
                     to="/samples"
-                    className={({isActive}) =>
+                    className={({ isActive }) =>
                         isActive ? 'text-sssorange' : 'hover:text-sssyellow'
                     }
                 >
-                    {({isActive}) => (
+                    {({ isActive }) => (
                         <div className="relative flex flex-col items-center">
                             <span
                                 id="samples"
@@ -47,11 +53,11 @@ export default function Navbar() {
                 </NavLink>
                 <NavLink
                     to="/sample-request"
-                    className={({isActive}) =>
+                    className={({ isActive }) =>
                         isActive ? 'text-sssorange' : 'hover:text-sssyellow'
                     }
                 >
-                    {({isActive}) => (
+                    {({ isActive }) => (
                         <div className="relative flex flex-col items-center">
                             <span
                                 id="sample-request"
@@ -69,11 +75,11 @@ export default function Navbar() {
                 </NavLink>
                 <NavLink
                     to="/about"
-                    className={({isActive}) =>
+                    className={({ isActive }) =>
                         isActive ? 'text-sssorange' : 'hover:text-sssyellow'
                     }
                 >
-                    {({isActive}) => (
+                    {({ isActive }) => (
                         <div className="relative flex flex-col items-center">
                             <span
                                 id="about"
