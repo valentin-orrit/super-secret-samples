@@ -5,7 +5,8 @@ import {
     Tag,
 } from '../../prisma/client'
 import Shape from '../components/Shape'
-import {Infinity, Route, Download} from 'lucide-react'
+import { Infinity, Route, Download } from 'lucide-react'
+import { toast } from "sonner"
 
 interface Sample extends PrismaSample {
     genres: Genre[]
@@ -53,6 +54,11 @@ export default function SampleDisplay({
         } catch (error) {
             console.error('Download failed:', error)
         }
+    }
+
+    const handleNoDownload = async (e: React.MouseEvent) => {
+        e.stopPropagation()
+        toast.error('download unavailable in showroom mode')
     }
 
     const handleSampleClick = (e: React.MouseEvent) => {
@@ -121,15 +127,27 @@ export default function SampleDisplay({
                 </div>
             </div>
             <div className="flex justify-end">
-                <button
-                    onClick={handleDownload}
-                    data-download-button
-                    className="p-2 text-sssblue hover:text-sssyellow hover:bg-sssblue rounded-lg transition-colors opacity-100"
-                    title={`Download ${sample.name}`}
-                    aria-label={`Download ${sample.name}`}
-                >
-                    <Download size={20}/>
-                </button>
+                {import.meta.env.VITE_SHOWROOM_MODE !== 'true' ? (
+                    <button
+                        onClick={handleDownload}
+                        data-download-button
+                        className="p-2 text-sssblue hover:text-sssyellow hover:bg-sssblue rounded-lg transition-colors opacity-100"
+                        title={`Download ${sample.name}`}
+                        aria-label={`Download ${sample.name}`}
+                    >
+                        <Download size={20}/>
+                    </button>
+                ) : (
+                    <button
+                        onClick={handleNoDownload}
+                        data-download-button
+                        className="p-2 disabled text-sssmutegray"
+                        title={`Download ${sample.name}`}
+                        aria-label={`Download ${sample.name}`}
+                    >
+                        <Download size={20}/>
+                    </button>
+                )}
             </div>
         </div>
     )
