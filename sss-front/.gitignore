@@ -3,4 +3,5 @@
 **/build
 **/logs
 .env
+.env.showroom
 .react-router/
