@@ -1,5 +1,4 @@
-import { MetaFunction, useLoaderData } from 'react-router'
-import { Link } from 'react-router'
+import { MetaFunction, useLoaderData, Link } from 'react-router'
 import Shape from '../components/Shape'
 import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"

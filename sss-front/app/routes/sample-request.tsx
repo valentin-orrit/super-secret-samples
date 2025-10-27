@@ -1,4 +1,4 @@
-import { type MetaFunction, type ActionFunctionArgs, useActionData, useNavigation } from 'react-router'
+import { type MetaFunction, type ActionFunctionArgs, useActionData, useNavigation, useLoaderData } from 'react-router'
 import { Form } from 'react-router'
 import { useEffect, useState } from 'react'
 import type { Genre, Instrument } from '../../prisma/client'
@@ -16,6 +16,12 @@ export const meta: MetaFunction = () => {
                 'request samples to be created and uploaded in the samples page!',
         },
     ]
+}
+
+export async function loader() {
+    const isShowroomMode = process.env.SHOWROOM_MODE === 'true'
+
+    return { isShowroomMode }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -81,6 +87,7 @@ export default function SampleRequest() {
     const [selectedGenres, setSelectedGenres] = useState<number[]>([])
     const [selectedInstruments, setSelectedInstruments] = useState<number[]>([])
     const [email, setEmail] = useState<string>('')
+    const { isShowroomMode } = useLoaderData<typeof loader>()
 
     // Get action data and navigation state from React Router
     const actionData = useActionData() as { success: boolean; message: string } | undefined
@@ -165,14 +172,14 @@ export default function SampleRequest() {
                 className="text-sssred">samples</span></span>?
                 We can produce exclusive samples for you. You would be the only producer in possession of those
                 samples and would be able to use them as you wish. To proceed, fill this form. <span
-                className="min-w-2/3 max-w-3xl text-left mb-2 font-thin text-xs">
+                className="min-w-2/3 max-w-3xl text-left mb-2 font-thin text-xs italic">
                 (This is a paid service, once
                 you fill the form we will contact you via email regarding the process and pricing).
             </span>
             </p>
 
 
-            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-4 p-14 rounded-2xl shadow-lg">
+            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-6 p-14 rounded-2xl shadow-lg">
                 <Form method="POST" className="flex flex-col gap-y-8">
                     {/* Description */}
                     <div>
@@ -180,6 +187,7 @@ export default function SampleRequest() {
                         <textarea
                             name="description"
                             value={description}
+                            disabled={isSubmitting || isShowroomMode}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="tell us in a few (or more) words"
                             className="p-3 border border-sssmutegray shadow-sm w-full rounded-lg h-24 resize-vertical"
@@ -198,6 +206,7 @@ export default function SampleRequest() {
                                     <button
                                         key={instrument.id}
                                         type="button"
+                                        disabled={isSubmitting || isShowroomMode}
                                         onClick={() => handleInstrumentToggle(instrument.id)}
                                         className={`flex items-center pl-1 pr-3 py-2 rounded-full border-2 transition-colors ${
                                             selectedInstruments.includes(instrument.id)
@@ -236,6 +245,7 @@ export default function SampleRequest() {
                                     <button
                                         key={genre.id}
                                         type="button"
+                                        disabled={isSubmitting || isShowroomMode}
                                         onClick={() => handleGenreToggle(genre.id)}
                                         className={`px-4 py-2 rounded-full border-2 transition-colors ${
                                             selectedGenres.includes(genre.id)
@@ -269,6 +279,7 @@ export default function SampleRequest() {
                             type="email"
                             name="email"
                             value={email}
+                            disabled={isSubmitting || isShowroomMode}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="your@email.com"
                             className="p-3 border border-sssmutegray shadow-sm w-full rounded-lg"
@@ -278,14 +289,14 @@ export default function SampleRequest() {
 
                     <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isShowroomMode}
                         className={`mt-6 py-3 px-10 rounded-full transition-colors font-semibold ${
-                            isSubmitting
+                            isSubmitting || isShowroomMode
                                 ? 'bg-gray-400 cursor-not-allowed'
                                 : 'bg-sssyellow hover:bg-yellow-400'
                         }`}
                     >
-                        {isSubmitting ? 'sending...' : 'submit'}
+                        {isShowroomMode ? 'sample request unavailable in showroom' : (isSubmitting ? 'sending...' : 'submit')}
                     </button>
                 </Form>
             </section>

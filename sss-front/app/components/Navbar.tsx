@@ -28,7 +28,7 @@ export default function Navbar({ isShowroomMode }: NavbarProps) {
 
             {isShowroomMode && (
                 <div
-                    className="text-3xl text-sssyellow font-thin">SHOWROOM
+                    className="absolute left-1/2 -translate-x-1/2 text-3xl text-sssyellow font-thin">SHOWROOM
                 </div>
             )}
 
