@@ -1,4 +1,4 @@
-import type { MetaFunction } from 'react-router'
+import { MetaFunction, useLoaderData } from 'react-router'
 import { Link } from 'react-router'
 import Shape from '../components/Shape'
 import { Loader2 } from "lucide-react"
@@ -11,8 +11,16 @@ export const meta: MetaFunction = () => {
     ]
 }
 
+export async function loader() {
+    const isShowroomMode = process.env.SHOWROOM_MODE === 'true'
+
+    return { isShowroomMode }
+}
+
+
 export default function Index() {
     const [isLoading, setIsLoading] = useState(true)
+    const { isShowroomMode } = useLoaderData<typeof loader>()
 
     useEffect(() => {
         setIsLoading(true)
@@ -51,14 +59,16 @@ export default function Index() {
                                 </div>
                             </div>
                         </div>
-
                         <div
                             className="flex flex-col justify-center align-middle items-center bg-sssdarkblue z-50 opacity-100">
                             <h1
                                 id="title"
                                 className="text-3xl sm:text-4xl font-normal text-center"
                             >
-                                super secret <span className="text-sssred animate-in fade-in duration-1000">samples</span>
+                                super secret <span
+                                className="text-sssred animate-in fade-in duration-1000">samples</span> {isShowroomMode && (
+                                <span className="text-sm font-thin text-sssyellow italic relative -top-1.5">showroom</span>
+                            )}
                             </h1>
 
                             <h2

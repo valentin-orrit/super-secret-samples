@@ -48,12 +48,14 @@ function App() {
     const isRoot = location.pathname === '/'
     const { isAuthenticated, isShowroomMode } = useLoaderData<typeof loader>()
 
+    const shouldShowNavbar = !isRoot && (isShowroomMode || isAuthenticated)
+
     return (
         <div
             id="root"
             className="flex flex-col min-h-screen font-mono text-sssdarkblue bg-sssoffwhite"
         >
-            {!isRoot && isAuthenticated && <Navbar isShowroomMode={isShowroomMode}/>}
+            {shouldShowNavbar && <Navbar isShowroomMode={isShowroomMode}/>}
             <main className="flex-grow">
                 <Outlet/>
             </main>
