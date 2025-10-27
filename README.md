@@ -1,6 +1,6 @@
 ![super secret samples homepage](sss-front/public/images/super-secret-samples-screenshot.png 'super secret samples homepage')
 
-# super secret samples [![Demo](https://img.shields.io/badge/website-FF5722?style=for-the-badge&logo=googlechrome&logoColor=white&style=plastic)](https://supersecretsamples.com)
+# super secret samples [![Demo](https://img.shields.io/badge/showroom-FF5722?style=for-the-badge&logo=googlechrome&logoColor=white&style=plastic)](https://super-secret-samples-showroom.fly.dev/)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white&style=plastic)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB&style=plastic)
 ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white&style=plastic)
@@ -24,6 +24,12 @@ Users can search for and download samples by music genre, instrument, tempo, key
 - Custom react audio player built with the Web Audio API. I made a prototype as a [separate repo](https://github.com/valentin-orrit/react-nice-audio-player) for this feature.
 - Sample Request form with mailer to manage user private requests.
 - Admin Sample Upload form to manage the compression & upload to samples to an S3 Bucket + samples metatadas to the Postgres DB.
+
+## Showroom
+Since the app & samples are protected via a password, I created a showroom branch with a small selection of samples for demo purposes. To maintain synchronisation between the two branches, I added checks, created a db branch and a separate S3 bucket. The app can then be deployed on the two branches without any change.
+You can access the two websites here :
+- [showroom](https://super-secret-samples-showroom.fly.dev/)
+- [main](https://supersecretsamples.com/)
 
 ## Contact
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white&style=plastic)](mailto:contact@supersecretsamples.com)
