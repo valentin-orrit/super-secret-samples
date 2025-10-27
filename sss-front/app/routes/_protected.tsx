@@ -27,6 +27,17 @@ import { useEffect, useState } from 'react'
 export async function loader({ request }: LoaderFunctionArgs) {
     const url = new URL(request.url)
     const error = url.searchParams.get('error')
+    const isShowroomMode = process.env.SHOWROOM_MODE === 'true'
+
+    // Skip auth check in showroom mode
+    if (isShowroomMode) {
+        console.log('✅ Showroom mode - bypassing auth')
+        return {
+            authenticated: true,
+            error,
+        }
+    }
+
     const authData = await requireSiteAuth(request)
 
     return {
