@@ -17,13 +17,20 @@
 
 Since the purpose of the app is to provide unique and private samples, the app is password-protected and the users are selected. 
 
-Users can search for and download samples by music genre, instrument, tempo, key, and various tags. Users can also request the creation of samples based on their specific criteria to obtain exclusive access to these custom samples. 
+Users can search for and download samples by music genre, instrument, tempo, key, and various tags. They can also request the creation of samples based on their specific criteria to obtain exclusive access to these custom samples.
 
 ## Key Features
 - Samples library with search & filtering features.
 - Custom react audio player built with the Web Audio API. I made a prototype as a [separate repo](https://github.com/valentin-orrit/react-nice-audio-player) for this feature.
 - Sample Request form with mailer to manage user private requests.
 - Admin Sample Upload form to manage the compression & upload to samples to an S3 Bucket + samples metatadas to the Postgres DB.
+
+![super secret samples app overview](sss-front/public/images/super-secret-samples-app-overview.drawio.png 'super secret samples app overview')
+
+## DB diagram
+Since the app is only password-protected, I opted to remove the User account system initially planned. Due to this, the postgres database is really simple. It is hosted on neon and a separate branch is used for the Showroom.
+
+![super secret samples db diagram](sss-front/public/images/super-secret-samples-db.drawio.png 'super secret samples db diagram')
 
 ## Showroom
 Since the app & samples are protected via a password, I created a showroom branch with a small selection of samples for demo purposes. To maintain synchronisation between the two branches, I added checks, created a db branch and a separate S3 bucket. The app can then be deployed on the two branches without any change.
