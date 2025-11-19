@@ -183,7 +183,7 @@ export default function SamplesPage() {
                 className="flex flex-col items-center min-h-[calc(100vh-400px)] bg-white"
             >
                 <div className="w-full mb-4 px-4 flex-grow flex flex-col">
-                    <div className="sticky top-[49px] z-50 bg-white">
+                    <div className="sticky top-[56px] sm:top-[49px] z-50 bg-white">
                         <SampleTableHead
                             sortField={sortField}
                             sortDirection={sortDirection}

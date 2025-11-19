@@ -40,7 +40,6 @@ export default function SampleDisplay({
     }
 
     const handleDownload = async (e: React.MouseEvent) => {
-        // Prevent event bubbling to play the sample
         e.stopPropagation()
 
         try {
@@ -82,7 +81,7 @@ export default function SampleDisplay({
 
     return (
         <div
-            className={`grid grid-flow-col grid-cols-9 border-b border-gray-200 w-full px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
+            className={`grid grid-flow-col grid-cols-[auto_1fr_auto] sm:grid-cols-9 border-b border-gray-200 w-full px-1 sm:px-4 py-1 my-1 hover:bg-sssoffwhite cursor-pointer items-center rounded-2xl group ${
                 isActive
                     ? 'bg-sssoffwhite border border-sssorange hover:bg-sssoffwhite rounded-md'
                     : 'bg-white border border-gray-200 hover:bg-sssoffwhite rounded-md'
@@ -94,32 +93,40 @@ export default function SampleDisplay({
             aria-label={`Play sample: ${sample.name}`}
             aria-pressed={isActive}
         >
-            <div className="">
+            {/* Instrument Shape - Always visible */}
+            <div className="w-12 sm:w-20">
                 {sample?.instruments[0]?.name ? (
                     <Shape instrument={sample.instruments[0].name} width={40}/>
                 ) : (
                     <Shape instrument="drums" width={40}/>
                 )}
             </div>
-            <div className="text-gray-500 text-start">
+
+            {/* Loop indicator - Hidden on mobile */}
+            <div className="text-gray-500 text-start hidden sm:block">
                 {sample.loop ? <Infinity/> : <Route/>}
             </div>
-            <div className="text-md text-gray-800 font-semibold text-start flex flex-col col-span-4 justify-evenly">
+
+            {/* Sample name and tags - Always visible */}
+            <div
+                className="text-sm sm:text-md text-gray-800 font-semibold text-start flex flex-col col-span-1 sm:col-span-4 justify-evenly min-w-0">
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap">
                     {sample.name}
                 </p>
-                <div className="flex overflow-hidden text-ellipsis gap-2 my-1 mr-4">
+                <div className="flex overflow-x-hidden gap-2 my-1 mr-4">
                     {genreAndTags.map((tag, index) => (
                         <span
                             key={index}
-                            className="text-gray-500 text-xs font-thin text-nowrap border px-1 rounded-lg border-sssmutegray"
+                            className="text-gray-500 text-[10px] sm:text-xs font-thin text-nowrap border px-1 rounded-lg border-sssmutegray flex-shrink-0"
                         >
                             {tag.name}{' '}
                         </span>
                     ))}
                 </div>
             </div>
-            <div className="col-span-2 grid grid-flow-col grid-cols-4 gap-x-2">
+
+            {/* Time, Key, BPM - Hidden on mobile */}
+            <div className="col-span-2 grid-flow-col grid-cols-4 gap-x-2 hidden sm:grid">
                 <div className="text-gray-700 text-start">
                     {formatSampleLength(sample.length)}
                 </div>
@@ -128,7 +135,9 @@ export default function SampleDisplay({
                     {sample.bpm !== null && sample.bpm > 0 && sample.bpm}
                 </div>
             </div>
-            <div className="flex justify-end">
+
+            {/* Download button - Always visible */}
+            <div className="flex justify-end flex-shrink-0">
                 {!isShowroomMode ? (
                     <button
                         onClick={handleDownload}
