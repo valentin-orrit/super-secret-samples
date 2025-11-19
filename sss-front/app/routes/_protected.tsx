@@ -64,33 +64,33 @@ export default function ProtectedServerLayout() {
     if (!authenticated) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-sssdarkblue text-sssdarkblue p-4">
-                <div className="flex m-4 w-44 sm:w-96">
-                    <div id="shapes-top" className="flex flex-col sm:flex-row">
-                        <div className="animate-in slide-in-from-bottom spin-in-3 duration-300">
+                <div className="flex m-4">
+                    <div id="shapes-top" className="flex flex-row">
+                        <div className="animate-in slide-in-from-bottom spin-in-3 duration-300 w-18 sm:w-20">
                             <Shape instrument="bass"/>
                         </div>
-                        <div className="animate-in slide-in-from-bottom spin-in-6 duration-300">
+                        <div className="animate-in slide-in-from-bottom spin-in-6 duration-300 w-18 sm:w-20">
                             <Shape instrument="drums"/>
                         </div>
                     </div>
-                    <div id="shapes-bot" className="flex flex-col sm:flex-row">
-                        <div className="animate-in slide-in-from-bottom spin-in-12 duration-500">
+                    <div id="shapes-bot" className="flex flex-row">
+                        <div className="animate-in slide-in-from-bottom spin-in-12 duration-500 w-18 sm:w-20">
                             <Shape instrument="synths"/>
                         </div>
-                        <div className="animate-in slide-in-from-bottom spin-in-45 duration-700">
+                        <div className="animate-in slide-in-from-bottom spin-in-45 duration-700 w-18 sm:w-20">
                             <Shape instrument="percs"/>
                         </div>
-                        <div className="animate-in slide-in-from-bottom spin-in-90 duration-1000">
+                        <div className="animate-in slide-in-from-bottom spin-in-90 duration-1000 w-18 sm:w-20">
                             <Shape instrument="pads"/>
                         </div>
                     </div>
                 </div>
                 <Card className="w-full max-w-md z-50 animate-in zoom-in-75">
                     <CardHeader className="space-y-1">
-                        <CardTitle className="text-2xl font-bold text-center text-sssblue">
+                        <CardTitle className="text-lg sm:text-2xl font-bold text-center text-sssblue">
                             super secret <span className="text-sssred">samples</span>
                         </CardTitle>
-                        <CardDescription className="text-center text-sssdarkblue">
+                        <CardDescription className="text-center text-sssdarkblue text-xs sm:text-sm">
                             Enter the password to access the site
                         </CardDescription>
                     </CardHeader>
@@ -113,22 +113,22 @@ export default function ProtectedServerLayout() {
                                         setPassword(e.target.value)
                                     }
                                     required
-                                    className="w-full"
+                                    className="w-full tracking-widest"
                                 />
                             </div>
 
-                            <div className="flex items-start space-x-3">
+                            <div className="flex items-start space-x-3 pt-4">
                                 <Checkbox
                                     id="terms"
                                     checked={agreedToTerms}
                                     onCheckedChange={(checked) =>
                                         setAgreedToTerms(checked as boolean)
                                     }
-                                    className="mt-1"
+                                    className="mt-1 relative bottom-0.5"
                                 />
                                 <label
                                     htmlFor="terms"
-                                    className="text-sm leading-relaxed cursor-pointer"
+                                    className="text-xs sm:text-sm leading-relaxed cursor-pointer"
                                 >
                                     I agree to the{' '}
                                     <Link
