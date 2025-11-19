@@ -19,8 +19,8 @@ export default function termsOfUse() {
     })
 
     return (
-        <div className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen w-full py-10">
-            <div className="max-w-4xl mx-auto px-2 sm:px-6">
+        <div className="text-xs sm:text-base flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen w-full py-10">
+            <div className="max-w-4xl mx-auto sm:px-6">
                 <h2 className="text-3xl font-bold text-sssblue mb-2 text-center">Terms of Use</h2>
                 <p className="text-sm text-sssaccentgray mb-8 text-center">Last updated: {lastUpdated}</p>
 

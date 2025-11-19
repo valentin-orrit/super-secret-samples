@@ -17,15 +17,15 @@ export default function About() {
     return (
         <div
             id="about-page"
-            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen align-middle items-center justify-center w-full py-10"
+            className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen align-middle items-center justify-center w-full sm:py-10"
         >
             <div className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen w-full py-10">
                 <div className="max-w-4xl mx-auto px-2 sm:px-6">
-                    <h2 className="text-3xl font-bold text-sssblue mb-2 text-center">about
+                    <h2 className="text-3xl font-bold text-sssblue sm:mb-2 text-center">about
                     </h2>
                     <br/>
 
-                    <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 space-y-8">
+                    <div className="tex-sm bg-white rounded-2xl shadow-lg p-4 sm:p-8 space-y-8">
                         <section>
                             <h2 className="text-xl font-semibold text-sssblue mb-3">what is the purpose of <span
                                 className="font-bold text-sssdarkblue">super secret <span

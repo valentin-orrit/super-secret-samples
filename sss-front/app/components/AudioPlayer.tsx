@@ -25,6 +25,7 @@ export default function AudioPlayer({
     const [duration, setDuration] = useState(0.0)
     const [streamUrl, setStreamUrl] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [showVolumeSlider, setShowVolumeSlider] = useState(false)
 
     // Fetch stream URL when currentSample changes
     useEffect(() => {
@@ -107,13 +108,17 @@ export default function AudioPlayer({
         audioController?.seek(newTime)
     }
 
+    const toggleVolumeSlider = () => {
+        setShowVolumeSlider(!showVolumeSlider)
+    }
+
     return (
         <div
-            className="flex items-center justify-between gap-4 p-4 mb-8 bg-white shadow-xl rounded-2xl w-full border border-gray-400">
+            className="flex items-center justify-between gap-4 p-4 mb-8 bg-white shadow-xl rounded-2xl w-full border border-gray-400 min-w-64">
             <div className="flex gap-2">
                 <button
                     onClick={handlePlayPause}
-                    className="p-4 bg-amber-100 rounded-full hover:bg-amber-200 disabled:bg-gray-300"
+                    className="p-4 bg-amber-100 rounded-full hover:bg-amber-200 disabled:bg-gray-300 transition-colors"
                     disabled={!streamUrl || isLoading}
                 >
                     {isLoading ? (
@@ -127,7 +132,7 @@ export default function AudioPlayer({
                 </button>
                 <button
                     onClick={() => setIsLooping(!isLooping)}
-                    className={`p-4 text-gray-700 rounded-full ${
+                    className={`p-4 hidden sm:block text-gray-700 rounded-full transition-colors ${
                         isLooping ? 'text-amber-800' : ''
                     } hover:bg-amber-100`}
                 >
@@ -140,19 +145,28 @@ export default function AudioPlayer({
                 </button>
             </div>
 
+            {/* Sample name - animated fade out when volume slider is shown */}
             {currentSample ? (
                 <div
-                    className="text-sm lg:text-md text-gray-800 font-semibold text-start overflow-hidden text-ellipsis text-nowrap w-1/3">
+                    className={`text-sm lg:text-md text-gray-800 font-semibold text-start overflow-hidden text-ellipsis text-nowrap w-1/3 hidden sm:block lg:block transition-opacity duration-300 ${
+                        showVolumeSlider ? 'lg:opacity-100 opacity-0 pointer-events-none' : 'opacity-100'
+                    }`}
+                >
                     {currentSample.name}
                 </div>
             ) : (
-                <div className="flex items-center text-gray-500">
+                <div className={`items-center text-gray-500 hidden sm:block lg:block transition-opacity duration-300 ${
+                    showVolumeSlider ? 'lg:opacity-100 opacity-0 pointer-events-none' : 'opacity-100'
+                }`}>
                     select a track
                 </div>
             )}
 
+            {/* Seek bar and duration - animated fade out when volume slider is shown */}
             {currentSample && duration > 0 && (
-                <div className="flex items-center gap-1 mx-4 w-3/4">
+                <div className={`flex items-center gap-1 mx-4 w-3/4 transition-opacity duration-300 ${
+                    showVolumeSlider ? 'lg:opacity-100 lg:pointer-events-auto opacity-0 pointer-events-none' : 'opacity-100'
+                }`}>
                     <input
                         type="range"
                         min="0"
@@ -162,14 +176,18 @@ export default function AudioPlayer({
                         onChange={handleSeekChange}
                         className="w-full accent-amber-700 cursor-pointer"
                     />
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 hidden sm:block">
                         <span>{Math.round(duration * 100) / 100}s</span>
                     </div>
                 </div>
             )}
 
-            <div className="flex items-center justify-center gap-2">
-                <Volume2 size={20} className="text-amber-800"/>
+            {/* Volume slider overlay for mobile - animated fade in */}
+            <div
+                className={`absolute left-1/2 -translate-x-1/2 flex items-center gap-2 w-1/2 lg:hidden transition-opacity duration-300 bg-amber-200 py-2 px-4 rounded-xl ${
+                    showVolumeSlider ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                }`}>
+                <Volume2 size={20} className="text-amber-800 flex-shrink-0"/>
                 <input
                     type="range"
                     min="0"
@@ -177,8 +195,38 @@ export default function AudioPlayer({
                     step="0.01"
                     value={volume}
                     onChange={handleVolumeChange}
-                    className="w-10 md:w-16 lg:w-20 accent-amber-700"
+                    className="w-full accent-amber-700"
                 />
+            </div>
+
+            {/* Volume controls */}
+            <div className="flex items-center justify-center gap-2">
+                <button
+                    onClick={toggleVolumeSlider}
+                    className={`lg:hidden p-2 rounded-full transition-all duration-300 ${
+                        showVolumeSlider
+                            ? 'bg-amber-200 scale-110'
+                            : 'hover:bg-amber-100'
+                    }`}
+                >
+                    <Volume2 size={20} className={`transition-colors duration-300 ${
+                        showVolumeSlider ? 'text-amber-900' : 'text-amber-800'
+                    }`}/>
+                </button>
+
+                {/* Desktop volume control - always visible on lg+ */}
+                <div className="hidden lg:flex items-center gap-2">
+                    <Volume2 size={20} className="text-amber-800"/>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                        className="w-20 accent-amber-700"
+                    />
+                </div>
             </div>
         </div>
     )

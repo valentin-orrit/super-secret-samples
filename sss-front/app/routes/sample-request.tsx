@@ -164,9 +164,9 @@ export default function SampleRequest() {
             id="sample-request-page"
             className="flex flex-col font-mono text-sssdarkblue bg-sssoffwhite min-h-screen align-middle items-center justify-center w-full py-10"
         >
-            <h1 className="text-2xl font-semibold text-sssblue mb-4">request exclusive samples</h1>
+            <h1 className="text-2xl font-semibold text-sssblue mb-4 px-4 sm:px-8">request exclusive samples</h1>
 
-            <p className="min-w-2/3 max-w-3xl text-left mb-2">
+            <p className="min-w-2/3 max-w-3xl text-left mb-2 px-4 sm:px-8">
                 Do you like the samples produced for <span
                 className="font-bold text-sssdarkblue">super secret <span
                 className="text-sssred">samples</span></span>?
@@ -179,7 +179,7 @@ export default function SampleRequest() {
             </p>
 
 
-            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-6 p-14 rounded-2xl shadow-lg">
+            <section className="min-w-2/3 max-w-3xl flex flex-col bg-white my-6 p-4 sm:p-14 rounded-2xl shadow-lg">
                 <Form method="POST" className="flex flex-col gap-y-8">
                     {/* Description */}
                     <div>
@@ -190,7 +190,7 @@ export default function SampleRequest() {
                             disabled={isSubmitting || isShowroomMode}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="tell us in a few (or more) words"
-                            className="p-3 border border-sssmutegray shadow-sm w-full rounded-lg h-24 resize-vertical"
+                            className="p-3 border border-sssmutegray shadow-sm w-full rounded-lg h-24 resize-vertical text-sm"
                             required
                         />
                     </div>
@@ -201,14 +201,14 @@ export default function SampleRequest() {
                         {instruments.length === 0 ? (
                             <p className="text-gray-500">Loading instruments...</p>
                         ) : (
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-wrap gap-1 sm:gap-3">
                                 {instruments.map((instrument) => (
                                     <button
                                         key={instrument.id}
                                         type="button"
                                         disabled={isSubmitting || isShowroomMode}
                                         onClick={() => handleInstrumentToggle(instrument.id)}
-                                        className={`flex items-center pl-1 pr-3 py-2 rounded-full border-2 transition-colors ${
+                                        className={`text-sm sm:text-base flex items-center pl-1 pr-1 sm:pr-3 py-1 sm:py-2 rounded-full border-2 transition-colors ${
                                             selectedInstruments.includes(instrument.id)
                                                 ? 'bg-sssyellow border-sssyellow text-sssdarkblue'
                                                 : 'bg-white border-sssmutegray text-sssdarkblue hover:border-sssyellow'
@@ -240,14 +240,14 @@ export default function SampleRequest() {
                         {genres.length === 0 ? (
                             <p className="text-gray-500">Loading genres...</p>
                         ) : (
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-wrap gap-1 sm:gap-3">
                                 {genres.map((genre) => (
                                     <button
                                         key={genre.id}
                                         type="button"
                                         disabled={isSubmitting || isShowroomMode}
                                         onClick={() => handleGenreToggle(genre.id)}
-                                        className={`px-4 py-2 rounded-full border-2 transition-colors ${
+                                        className={`text-sm sm:text-base px-2 sm:px-4 sm:py-2 rounded-full border-2 transition-colors ${
                                             selectedGenres.includes(genre.id)
                                                 ? 'bg-sssyellow border-sssyellow text-sssdarkblue'
                                                 : 'bg-white border-sssmutegray text-sssdarkblue hover:border-sssyellow'
@@ -273,7 +273,7 @@ export default function SampleRequest() {
                     {/* Email */}
                     <div>
                         <p className="mb-2 font-semibold">
-                            email : <span className="text-sm text-sssorange">(we will contact you via email regarding the process and pricing)</span>
+                            email : <span className="text-xs text-sssorange">(we will contact you via email regarding the process and pricing)</span>
                         </p>
                         <input
                             type="email"
@@ -282,7 +282,7 @@ export default function SampleRequest() {
                             disabled={isSubmitting || isShowroomMode}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="your@email.com"
-                            className="p-3 border border-sssmutegray shadow-sm w-full rounded-lg"
+                            className="p-3 border border-sssmutegray shadow-sm w-full rounded-lg text-xs"
                             required
                         />
                     </div>
