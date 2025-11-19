@@ -58,12 +58,12 @@ export default function AdminServerLayout() {
                 <Card className="w-full max-w-md border-red-200">
                     <CardHeader className="space-y-1">
                         <div className="flex items-center justify-center mb-2">
-                            <ShieldAlert className="h-12 w-12 text-red-600" />
+                            <ShieldAlert className="h-12 w-12 text-red-600"/>
                         </div>
-                        <CardTitle className="text-2xl font-bold text-center">
+                        <CardTitle className="font-bold text-center text-base sm:text-2xl">
                             Admin Access Required
                         </CardTitle>
-                        <CardDescription className="text-center text-red-600">
+                        <CardDescription className="text-center text-red-600 text-xs sm:text-base">
                             This area requires admin authentication
                         </CardDescription>
                     </CardHeader>
@@ -86,7 +86,7 @@ export default function AdminServerLayout() {
                                         setPassword(e.target.value)
                                     }
                                     required
-                                    className="w-full"
+                                    className="w-full text-sm"
                                 />
                             </div>
                         </CardContent>
@@ -107,5 +107,5 @@ export default function AdminServerLayout() {
         )
     }
 
-    return <Outlet />
+    return <Outlet/>
 }
