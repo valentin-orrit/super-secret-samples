@@ -7,6 +7,7 @@ export class AudioController {
     private loop: boolean = false
     private playbackStartTime: number = 0
     private currentOffset: number = 0
+    private onEndedCallback: (() => void) | null = null
 
     constructor() {
         if (typeof window !== 'undefined') {
@@ -36,6 +37,17 @@ export class AudioController {
         this.source.loop = this.loop
         this.source.connect(this.gainNode!)
 
+        // detect when sample finishes
+        this.source.onended = () => {
+            if (!this.loop) {
+                this.isPlaying = false
+                this.currentOffset = 0
+                if (this.onEndedCallback) {
+                    this.onEndedCallback()
+                }
+            }
+        }
+
         this.playbackStartTime =
             this.audioContext.currentTime - this.currentOffset
         this.source.start(0, this.currentOffset)
@@ -55,6 +67,7 @@ export class AudioController {
 
     stop() {
         if (this.source) {
+            this.source.onended = null
             this.source.stop()
             this.source.disconnect()
             this.source = null
@@ -85,6 +98,16 @@ export class AudioController {
             this.source.loop = this.loop
             this.source.connect(this.gainNode!)
 
+            this.source.onended = () => {
+                if (!this.loop) {
+                    this.isPlaying = false
+                    this.currentOffset = 0
+                    if (this.onEndedCallback) {
+                        this.onEndedCallback()
+                    }
+                }
+            }
+
             this.playbackStartTime =
                 this.audioContext.currentTime - this.currentOffset
             this.source.start(0, this.currentOffset)
@@ -103,10 +126,19 @@ export class AudioController {
         return this.currentOffset
     }
 
+    getIsPlaying() {
+        return this.isPlaying
+    }
+
+    setOnEndedCallback(callback: () => void) {
+        this.onEndedCallback = callback
+    }
+
     cleanup() {
         this.stop()
         this.currentBuffer = null
         this.currentOffset = 0
         this.isPlaying = false
+        this.onEndedCallback = null
     }
 }

@@ -27,6 +27,16 @@ export default function AudioPlayer({
     const [isLoading, setIsLoading] = useState(false)
     const [showVolumeSlider, setShowVolumeSlider] = useState(false)
 
+    // Set up callback for when audio ends
+    useEffect(() => {
+        if (audioController) {
+            audioController.setOnEndedCallback(() => {
+                setIsPlaying(false)
+                setCurrentTime(0)
+            })
+        }
+    }, [audioController, setIsPlaying])
+
     // Fetch stream URL when currentSample changes
     useEffect(() => {
         // Reset audio state when sample changes
@@ -80,20 +90,34 @@ export default function AudioPlayer({
     // Set up an interval to update the current playback time
     useEffect(() => {
         const interval = setInterval(() => {
-            if (isPlaying && currentSample && audioController) {
-                setCurrentTime(audioController.getCurrentTime())
+            if (currentSample && audioController) {
+                const time = audioController.getCurrentTime()
+                setCurrentTime(time)
+
+                // Update isPlaying state based on audio controller
+                const playing = audioController.getIsPlaying()
+                if (playing !== isPlaying) {
+                    setIsPlaying(playing)
+                }
             }
-        }, 100)
+        }, 50)
         return () => clearInterval(interval)
-    }, [isPlaying, currentSample, audioController])
+    }, [currentSample, audioController, isPlaying, setIsPlaying])
 
     const handlePlayPause = () => {
+        if (!audioController) return
+
         if (isPlaying) {
-            audioController?.pause()
+            audioController.pause()
+            setIsPlaying(false)
         } else {
-            audioController?.play()
+            // If at the end or stopped, replay from beginning
+            if (currentTime >= duration - 0.1) {
+                audioController.seek(0)
+            }
+            audioController.play()
+            setIsPlaying(true)
         }
-        setIsPlaying(!isPlaying)
     }
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,7 +195,7 @@ export default function AudioPlayer({
                         type="range"
                         min="0"
                         max={duration}
-                        step="0.1"
+                        step="0.01"
                         value={currentTime}
                         onChange={handleSeekChange}
                         className="w-full accent-amber-700 cursor-pointer"
