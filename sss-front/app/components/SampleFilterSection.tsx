@@ -11,10 +11,10 @@ interface SampleHeaderProps {
 }
 
 export default function SampleFilterSection({
-    title,
-    totalCount,
-    isLoading = false,
-}: SampleHeaderProps) {
+                                                title,
+                                                totalCount,
+                                                isLoading = false,
+                                            }: SampleHeaderProps) {
     const {
         searchTerm,
         selectedInstrument,
@@ -60,12 +60,13 @@ export default function SampleFilterSection({
 
     return (
         <header className="w-full flex flex-col align-middle justify-center p-6">
-            <div className="flex w-full justify-between items-start">
-                <div className="flex flex-row items-end justify-start gap-4">
+            <div className="flex flex-col sm:flex-row w-full justify-between items-start space-y-10 sm:space-y-0">
+                <div className="flex flex-row items-end sm:justify-start gap-4 w-full justify-center mt-4 sm:mt-0">
                     <h1 className="text-3xl text-center font-bold">{title}</h1>
                 </div>
-                <div className="flex w-1/2 justify-center items-start bg-white rounded-lg p-2 border-2 border-sssmutegray group focus-within:border-sssyellow">
-                    <SearchIcon />
+                <div
+                    className="flex w-full sm:w-2/3 justify-center items-start bg-white rounded-lg p-2 border-2 border-sssmutegray group focus-within:border-sssyellow">
+                    <SearchIcon/>
                     <input
                         type="text"
                         placeholder="search by name, genre and tags..."
@@ -73,12 +74,12 @@ export default function SampleFilterSection({
                         value={searchTerm}
                         className="search-input w-full px-4 outline-none"
                     />
-                    <div className=" m-auto text-xs text-sssaccentgray w-1/4">
+                    <div className="hidden xl:block m-auto text-xs text-sssaccentgray w-1/4">
                         {isLoading ? '...' : totalCount} results!
                     </div>
                 </div>
             </div>
-            <div className="mt-6 flex gap-4 items-center flex-wrap">
+            <div className="mt-12 sm:mt-6 flex gap-4 items-center flex-wrap">
                 <SampleFilterMenu
                     menuTitle="instruments"
                     menuContent={instruments}
@@ -99,11 +100,11 @@ export default function SampleFilterSection({
                     >
                         <span className="p-0 m-0">
                                 {
-                                    selectedInstrument && <Shape instrument={selectedInstrument} width={20} />
-                                    }
+                                    selectedInstrument && <Shape instrument={selectedInstrument} width={20}/>
+                                }
                             </span>
                         <span>{selectedInstrument}</span>
-                        <X size={14} />
+                        <X size={14}/>
                     </button>
                 )}
 
@@ -114,7 +115,7 @@ export default function SampleFilterSection({
                         title="Remove genre filter"
                     >
                         <span>{selectedGenre}</span>
-                        <X size={14} />
+                        <X size={14}/>
                     </button>
                 )}
 

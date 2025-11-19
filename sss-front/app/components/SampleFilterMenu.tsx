@@ -17,10 +17,10 @@ interface SampleFilterMenuProps {
 }
 
 export default function SampleFilterMenu({
-    menuTitle,
-    menuContent,
-    filterType,
-}: SampleFilterMenuProps) {
+                                             menuTitle,
+                                             menuContent,
+                                             filterType,
+                                         }: SampleFilterMenuProps) {
     const [open, setOpen] = useState(false)
     const {
         selectedInstrument,
@@ -48,19 +48,19 @@ export default function SampleFilterMenu({
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
                     <button
-                        className={`flex bg-white px-4 py-2 gap-2 border rounded-xl group relative ${
+                        className={`flex bg-white px-3 sm:px-4 pt-2 pb-1 sm:py-2 sm:gap-2 border rounded-xl group text-sm sm:text-lg relative ${
                             selectedValue ? 'border-sssyellow bg-yellow-50' : ''
                         }`}
                     >
-                        <div className="flex">{menuTitle}</div>
+                        <div className="flex pr-1 sm:pr-0">{menuTitle}</div>
                         <ChevronDown
-                            className={`transition-transform duration-200 ${
+                            className={`transition-transform relative sm:top-1 w-4 sm:w-8 duration-200 ${
                                 open ? 'rotate-180' : ''
                             }`}
                         />
                     </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]">
                     {menuContent.map((menuContentItem) => (
                         <DropdownMenuItem
                             key={menuContentItem.name}
@@ -75,7 +75,7 @@ export default function SampleFilterMenu({
                         >
                             <span>
                                 {menuTitle === "instruments"
-                                    ? menuContentItem.name && <Shape instrument={menuContentItem.name} width={24} />
+                                    ? menuContentItem.name && <Shape instrument={menuContentItem.name} width={24}/>
                                     : ""}
                             </span>
                             {menuContentItem.name}
