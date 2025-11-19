@@ -37,7 +37,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration/>
         <Scripts/>
-        <Toaster closeButton richColors position="bottom-right" offset={{ bottom: '124px' }}/>
+        <Toaster
+            closeButton
+            richColors
+            position="bottom-right"
+            toastOptions={{
+                className: 'sm:!bottom-[100px] !bottom-[118px]',
+            }}
+        />
         </body>
         </html>
     )
