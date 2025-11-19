@@ -37,23 +37,23 @@ export default function Index() {
                 <div
                     className="flex h-screen items-center justify-center text-sssoffwhite bg-sssdarkblue animate-in fade-in">
                     <div id="shapes" className="flex flex-col items-center m-4">
-                        <div className="flex m-4 w-44 sm:w-96">
-                            <div id="shapes-top" className="flex flex-col sm:flex-row">
-                                <div className="animate-in slide-in-from-bottom spin-in-3 duration-300">
+                        <div className="flex m-4">
+                            <div id="shapes-top" className="flex flex-row">
+                                <div className="animate-in slide-in-from-bottom spin-in-3 duration-300 w-18 sm:w-20">
                                     <Shape instrument="bass"/>
                                 </div>
-                                <div className="animate-in slide-in-from-bottom spin-in-6 duration-300">
+                                <div className="animate-in slide-in-from-bottom spin-in-6 duration-300 w-18 sm:w-20">
                                     <Shape instrument="drums"/>
                                 </div>
                             </div>
-                            <div id="shapes-bot" className="flex flex-col sm:flex-row">
-                                <div className="animate-in slide-in-from-bottom spin-in-12 duration-500">
+                            <div id="shapes-bot" className="flex flex-row">
+                                <div className="animate-in slide-in-from-bottom spin-in-12 duration-500 w-18 sm:w-20">
                                     <Shape instrument="synths"/>
                                 </div>
-                                <div className="animate-in slide-in-from-bottom spin-in-45 duration-700">
+                                <div className="animate-in slide-in-from-bottom spin-in-45 duration-700 w-18 sm:w-20">
                                     <Shape instrument="percs"/>
                                 </div>
-                                <div className="animate-in slide-in-from-bottom spin-in-90 duration-1000">
+                                <div className="animate-in slide-in-from-bottom spin-in-90 duration-1000 w-18 sm:w-20">
                                     <Shape instrument="pads"/>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@ export default function Index() {
                             className="flex flex-col justify-center align-middle items-center bg-sssdarkblue z-50 opacity-100">
                             <h1
                                 id="title"
-                                className="text-3xl sm:text-4xl font-normal text-center"
+                                className="text-2xl sm:text-4xl font-normal text-center"
                             >
                                 super secret <span
                                 className="text-sssred animate-in fade-in duration-1000">samples</span> {isShowroomMode && (
