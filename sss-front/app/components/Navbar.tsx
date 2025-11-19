@@ -32,7 +32,7 @@ export default function Navbar({ isShowroomMode }: NavbarProps) {
                 </div>
             )}
 
-            <div id="nav-list" className="flex text-md font-normal">
+            <div id="nav-list" className="flex text-md font-normal text-xs sm:text-base">
                 <NavLink
                     to="/samples"
                     className={({ isActive }) =>
